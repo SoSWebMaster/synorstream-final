@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+html{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box !important;
+  background-image: "url('/static/images/Website-Background.png') !important";
+  background-size: cover;
+}
+
+
+.ellipsis{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  @apply overflow-hidden whitespace-pre-wrap line-clamp-1;
+}
+
+.ellipsis-2{
+  @apply line-clamp-2;
+}
+
+.full-line{
+  @apply line-clamp-none;
+}
+.song-info *{
+  float: none!important;
+}
+.song-info .tack_t{
+  @apply block mb-1 text-xl font-semibold md:mb-2 md:text-3xl text-white/40;
+}
+
+.song-info .out_comp,
+.song-info .tack_tit{
+  @apply text-lg md:text-xl;
+}
+
+.song-info .brac{
+  @apply mx-2;
+}
+
+.button-switcher input[type="radio"]:checked + label{
+  @apply bg-orange-400;
+}
+
+.szh-accordion__item-btn{
+  @apply w-full text-lg text-left;
+}
+.szh-accordion__item-content{
+  @apply transition-all duration-200;
+}
+.szh-accordion__item-heading{
+  @apply flex items-center py-1 md:py-1.5;
+}
+.szh-accordion__item-heading::after{
+  content: '\f054';
+  font: var(--fa-font-solid);
+  @apply flex-shrink-0 inline-block text-xs transition-all duration-200;
+}
+.szh-accordion__item.szh-accordion__item--expanded > .szh-accordion__item-heading::after{
+  @apply rotate-90;
+}
+.szh-accordion__item-panel{
+  @apply space-y-1.5;
+}
+
+.accordion-no-after-header .szh-accordion__item-heading{
+  @apply p-0;
+}
+.accordion-no-after-header .szh-accordion__item-heading::after{
+  content: unset;
+}
+
+.custom-checkbox{
+  position: relative;
+}
+.custom-checkbox:checked::after{
+  content: '\f00c';
+  font: var(--fa-font-solid);
+  @apply absolute text-xs -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+}
+
+.song-loading-spinner{
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255, .4);
+  border-top-color: #ffffff;
+  position: relative;
+  animation: song-loading-spinner 800ms linear infinite;
+}
+
+
+/* input['type=range']::- */
+@keyframes song-loading-spinner {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+

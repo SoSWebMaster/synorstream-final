@@ -1,0 +1,29 @@
+.swiper {
+    width: 100%;
+  }
+  
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+
+    background-image: url('/static/images/slider-with-background.png');
+    background-position: center;
+    background-size: auto;
+    width: 485px;
+    height: 200px;
+  }
+
+  
+  .swiper-slide-active {
+    filter: brightness(1.2); /* Adjust brightness for active slide */
+  }
+  
+  .swiper-slide-prev, .swiper-slide-next {
+    filter: brightness(0.5); /* Adjust brightness for previous and next slides */
+    
+  }
+
+  /* box-shadow:     0 -20px 30px rgba(0, 0, 0, 0.5), 
+  0 20px 30px rgba(0, 0, 0, 0.5),  
+  -20px 0 30px rgba(0, 0, 0, 0.5),
+  20px 0 30px rgba(0, 0, 0, 0.5); */
