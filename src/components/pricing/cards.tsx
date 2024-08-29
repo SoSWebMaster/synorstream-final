@@ -61,10 +61,10 @@ const style = {
          "Unlimited streaming",
          "Create playlists & favorite tracks",
          "Qualified for promotions and giveaways",
-         "10% off custom music requests",
+         "10% off custom music requests",
       ],
-      Creator:['Unlock SFX library','Unlimited downloads of music and SFX','Personal-Use license for unlimited personal projects','20% off custom music requests'],
-      Freelancer:['MP3 and WAV downloads','Ability to download stems','Commercial-Use license for client work and broadcast','25% off custom music requests'],
+      Creator:['Unlock SFX library','Unlimited downloads of music and SFX','Personal-Use license for unlimited personal projects','20% off custom music requests'],
+      Freelancer:['MP3 and WAV downloads','Ability to download stems','Commercial-Use license for client work and broadcast','25% off custom music requests'],
       Business:['Dedicated customer service representative and contact information','Access to exclusive, unreleased tracks','Playlists tailored to your requests/briefs','Custom music requests and custom SFX/foley/sound design services']
    };
 
@@ -147,16 +147,16 @@ const style = {
                   <p className="relative bottom-1">__________</p>
                </div>
                <p className="text-[12px] font-semibold text-center mt-1">
-                  {"$"+item?.year_price + "/year (one free month)"}
+               {"$"+item?.year_price + `/year ( ${item?.free_months_text} )`}
                </p>
                <div className="flex justify-center ">
                   <p className="relative bottom-1">__________</p>
-                  <p className="mx-3 text-center text-[#848199]">or</p>
                   <p className="relative bottom-1">__________</p>
                </div>
                <p className="text-[16px] font-normal  mt-10">
                   This Plan Includes
                </p>
+               <div className="h-[150px] ">
                {item?.features?.map((item, index) => (
                   <div
                      className="flex items-center "
@@ -173,10 +173,11 @@ const style = {
                      </p>
                   </div>
                ))}
-               <button className="w-full h-[54px] !bg-[#0714BD] group-hover:!bg-[#FB8A2E]   text-white rounded-lg mt-5"
+               </div>
+               <button className="position-fixed w-full h-[54px] !bg-[#0714BD] group-hover:!bg-[#FB8A2E]   text-white rounded-lg mt-5"
                onClick={() => selectPlan(item.id,item?.month_price,item?.year_price)} // Add onClick handler to call selectPlan with plan_id
                >
-                  {item?.mailchimp_tag}
+                  {item?.mailchimp_tag == "PAID USER" ? "Sign Up" : item?.mailchimp_tag}
                </button>
             </div>
          ))}
@@ -191,9 +192,10 @@ const style = {
                Your business needs the best audio for ads, television, branding, and more. Let us do the work.
                </p>
           
-               <p className="text-[16px] font-normal  mt-12">
+               <p className="text-[16px] font-normal  mt-20">
                   This Plan Includes
                </p>
+               <div className="h-[145px]">
                {List?.Business?.map((item, index) => (
                   <div
                      className="flex items-center "
@@ -210,8 +212,9 @@ const style = {
                      </p>
                   </div>
                ))}
+               </div>
                <button className="w-full h-[54px] !bg-[#0714BD] group-hover:!bg-[#FB8A2E]   text-white rounded-lg mt-5">
-                  Free Trial
+               Contact us
                </button>
             </div>
             {isOpen && (

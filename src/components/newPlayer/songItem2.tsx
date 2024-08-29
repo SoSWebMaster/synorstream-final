@@ -62,7 +62,7 @@ export default function SongItem2({
 
             <div className="relative items-center text-sm md:text-lg top-5">
                <div className="h-full ">
-                  <span className="mb-1 ellipsis md:mb-0">Song Name</span>
+                  {/* <span className="mb-1 ellipsis md:mb-0">Song Name</span> */}
                   <span className="mb-1 ellipsis md:mb-0 text-[#CCCCCC] !text-[18px]">
                      {name}
                   </span>

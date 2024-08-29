@@ -112,7 +112,7 @@ export default function SongItem({ id, name, artis_name, flt_name, thumb, audio,
            return;
        }
        console.log(fileName);
-       download(url, fileName)
+       download(url, name)
        toast.info('Downloading Started...');
 
        saveDownloadHistory(id)
@@ -124,10 +124,9 @@ export default function SongItem({ id, name, artis_name, flt_name, thumb, audio,
   };
   const saveDownloadHistory=async(songId:number)=>{
     try{
-        console.log("sdfsdfdsf")
        const response =await axiosInstance.post(endPoints?.download, {id:songId})
        if(response?.data?.result){
-          toast.success(`${response?.data?.message}`);
+        //   toast.success(`${response?.data?.message}`);
        }
     }catch(error){
        console.log(error);
@@ -189,8 +188,7 @@ export default function SongItem({ id, name, artis_name, flt_name, thumb, audio,
                        className={`mr-2 grow ellipsis ellipsis-2 flex justify-start `}
                        ref={cateElRef}
                    >
-                       {Array.isArray(flt_name) ? flt_name.join(", ") : <span className="">{flt_name}</span>}
-                   </span>
+                       {Array.isArray(flt_name) ? Array.from(new Set(flt_name)).join(", ") : <span className="">{flt_name}</span>}                   </span>
                    <FontAwesomeIcon
                        icon={faCirclePlus}
                        className="w-8 text-xl cursor-pointer shrink-0"

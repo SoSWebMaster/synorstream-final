@@ -44,7 +44,7 @@ export default function Filter( { className }: FilterProps ) {
    return (
       <div className={`${className ? className + ' ' : ''}space-y-3`}>
          <div className="flex justify-center text-center">
-         <img src={Logo} className="w-[280px] h-[55px]"/>
+         <img src={Logo}/>
          </div>
          <Divider className="!bg-[#555555] !my-5 w-[100%]"/>
          <div className="flex gap-3 md:block">

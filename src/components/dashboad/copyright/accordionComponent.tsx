@@ -104,7 +104,7 @@ const AccordionComponent = () => {
                   icon={faPlus}
                   className="w-8 text-xl cursor-pointer shrink-0"
                 />
-                Add Another
+                Add
               </Button>
             </div>
             {addresses[url.name]?.length > 0 && (
@@ -129,7 +129,7 @@ const AccordionComponent = () => {
         </Accordion>
       ))}
         <div className="flex items-center justify-end p-10">
-              <p>For Vedeo CLearence COntact US</p>
+              <p>For Video Clearence Contact Us</p>
               <Button className="!w-[120px] !h-[43px] !bg-[#FB8A2E] !text-white !font-semibold !ml-6" onClick={onSaveData}>Save</Button>
           </div>
     </div>

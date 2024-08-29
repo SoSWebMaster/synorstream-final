@@ -1,6 +1,6 @@
 import { useId, ChangeEvent } from "react";
 import { updateMusicType, updateSongType } from "../../store/music-store";
-import { useAppDispatch } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import Music from '/static/images/mdi_music.png'
 import Volume from '/static/images/Vector (3).png'
 
@@ -13,6 +13,7 @@ export default function SongSwitcher( { title }: SongSwitcherProps ) {
    const sfxBtnId = useId();
    const radioId = useId();
    const dispatch = useAppDispatch();
+   const {musicType} = useAppSelector((state)=>state.music)
    const changeSongTypeHandler = (e: ChangeEvent<HTMLInputElement>  ) => {
        const value = +e.currentTarget.value;
       
@@ -43,9 +44,9 @@ export default function SongSwitcher( { title }: SongSwitcherProps ) {
                   defaultChecked={true}
                />
                <label
-                  className="block p-2.5 font-semibold cursor-pointer !bg-[#0714BD] rounded-lg  md:flex md:justify-center"
+                  className={`block p-2.5 font-semibold cursor-pointer ${musicType === 'music' ? '!bg-[#0714BD]' : ''}  rounded-lg  md:flex md:justify-center`}
                   htmlFor={musicBtnId}
-               > <span><img src={Music} className="mr-2"/> </span>  MUSIC
+                  > <span><img src={Music} className="mr-2"/> </span>  MUSIC
                </label>
             </div>
             <div className="flex-1 ">
@@ -58,7 +59,7 @@ export default function SongSwitcher( { title }: SongSwitcherProps ) {
                   onClick={(e : any)=>{changeSongTypeHandler(e)}}
                />
                <label
-                  className="block p-2.5 font-semibold cursor-pointer border border-[#999999] rounded-lg ml-2 text-[#999999]  md:flex md:justify-center"
+                  className={`block p-2.5 font-semibold cursor-pointer ${musicType === 'sfx' ? '!bg-[#0714BD] text-white' : 'text-[#999999]'} border border-[#999999] rounded-lg ml-2   md:flex md:justify-center`}
                   htmlFor={sfxBtnId}
                > <span><img src={Volume} className="mr-2"/> </span> SFX
                </label>
