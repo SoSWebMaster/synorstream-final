@@ -50,7 +50,7 @@ const NewPlayer = () => {
          }
          // console.log( records );
       } catch (e) {
-         console.error("unable to fetch songs!!!");
+         console.error("unable to fetch songs!!!",e);
       }
    }, [setSongs, songType, filterCategories, search, isLoading]);
 

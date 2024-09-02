@@ -13,15 +13,11 @@ const UpdatePlan = () => {
     const navigate = useNavigate();
     const {plain_Id}=useAppSelector(state=>state.music);
     useEffect(() => {
-        // Function to fetch pricing data from the API
         fetchPricingData();
       }, []);
-      console.log(plain_Id,"plain_Idplain_Idplain_Id")
       const fetchPricingData = async () => {
         try {
           const response = await axiosInstance.get(endPoints.pricing);
-  
-          console.log(response.data);
           if(response?.data){
            const data = response?.data.data;
            setPricingData(data);
@@ -30,7 +26,6 @@ const UpdatePlan = () => {
             toast.error(`${error}`);
         }
       };
-      console.log(pricingData,"pricingDatapricingData")
 
    return (
       <>

@@ -12,10 +12,14 @@ import RoyalitySection from "../components/royalitySection/royalitySection";
 import bgImage from '../../public/static/images/Website-Background.png'
 import { useAppSelector } from "../store/index";
 import Player from "../components/player/Player";
+import { useEffect } from "react";
 const  Home=()=> {
 
-   const {musicType} = useAppSelector((state) => state.music);
+   const {musicType , songType} = useAppSelector((state) => state.music);
+   useEffect(()=>{
 
+   },[musicType])
+   console.log(musicType,"musicTypemusicType")
    return (
       <>
          <div className="" style={{ backgroundImage: `url(${bgImage})` }}>
@@ -47,7 +51,7 @@ const  Home=()=> {
             <div>
                <FooterComponent />
             </div>
-            {musicType === 'music' && <Player/>}
+            {!songType  && <Player/>}
          </div>
       </>
    );

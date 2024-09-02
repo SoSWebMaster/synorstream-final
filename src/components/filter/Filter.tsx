@@ -22,8 +22,7 @@ export default function Filter( { className }: FilterProps ) {
    const categoryRef = useRef<HTMLDivElement>( null );
    const handleOnChange=()=>{
       if( !categoryRef.current ) return
-      const categoryCheckboxes = categoryRef?.current.querySelectorAll( "input[type='checkbox']" );
-      console.log(categoryCheckboxes,"Hello World")
+      // const categoryCheckboxes = categoryRef?.current.querySelectorAll( "input[type='checkbox']" );
    }
    const updatefilterhandler = useCallback(() => {
       if( !categoryRef.current ) return

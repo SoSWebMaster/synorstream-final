@@ -81,7 +81,6 @@ const style = {
     };
 
     const selectPlan = async (planId:number,m_price:number,y_price:number) => {
-      console.log(planId,"planId")
       dispatch(updatePlainId(planId));
       dispatch(updatePlainMonthlyPrice(m_price))
       dispatch(updatePlainAnnualPrice(null))
@@ -207,7 +206,7 @@ const style = {
                            className="cursor-pointer text-[#FB8A2E] w-3 "
                         />
                      </div>
-                     <p className="text-[#A8A8A8] text-[10px] ml-5 mt-3">
+                     <p className="text-[#A8A8A8] text-[9px] ml-5 mt-3 h-6 w-40 ">
                         {item}
                      </p>
                   </div>

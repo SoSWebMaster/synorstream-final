@@ -36,7 +36,6 @@ const SubmitMusicComponent = () => {
    const { errors } = formState;
 
    const onSubmitData = async (data:ContactProp) => {
-    console.log(data,"dataaaaaaa")
       setisLoading(true);
       const captchaValue = recaptcha?.current.getValue();
       if (!captchaValue) {
@@ -47,7 +46,6 @@ const SubmitMusicComponent = () => {
             const response = await axiosInstance.post(
                endPoints?.submit_music_api,data
             );
-            console.log(response,"responseresponseresponseresponse")
             if (response.status === 200) {
                setisLoading(false);
                toast.success(`${response.data.response}`);
@@ -67,7 +65,7 @@ const SubmitMusicComponent = () => {
    return (
       <div>
          <div>
-            <p className="text-[28px]">Contact Us</p>
+            <p className="text-[28px]">INTERESTED IN SUBMITTING MUSIC TO BE A PART OF OUR CATALOG? SUBMIT MUSIC BELOW!</p>
             <form onSubmit={handleSubmit(onSubmitData)}>
                <Box sx={{ marginTop: 2 }}>
                   <Controller

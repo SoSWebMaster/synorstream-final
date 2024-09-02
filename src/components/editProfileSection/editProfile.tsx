@@ -7,6 +7,7 @@ import "./profilePage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
+import DashboardComponent2 from "../dashboad2";
 
 const EditProfile = () => {
     const [contactDetails, setContactDetails] = useState({
@@ -42,7 +43,6 @@ const EditProfile = () => {
       const fetchUserData = async () => {
          try {
             const response = await axiosInstance.get(endPoints.profile);
-            console.log(response?.data,"response")
             setContactDetails((prevDetails: any) => ({
                 ...prevDetails, 
                 id: userData?.user?.id || null,
@@ -53,7 +53,6 @@ const EditProfile = () => {
                 vat: "",
                 billing: ""
             }));
-         
             setUserData(response?.data)
          } catch (error) {
             console.error("Error fetching user data:", error);
@@ -92,7 +91,6 @@ const EditProfile = () => {
 };
 
 const onSubmitData= async ()=>{
-    console.log(contactDetails, "contactDetails");
     try {
         const result = await axiosInstance.post(endPoints.update_profile,contactDetails);
         if(result?.data){
@@ -116,31 +114,32 @@ const onSubmitData= async ()=>{
    }
 
    return (
-      <div className="p-10">
+    <DashboardComponent2>
+      <div className="p-10 bg-[url('/static/images/Website-Background.png')] !h-full">
          <h1 className="text-[28px] font-bold">My Profile</h1>
-            <div className=" w-full ">
+            <div className="w-full ">
                 <div className=" w-[500px] p-6">
-                <div className="flex justify-between  mb-6">
+                <div className="flex justify-between mb-6">
                     <p className="text-[22px] font-semibold">Full Name</p>
                     <h2 className="text-[18px] font-medium">{userData?.user?.name}</h2>
                 </div>
-                <div className="flex justify-between  mb-6">
+                <div className="flex justify-between mb-6">
                     <p className="text-[22px] font-semibold">Email</p>
                     <p className="text-[18px] font-medium">{userData?.user?.email}</p>
                 </div>
-                <div className="flex justify-between  mb-6">
+                <div className="flex justify-between mb-6">
                     <p className="text-[22px] font-semibold">Password</p>
                     <p className="text-[18px] font-medium">**************</p>
                 </div>
-                <div className="flex justify-between  mb-6">
+                <div className="flex justify-between mb-6">
                     <p className="text-[22px] font-semibold">Company </p>
                     <p className="text-[18px] font-medium">Company (Optional)</p>
                 </div>
-                <div className="flex justify-between  mb-6">
+                <div className="flex justify-between mb-6">
                     <p className="text-[22px] font-semibold">VAT Number</p>
                     <p className="text-[18px] font-medium">VAT Number (Optional)</p>
                 </div>
-                <div className="flex justify-between  mb-6">
+                <div className="flex justify-between mb-6">
                     <p className="text-[22px] font-semibold">Billing Address</p>
                     <p className="text-[18px] font-medium">Billing Address (Optional)</p>
                 </div>
@@ -358,6 +357,7 @@ const onSubmitData= async ()=>{
                </Modal>
             )}
       </div>
+      </DashboardComponent2>
    );
 }
 

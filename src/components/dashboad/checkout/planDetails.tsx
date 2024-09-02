@@ -9,8 +9,6 @@ import { Divider } from "@mui/material";
 
 const PlanDetails = ({features, plan_name}) => {
 
-
-  // console.log(parsedData?.length,"features")
   const stripHtmlTags = (htmlString: string) => {
     const div = document.createElement('div')
     div.innerHTML = htmlString
@@ -39,7 +37,7 @@ const PlanDetails = ({features, plan_name}) => {
             </div>
             <div>
                <div className="flex mt-10 ">
-                  <img src={Tick} />
+                  <img src={Tick} className="w-16 h-16"/>
                   <div  className="ml-6">
                      <p className="font-bold">Acceptance Payment Method</p>
                      <div className="flex items-center mt-3">
@@ -53,11 +51,11 @@ const PlanDetails = ({features, plan_name}) => {
                <Divider className="!mt-4  !bg-[#FB8A2E]"/>
 
                <div className="flex mt-6 ">
-                  <img src={Tick} />
+                  <img src={Tick} className="w-16 h-16"/>
                   <div  className="ml-6">
                      <p className="font-bold">7 day free trial</p>
                      <div className="flex items-center mt-3">
-                     <p className="font-bold text-[#BBBBBB]">Try Sync or Stream Risk Free</p>
+                     <p className="font-bold text-[#BBBBBB]">Try Sync Or Stream Risk Free</p>
                      </div>
                   </div>
               
@@ -65,7 +63,7 @@ const PlanDetails = ({features, plan_name}) => {
                <Divider className="!mt-4  !bg-[#FB8A2E]"/>
 
                <div className="flex mt-6 ">
-                  <img src={Tick} />
+                  <img src={Tick} className="w-16 h-16"/>
                   <div  className="ml-6">
                      <p className="font-bold">Secure payment</p>
                      <div className="flex items-center mt-3">

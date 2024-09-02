@@ -29,9 +29,7 @@ const SignUpTextFieldsComponent = () => {
    const {plain_Id,plain_MonthlyPrice,plain_AnnualPrice}=useAppSelector(state=>state.music)
    const handleClickShowPassword = () => setShowPassword(show => !show);
    const handleClickShowPassword2 = () => setShowPassword2(show => !show);
-   console.log(plain_Id,"vplain_Id")
    const  p_type = plain_MonthlyPrice ? 0 : 1;
-   console.log("................>>>>>>>>"+p_type+"........<<<<<");
    const handleSubmit = async (event: React.FormEvent) => {
       event.preventDefault();
 

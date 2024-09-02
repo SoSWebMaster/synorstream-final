@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { updatePlainAnnualPrice, updatePlainId, updatePlainMonthlyPrice } from "../../../store/music-store";
 import { useAppDispatch } from "../../../store";
+import './stripe.scss';
 // import { useAppSelector } from "../../../store";
 
 
@@ -62,9 +63,9 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
       vat:null,
       billing:null
    })
+   
    const dispatch=useAppDispatch()
    useEffect(() => {
-      console.log("Hello World from useEffewct")
       setCircularLoader(true);
     fetchData();
    },[clientSecret]);
@@ -72,8 +73,6 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
 
    const handleSubmit = useCallback(
       async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
-         console.log(cardHolderName,"cardHolderNamecardHolderNamecardHolderName")
-         console.log(additionalInfo,"additionalInfoadditionalInfoadditionalInfo")
          event.preventDefault();
          if (!stripe || !elements) {
             return;
@@ -100,9 +99,6 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
          }
        
          if (paymentIntent.status === PaymentStatus.SUCCEEDED) {
-         //  console.log('payment_intent' , paymentIntent,cardHolderName);
-            console.log(cardHolderName,"cardHolderNamecardHolderNamecardHolderName")
-            console.log(additionalInfo,"additionalInfoadditionalInfoadditionalInfo")
           try {
             const response = await axiosInstance.post(endPoints.submit_payment, {
                paymentMethod: paymentIntent.payment_method,
@@ -177,9 +173,9 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
   };
   // @ts-ignore
   const handleCardName=(e)=>{
-   console.log(e,"dfdsfds")
    setCardHolderName(e.target.value)
   }
+  
 
    return (
       <form onSubmit={handleSubmit}>
@@ -264,10 +260,7 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
                      },
                   }}
                />
-               <PaymentElement
-                  className="payment-element"
-                  data-testid="phone-input"
-               />
+          <PaymentElement className="payment-element" />
                <p className="font-semibold text-[22px] text-[#BBBBBB] mb-4">
                   Add Invoice Info
                </p>

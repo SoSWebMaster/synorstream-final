@@ -51,7 +51,6 @@ const ChangeBillingDetail=({handleClose})=>{
          // setMessage(error.message);
          setIsLoading(false);
      } else if (setupIntent && setupIntent.status === "succeeded") {
-       console.log(setupIntent);
        const newObj={ payment_method: setupIntent.payment_method}
        // call post api (add_payment_method_api) from backend and pass setup-intent init (return paymentMethod form setupIntent )
        try{
@@ -59,7 +58,6 @@ const ChangeBillingDetail=({handleClose})=>{
          setMessage("Payment method updated successfully!");
          setIsLoading(false);
          handleClose1();
-         console.log(resp,"resp")
        }catch(err){
           setIsLoading(false);
           handleClose1();

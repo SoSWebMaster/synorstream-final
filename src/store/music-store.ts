@@ -51,7 +51,7 @@ const initialState: MusicState = {
    search: '',
    musicType:'music',
    isLoading:false,
-   sideBar:'browse',
+   sideBar:'/browse',
    playListFilter:'',
    playLists:[],
    single_page:'',

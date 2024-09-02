@@ -41,7 +41,7 @@ const LoginTextFieldsComponent = () => {
             if(result?.payload?.data?.link==="/dashboard"){
                setIsLoading(false)
                toast.success("Welcome to dashboard");
-               navigate(link); 
+               navigate('/browse'); 
             }
             else{
                setIsLoading(false)
@@ -84,10 +84,12 @@ const LoginTextFieldsComponent = () => {
                   name='password'
                   onChange={inputValues}
                />
-               <div className="flex items-center justify-center mt-3 ">
+               <br/>
+               <br/>
+               {/* <div className="flex items-center justify-center mt-3 ">
                   <p className="2xl:mr-[180px] xl:mr-[120px] lg:mr-[100px]"> <Switch defaultChecked className="" style={{ color: 'white' }}   /> Remember me</p>
                   <p className="">Recover Password</p>
-               </div>
+               </div> */}
                <Button className="!border !border-white !text-white !rounded-lg 2xl:!w-[35%] xl:!w-[48%] lg:!w-[54%]  !mt-5 h-[55px]" variant="outlined" onClick={loginButton}>Login </Button>
             </form>
          </div>

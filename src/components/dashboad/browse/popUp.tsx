@@ -24,6 +24,8 @@ const style = {
     pt: 2,
     px: 4,
     pb: 3,
+    height:"auto"
+    
 };
 
 interface PlaylistPopUpProps {
@@ -76,18 +78,16 @@ const PlaylistPopUp: React.FC<PlaylistPopUpProps> = ({ open, setOpenModalState, 
             <Modal
                 open={open}
                 onClose={handleClose}
+                className=""
             >
-                <Box sx={style}>
+                <Box sx={style}  >
                     <button
                         className="flex items-center justify-end w-full text-white"
                         onClick={handleClose}
                     >
                         <FontAwesomeIcon icon={faXmark} className="text-[25px]" />
                     </button>
-
-                    <ScrollMenuComponent>
                         <PlayListCard onSelect={handleSelect} onClose={handleClose} />
-                    </ScrollMenuComponent>
                 </Box>
             </Modal>
         </div>

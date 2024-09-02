@@ -17,7 +17,7 @@ const MusicSection2 = () => {
    const fetchSongs = async () => {
       try {
          const response = await axiosInstance.get(endPoints?.fetch_latest_songs);
-
+         console.log(response,"New Relasesss")
          const records = response?.data;
          if (records) {
             setSongs(records);

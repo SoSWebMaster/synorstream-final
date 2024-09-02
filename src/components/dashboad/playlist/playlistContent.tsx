@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PlayListCard from "./playListCards";
-import ModalComponent from "../modalComponent";
+import ModalComponent from "../../dashboad2/modalComponent";
 
 const PlayListContent=()=>{
     const [openModal, setOpenModal] = React.useState(Boolean);

@@ -8,11 +8,30 @@
    import FooterComponent from "../../footer/footer";
    import bgImage from '../../../../public/static/images/Website-Background.png'
    import { useAppSelector } from "../../../store";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, colors } from "@mui/material";
+import { toast } from "react-toastify";
    const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK || "");
 
    const appearance: Appearance = {
       theme: "stripe",
+      variables: {
+         colorPrimary: '#0570de',
+         colorBackground: '#ffffff',
+         colorText: '#30313d',
+         colorDanger: '#df1b41',
+         fontFamily: 'Ideal Sans, system-ui, sans-serif',
+ 
+         // Other styling options
+       },
+       rules: {
+         '.TermsText': {
+            // Additional styles for Stripe Elements
+             fontSize: '0px',
+            display:'none',
+            color:"transparent"
+            
+          },
+       }
    };
 
    const backendUrl = import.meta.env.VITE_STRIPE_PK_AIRCODE_URL;
@@ -42,15 +61,11 @@ import { CircularProgress } from "@mui/material";
                })
                .catch((err) => {
                   console.log(err);
+                  toast.error(`${err}`)
                });
          
             
       }, [plain_AnnualPrice,plain_MonthlyPrice]);
-
-   
-
-
-      // const options: StripeElementsOptions = { clientSecret, appearance };
       const options: StripeElementsOptions=useMemo(
          ()=>({clientSecret,appearance}),
          [clientSecret]
@@ -58,7 +73,6 @@ import { CircularProgress } from "@mui/material";
       if (!clientSecret) {
          return null;
       }
-       console.log(clientSecret,"clientSecretv")
 
       return (
          

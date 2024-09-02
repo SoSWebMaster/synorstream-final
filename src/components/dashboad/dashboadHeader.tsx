@@ -21,7 +21,6 @@ const DashboadHeader = () => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const urlSegments = currentUrl.split('/');
-    console.log(urlSegments[3],"urlSegmentsurlSegments")
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };

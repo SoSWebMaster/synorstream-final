@@ -102,16 +102,13 @@ export default function SongItem({ id, name, artis_name, flt_name, thumb, audio,
    }, [currentSongId], afterSongLoaded);
    const downloadFIle = (url:any, id:any ) => {
     if(success){
-       console.log(id,"Downloading");
        setSOngId(id);
-       console.log(songId,"songId inside");
        const fileName=url?.split('/')?.pop();
        if (!fileName) {
            toast.error('File could not be determined.');
            console.error('File name could not be determined.');
            return;
        }
-       console.log(fileName);
        download(url, name)
        toast.info('Downloading Started...');
 

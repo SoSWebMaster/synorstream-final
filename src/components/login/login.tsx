@@ -13,9 +13,9 @@ const LoginForm=()=>{
                     <a className="">
                         <img src={logo} alt="Logo" className='2xl:w-[290px] xl:w-[220px] lg:w-[180px] 2xl:h-[42px] xl:h-[32px]' />
                     </a>
-                    <p className='text-[14px] mt-5 lg:ml-40 md:ml-20 relative z-10'>
+                    <p className='text-[14px] mt-5 lg:ml-40 md:ml-20 relative z-10 flex flex-col '>
                         Don't have an account? 
-                        <span className='text-[14px] font-bold !pl-1'>
+                        <span className='text-[16px] font-bold !pl-1 mt-2'>
                             <Link to='/pricing'> Sign up!</Link> 
                         </span>
                     </p>

@@ -7,7 +7,7 @@ import Twitch from "/static/images/twitch.png";
 
 export const musicSFXLinks = [
    {name:'Login', links:'/login'},
-   {name:'Browse', links:'/dashboard'},
+   {name:'Browse', links:'/browse'},
    {name:'Pricing', links:'/pricing'},
    {name:'Submit Music', links:'/submit_music'},
 ];

@@ -7,9 +7,14 @@
     text-align: center;
   }
 
-  .payment-element {
+
+  .payment-element  {
     margin-bottom: 24px;
   }
+ .payment-element  .p-Grid .p-GridCell  .TermsText {
+    display: none !important;
+  }
+
 
   button {
     display: block;

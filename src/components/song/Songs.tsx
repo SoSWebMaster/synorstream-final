@@ -7,7 +7,6 @@ import {SongInterface} from './songTypes'
 import axiosInstance from '../../services/axiosConfig/axiosConfigSimple';
 import { endPoints } from '../../services/constants/endPoint';
 import { CircularProgress } from '@mui/material';
-import useAxios from '../../services/axiosConfig/axiosConfig';
 const perPage = 8;
 
 interface SongsProps {
@@ -21,43 +20,15 @@ export default function Songs({ className }: SongsProps ) {
    const [hasError, setHasError] = useState( false );
    const [currentPage, setCurrentPage] = useState( 1 );
    const [currentCount, setCurrentCount] = useState( 0 );
-   const { songType, filterCategories, search,single_page,playLists,playListFilter } = useAppSelector( state => state.music );
-   const { success,user } = useAppSelector( state => state.auth );
+   const { songType, filterCategories, search,single_page,playListFilter } = useAppSelector( state => state.music );
+   const { success } = useAppSelector( state => state.auth );
    const dispatch = useAppDispatch();
-   const axiosInstanceAuth=useAxios();
 
    const fetchSongs = useCallback( async () => {
       setHasError( false );
       setIsLoading( true );
       try{
-         let response;
-         if(success && user?.id && single_page==='playlist' ){
-           const pageName= playLists?.find((item)=>item?.name==playListFilter)
-             response = await axiosInstanceAuth.post( endPoints?.fetch_data2, {
-               post: songType,
-               page: currentPage,
-               single_page: single_page ,
-               categories: filterCategories,
-               per_page: perPage,
-               user:  user?.id,
-               search,
-               page_name:pageName?.id
-            });
-         }
-         else if(single_page==='favorites'){
-            response = await axiosInstanceAuth.post( endPoints?.fetch_data_favorites, {
-               post: songType,
-               page: currentPage,
-               single_page: single_page ,
-               categories: filterCategories,
-               per_page: perPage,
-               user:  user?.id,
-               search,
-               page_name:single_page
-            });
-         }
-         else{
-            response = await axiosInstance.post( endPoints?.fetch_music_json, {
+         const  response = await axiosInstance.post( endPoints?.fetch_music_json, {
                post: songType,
                page: currentPage,
                single_page: "staging2.syncorstream.com",
@@ -67,7 +38,6 @@ export default function Songs({ className }: SongsProps ) {
                search,
                source:'react'
             });
-         }
             const result = response;
             const records = result?.data?.records;
         

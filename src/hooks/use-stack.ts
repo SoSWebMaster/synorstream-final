@@ -1,15 +1,20 @@
-import { useState, useEffect, useRef, MutableRefObject } from "react";
+import { useState, useEffect, useRef, MutableRefObject, useCallback } from "react";
 import { callStack } from "../util/util";
+
 
 export default function useStack(): [boolean, MutableRefObject<null | Function> ] {
    const [isCurrentStackLoaded, setIsCurrentStackLoaded] = useState( false );
    const nextStackFn = useRef<null | Function>( null );
-   const stackCallback = ( nextFn: Function ) => {
-      setIsCurrentStackLoaded(true);
+
+   const stackCallback = useCallback(( nextFn: Function ) => {
+      setIsCurrentStackLoaded( true );
+
       nextStackFn.current = nextFn;
-   };
+   }, [nextStackFn]);
+
    useEffect(() => {
       callStack.push( stackCallback );
    }, []);
+
    return [isCurrentStackLoaded, nextStackFn];
 }

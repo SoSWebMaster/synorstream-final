@@ -47,7 +47,6 @@ const ProfilePage = () => {
     const handleSave = async () => {
         try {
             const result =  await axiosInstance.post(endPoints.update_profile, { name, email, profile_info: profileInfo });
-            console.log(result);
 
             setUserData({ ...userData, name, email, profile_info: profileInfo });
             setIsEditing(false);

@@ -37,16 +37,24 @@ class CallStack {
    constructor() {
       this.stack = [];
    }
-
-   push( callback: Function ) {
    
+   push( callback: Function ) {
       this.stack.push( callback );
-      this.execute();
-      // if( this.isFirstCall ) {
-      //    this.isFirstCall = false;
-      
-      // }
+
+      if( this.isFirstCall ) {
+         this.isFirstCall = false;
+         this.execute();
+      }
    }
+   // push( callback: Function ) {
+   
+   //    this.stack.push( callback );
+   //    this.execute();
+   //    // if( this.isFirstCall ) {
+   //    //    this.isFirstCall = false;
+      
+   //    // }
+   // }
 
    execute() {
       if( this.stack.length > 0 ) {
@@ -59,7 +67,6 @@ class CallStack {
    }
 
    empty() {
-      console.log("Hello from empity stack")
       this.stack = [];
    }
 }
