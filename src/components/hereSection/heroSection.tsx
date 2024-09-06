@@ -1,14 +1,14 @@
 import { Button } from '@mui/material';
 import NewPlayer from '../newPlayer/newPlayer';
 import { useAppSelector } from '../../store';
-import { useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useEffect, forwardRef } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
 interface HeroSectionProps {
     scrollToSectionRef: React.RefObject<HTMLDivElement>;
 }
 
-const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(({ scrollToSectionRef }, ref) => {
+const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(({ scrollToSectionRef }) => {
     const { isLoading } = useAppSelector((state: any) => state.music);
 
     const scrollToFilter = () => {

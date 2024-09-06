@@ -1,9 +1,6 @@
-import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import Songs from "../../song/Songs";
-import { useAppSelector } from "../../../store";
-import { useAppDispatch } from "../../../store";
+import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { useAppSelector, useAppDispatch } from "../../../store";
 import { updatePlayListFilter } from "../../../store/music-store";
-import useAxios from "../../../services/axiosConfig/axiosConfig";
 import { useEffect, useState } from "react";
 import { SongInterface } from "../../song/songTypes";
 import SongItem from "../../song/SongItem";
@@ -18,11 +15,10 @@ const perPage = 8;
 const SinglePlayList2 = () => {
     const { id } = useParams();
     const { user } = useAppSelector((state) => state.auth);
-    const { songType, filterCategories, search, playLists } = useAppSelector((state) => state.music);
+    const { songType, filterCategories, search, playLists = [] } = useAppSelector((state) => state.music);
 
-    const [selectedPlaylist, setSelectedPlaylist] = useState<string | ''>('');
+    const [selectedPlaylist, setSelectedPlaylist] = useState<string>('');
     const [songs, setSongs] = useState<SongInterface[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [fetchingSong, setFetchingSong] = useState(false);
     const axios = axiosInstance();
 
@@ -33,7 +29,6 @@ const SinglePlayList2 = () => {
     }, [selectedPlaylist]); // Fetch songs whenever the selected playlist changes
 
     const fetchSongs = async () => {
-        setIsLoading(true);
         setFetchingSong(true);
         try {
             const response = await axios.post(endPoints?.fetch_data2, {
@@ -47,17 +42,15 @@ const SinglePlayList2 = () => {
                 page_name: id,
             });
             setSongs(response?.data?.records);
-            setIsLoading(false);
             setFetchingSong(false);
         } catch (e) {
             console.error("Unable to fetch songs!!!", e);
-            setIsLoading(false);
             setFetchingSong(false);
         }
     };
 
-    const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-        const playlistName = event.target.value as string;
+    const handleChange = (event: SelectChangeEvent<string>) => {
+        const playlistName = event.target.value;
         setSelectedPlaylist(playlistName);
         dispatch(updatePlayListFilter(playlistName));
     };
@@ -108,7 +101,7 @@ const SinglePlayList2 = () => {
                                 onChange={handleChange}
                                 label="Playlists"
                             >
-                                {playLists?.length > 0 &&
+                                {playLists.length > 0 &&
                                     playLists.map((item, index) => (
                                         <MenuItem
                                             key={`${index} + ${item?.name}`}
@@ -125,7 +118,7 @@ const SinglePlayList2 = () => {
                             <CircularProgress color="warning" size={40} className="ml-4" />
                         ) : (
                             songs?.length > 0 ? (
-                                songs.map((song, index) => (
+                                songs.map((song) => (
                                     <SongItem key={song.id} {...song} />
                                 ))
                             ) : (

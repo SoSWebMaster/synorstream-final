@@ -15,7 +15,7 @@ import Player from "../components/player/Player";
 const Home = () => {
    const filterRef = useRef<HTMLDivElement>(null);
 
-   const { musicType, songType } = useAppSelector((state) => state.music);
+   const {  songType } = useAppSelector((state) => state.music);
 
    return (
       <>
