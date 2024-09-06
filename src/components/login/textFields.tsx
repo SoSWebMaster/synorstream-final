@@ -9,9 +9,10 @@ import { userLogin } from "../../store/authSlice";
 import { useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import React from "react";
+import { AppDispatch } from "../../store"; // Import your AppDispatch type
 
 const LoginTextFieldsComponent = () => {
-   const dispatch = useDispatch();
+   const dispatch = useDispatch<AppDispatch>(); // Type the dispatch function
    const navigate = useNavigate();
    const [showPassword, setShowPassword] = React.useState(false);
    const [isLoading, setIsLoading] = React.useState(false);
@@ -32,10 +33,12 @@ const LoginTextFieldsComponent = () => {
 
    const loginButton = async () => {
       setIsLoading(true);
-      dispatch(userLogin(loginDetail)).then((result: any) => {
-         const link = result?.payload?.data?.link;
-         if (result?.payload?.data?.link) {
-            setIsLoading(false);
+      try {
+         const resultAction = await dispatch(userLogin(loginDetail));
+         const result = resultAction as { payload?: any }; // Explicitly type the resultAction
+
+         const link = result.payload?.data?.link;
+         if (link) {
             if (link === "/dashboard") {
                toast.success("Welcome to dashboard");
                navigate('/browse');
@@ -43,7 +46,11 @@ const LoginTextFieldsComponent = () => {
                navigate(link);
             }
          }
-     });
+      } catch (error) {
+         console.error("Login failed:", error);
+      } finally {
+         setIsLoading(false);
+      }
    };
 
    return (
