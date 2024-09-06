@@ -66,7 +66,6 @@ export default function WaveForm(
          progressColor: "rgb(8, 22, 191)",
          waveColor: "rgba(255, 255, 255, 1)",
          fillParent: true,
-         backend:"WebAudio" 
       });
 
       instance.on( "ready", () => {
@@ -115,7 +114,7 @@ export default function WaveForm(
       setWaveInstance( instance );
       if( typeof getInstance === "function" ) getInstance( instance );
       return () => instance.destroy();
-   }, [musicType,nextSongFn]);
+   }, [nextSongFn]);
 
 
    // update duration when new position seek
@@ -134,7 +133,7 @@ export default function WaveForm(
    
 
     
-   }, [currentDurationSeek,play]);
+   }, [currentDurationSeek]);
 
 
    // toggle play pause state

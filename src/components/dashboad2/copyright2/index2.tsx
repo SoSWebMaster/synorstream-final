@@ -9,6 +9,7 @@ const CopyrightComponent2 = () => {
                   <h1 className="text-[48px] font-medium ">
                      Copyright Clearance
                   </h1>
+                  <div className="w-3/4 px-4 py-2 mt-2 rounded-lg bg-black/50">
                   <p className="text-[20px] mt-2">
                      Unlock the beats you love with peace of mind! Get your
                      copyright clearance right here <br /> and keep the music
@@ -17,6 +18,7 @@ const CopyrightComponent2 = () => {
                      <br /> Join the harmony of hassle-free music licensing
                      today!
                   </p>
+                  </div>
                </div>
 
                <AccordionComponent2 />

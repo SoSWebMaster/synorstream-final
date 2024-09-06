@@ -10,7 +10,7 @@ export default function useStack(): [boolean, MutableRefObject<null | Function> 
       setIsCurrentStackLoaded( true );
 
       nextStackFn.current = nextFn;
-   }, [nextStackFn]);
+   }, []);
 
    useEffect(() => {
       callStack.push( stackCallback );

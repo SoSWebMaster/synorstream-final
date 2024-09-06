@@ -32,11 +32,11 @@ const FavoritesComponent2 = () => {
                post: songType,
                page: currentPage,
                single_page: "favorites",
-               categories: filterCategories,
+               categories: filterCategories?.split(','),
                per_page: perPage,
                user: user?.id,
                search,
-               page_name: single_page,
+               page_name: 'favorites',
             }
          );
          const records = response?.data?.records;
@@ -71,7 +71,10 @@ const FavoritesComponent2 = () => {
                <div className="flex min-h-screen gap-6 mb-20 text-white bg-black/50 md:p-5 !bg-[url('/static/images/Website-Background.png')] !h-full">
                   <Filter className=" md:w-1/6 md:sticky md:top-0" />
                   <div className="md:w-5/6">
-                     <SongItem key={songs.id} {...songs} />
+                     {/* <SongItem key={songs.id} {...songs} /> */}
+                     {songs.map((song, index) => (
+                           <SongItem key={song.id} {...song} />
+                        ))}
                   </div>
                </div>
             ) : (

@@ -99,7 +99,7 @@ const NewPlayer = () => {
             coverflowEffect={{
                rotate: 1,
                stretch: 390,
-               depth: 10,
+               depth: 150,
                modifier: 1,
                slideShadows: true,
             }}

@@ -63,7 +63,7 @@ export default function Filter( { className }: FilterProps ) {
          <div className="relative">
             <div className="space-y-3 !hidden md:!block bg-[#131313] md:bg-transparent p-3 md:p-0" ref={filterRef}>
                <SongSwitcher title={'FILTER BY'} />
-               <div ref={categoryRef} onChange={handleOnChange}>
+               <div ref={categoryRef} onChange={handleOnChange} className="max-h-[240px] overflow-y-auto scrollbar-hide">
                   { /* @ts-ignore */}
                   { songType === 0 && <CategoryFilter categories={musicFilterInfo} /> }
                   { /* @ts-ignore */}

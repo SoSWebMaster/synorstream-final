@@ -1,8 +1,8 @@
-import { useId, ChangeEvent } from "react";
+import { useId, ChangeEvent, useEffect } from "react";
 import { updateMusicType, updateSongType } from "../../store/music-store";
 import { useAppDispatch, useAppSelector } from "../../store";
-import Music from '/static/images/mdi_music.png'
-import Volume from '/static/images/Vector (3).png'
+import Music from '/static/images/mdi_music.png';
+import Volume from '/static/images/Vector (3).png';
 
 interface SongSwitcherProps {
    title: string,
@@ -13,19 +13,23 @@ export default function SongSwitcher( { title }: SongSwitcherProps ) {
    const sfxBtnId = useId();
    const radioId = useId();
    const dispatch = useAppDispatch();
-   const {musicType} = useAppSelector((state)=>state.music)
-   const changeSongTypeHandler = (e: ChangeEvent<HTMLInputElement>  ) => {
-       const value = +e.currentTarget.value;
-      
-      
-      if( value === 0 ){
-         dispatch( updateSongType( value ) );
-         dispatch(updateMusicType('music'))
-      
+   const { musicType } = useAppSelector((state) => state.music);
+
+   useEffect(() => {
+      if (!musicType) {
+         dispatch(updateMusicType('music'));
       }
-      else{
-         dispatch(updateSongType( value ) );
-         dispatch(updateMusicType('sfx'))
+   }, [musicType, dispatch]);
+
+   const changeSongTypeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+      const value = +e.currentTarget.value;
+
+      if (value === 0) {
+         dispatch(updateSongType(value));
+         dispatch(updateMusicType('music'));
+      } else {
+         dispatch(updateSongType(value));
+         dispatch(updateMusicType('sfx'));
       }
    };
 
@@ -40,13 +44,14 @@ export default function SongSwitcher( { title }: SongSwitcherProps ) {
                   type="radio"
                   value="0"
                   name={radioId}
-                  onClick={(e : any)=>{changeSongTypeHandler(e)}}
+                  onClick={(e: any) => { changeSongTypeHandler(e); }}
                   defaultChecked={true}
                />
                <label
-                  className={`block p-2.5 font-semibold cursor-pointer ${musicType === 'music' ? '!bg-[#0714BD]' : ''}  rounded-lg  md:flex md:justify-center`}
+                  className={`block p-2.5 font-semibold cursor-pointer ${musicType === 'music' ? '!bg-[#0714BD] text-white' : 'text-[#999999]'} border border-[#999999] rounded-lg md:flex md:justify-center`}
                   htmlFor={musicBtnId}
-                  > <span><img src={Music} className="mr-2"/> </span>  MUSIC
+               >
+                  <span><img src={Music} className="mr-2" /></span> MUSIC
                </label>
             </div>
             <div className="flex-1 ">
@@ -56,15 +61,16 @@ export default function SongSwitcher( { title }: SongSwitcherProps ) {
                   type="radio"
                   value="1"
                   name={radioId}
-                  onClick={(e : any)=>{changeSongTypeHandler(e)}}
+                  onClick={(e: any) => { changeSongTypeHandler(e); }}
                />
                <label
-                  className={`block p-2.5 font-semibold cursor-pointer ${musicType === 'sfx' ? '!bg-[#0714BD] text-white' : 'text-[#999999]'} border border-[#999999] rounded-lg ml-2   md:flex md:justify-center`}
+                  className={`block p-2.5 font-semibold cursor-pointer ${musicType === 'sfx' ? '!bg-[#0714BD] text-white' : 'text-[#999999]'} border border-[#999999] rounded-lg ml-2 md:flex md:justify-center`}
                   htmlFor={sfxBtnId}
-               > <span><img src={Volume} className="mr-2"/> </span> SFX
+               >
+                  <span><img src={Volume} className="mr-2" /></span> SFX
                </label>
             </div>
          </div>
       </div>
-   )
+   );
 }
