@@ -49,6 +49,9 @@ function PlayerContent() {
       };
    }
 
+
+   console.log(currentSong)
+
    if (!currentSong) return <></>;
 
    return (
