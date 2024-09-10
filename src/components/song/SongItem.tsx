@@ -351,6 +351,14 @@ import {
    faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import {
+   updateAllSongs,
+   updateFirstSongId,
+   updateCurrentSongId,
+   updateIsPlaying,
+   updateCurrentDuration,
+   updateCurrentSong,
+} from "../../store/music-store.ts";
 
 const formatTime = (time: number) => {
    const minutes = Math.floor(time / 60);
@@ -361,7 +369,7 @@ const formatTime = (time: number) => {
 const SongItem: React.FC<{
    song: any;
    isPlaying: boolean;
-   onPlay: (audio: HTMLAudioElement) => void;
+   onPlay: (audio: any) => void;
    onPause: () => void;
 }> = ({ song, isPlaying, onPlay, onPause }) => {
    const [isLoading, setIsLoading] = useState(false);
@@ -372,7 +380,7 @@ const SongItem: React.FC<{
    const cateElRef = useRef<HTMLSpanElement>(null);
    const audioRef = useRef<HTMLAudioElement | null>(null);
    const descriptionRef = useRef<HTMLSpanElement>(null);
-   const { single_page } = useAppSelector((state) => state.music);
+   const { single_page, currentSongId } = useAppSelector((state) => state.music);
    const { success } = useAppSelector((state) => state.auth);
    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
    const [songId, setSOngId] = useState<number | null>(null);
@@ -383,6 +391,7 @@ const SongItem: React.FC<{
    const navigate = useNavigate();
    const { download } = useDownloader();
    const [toggleSimSongs, setToggleSimSongs] = useState<boolean | null>(null);
+   const dispatch = useAppDispatch();
 
    const setOpenModalState = () => {
       setOpenModal(true);
@@ -396,13 +405,16 @@ const SongItem: React.FC<{
    useEffect(() => {
       const updateTime = () => {
          if (audioRef.current) {
-            setCurrentTime(audioRef.current.currentTime);
+            const time = audioRef.current.currentTime;
+            setCurrentTime(time);
+            dispatch(updateCurrentDuration(time));
          }
       };
 
       const handleLoadedMetadata = () => {
          if (audioRef.current) {
-            setDuration(audioRef.current.duration);
+            const newDuration = audioRef.current.duration;
+            setDuration(newDuration);
          }
       };
 
@@ -416,6 +428,9 @@ const SongItem: React.FC<{
          }
 
          const currentAudio = audioRef.current;
+         dispatch(updateCurrentSong(song)); // Update the Redux state with the current song
+         dispatch(updateCurrentSongId(song.id)); // Update the current song ID
+         dispatch(updateIsPlaying(true));
          setIsLoading(true);
 
          currentAudio.oncanplaythrough = () => {
@@ -434,6 +449,7 @@ const SongItem: React.FC<{
       } else {
          if (audioRef.current) {
             audioRef.current.pause();
+            dispatch(updateIsPlaying(false));
             onPause();
          }
       }
@@ -447,6 +463,27 @@ const SongItem: React.FC<{
          }
       };
    }, [isPlaying]);
+
+   useEffect(() => {
+    if (currentSongId === id) {
+       // Play the song if the currentSongId matches this song's id
+       if (audioRef.current) {
+          audioRef.current.play().then(() => onPlay(audioRef.current));
+       } else {
+          audioRef.current = new Audio(audio);
+          const currentAudio = audioRef.current;
+          currentAudio.play().then(() => onPlay(currentAudio));
+       }
+       dispatch(updateIsPlaying(true));
+    } else {
+       // Pause the song if the currentSongId does not match this song's id
+       if (audioRef.current) {
+          audioRef.current.pause();
+          dispatch(updateIsPlaying(false));
+          onPause();
+       }
+    }
+ }, [currentSongId]);
 
    const options = ["Favorites", "Playlist"];
 
@@ -502,48 +539,24 @@ const SongItem: React.FC<{
       }
    };
 
+   console.log('currentsongID in songitem',currentSongId)
+
    return (
       <div className="border-2 border-white p-4 rounded-md">
-         <div className="flex items-center gap-6">
+         <div className="flex items-start gap-6">
             <img
                className="w-16 h-16 object-cover rounded-md"
                src={thumb}
                alt={name}
             />
-            <div className="flex flex-col flex-grow">
-               <h3 className="text-xl text-white truncate">{name}</h3>
-               <span
-                  className="text-white/50 text-sm truncate"
-                  dangerouslySetInnerHTML={{ __html: artis_name }}
-               />
-            </div>
-            <p className={`text-white/70 !hidden md:!flex items-start `}>
-               <span
-                  className={`mr-2 grow ellipsis ellipsis-2 flex justify-start `}
-                  ref={cateElRef}
-               >
-                  {Array.isArray(flt_name) ? (
-                     Array.from(new Set(flt_name)).join(", ")
-                  ) : (
-                     <span className="">{flt_name}</span>
-                  )}{" "}
-               </span>
-               <FontAwesomeIcon
-                  icon={faCirclePlus}
-                  className="w-8 text-xl cursor-pointer shrink-0"
-                  onClick={() => {
-                     if (!cateElRef.current) return;
-                     cateElRef.current.classList.toggle("full-line");
-                  }}
-               />
-            </p>
-            <div className="flex items-center gap-4">
+
+            <div className="flex items-center px-2 gap-4 mt-2">
                {isLoading ? (
                   <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
                ) : isPlaying ? (
                   <PauseIcon
                      className="w-6 h-6 text-white cursor-pointer"
-                     onClick={() => audioRef.current?.pause()}
+                     onClick={() => onPause()}
                   />
                ) : (
                   <PlayIcon
@@ -551,71 +564,101 @@ const SongItem: React.FC<{
                      onClick={() => onPlay(audioRef.current!)}
                   />
                )}
-               <div className="flex items-center gap-2">
+            </div>
+
+            <div className="flex flex-col flex-grow w-full max-w-[350px]">
+               <h3 className="text-xl text-white truncate">{name}</h3>
+               <span
+                  className="text-white/50 text-sm truncate"
+                  dangerouslySetInnerHTML={{ __html: artis_name }}
+               />
+            </div>
+            <div className="flex items-start justify-between w-[450px] ml-4">
+               <p className={`text-white/70 !hidden md:!flex items-start`}>
+                  <span
+                     className={`mr-2 grow ellipsis ellipsis-2 flex justify-start`}
+                     ref={cateElRef}
+                  >
+                     {Array.isArray(flt_name) ? (
+                        Array.from(new Set(flt_name)).join(", ")
+                     ) : (
+                        <span>{flt_name}</span>
+                     )}
+                  </span>
+                  <FontAwesomeIcon
+                     icon={faCirclePlus}
+                     className="w-8 text-xl cursor-pointer shrink-0"
+                     onClick={() => {
+                        if (!cateElRef.current) return;
+                        cateElRef.current.classList.toggle("full-line");
+                     }}
+                  />
+               </p>
+               <div className="ml-3 flex items-center gap-2">
                   <span className="text-white/70">
                      {formatTime(currentTime)}
                   </span>
                   <span className="text-white/70">/</span>
                   <span className="text-white/70">{formatTime(duration)}</span>
                </div>
-               <div className="flex items-center gap-3">
-                  <SocialShare url={audio} />
-                  <SongInfo songId={id} />
-                  <button onClick={() => setToggleSimSongs((prev) => !prev)}>
-                     <FontAwesomeIcon
-                        icon={faMusic}
-                        className="text-white text-xl"
-                     />
-                  </button>
+            </div>
+            <div className="flex items-center gap-3 ml-4">
+               <SocialShare url={audio} />
+               <SongInfo songId={id} />
+               <button onClick={() => setToggleSimSongs((prev) => !prev)}>
                   <FontAwesomeIcon
-                     icon={faDownload}
-                     onClick={() => downloadFIle(audio, id)} // Assuming downloadFIle is defined
-                     className="text-white text-xl cursor-pointer"
+                     icon={faMusic}
+                     className="text-white text-xl"
                   />
-                  {success && single_page !== "favourites" && (
-                     <>
-                        <IconButton
-                           aria-label="more"
-                           id="long-button"
-                           aria-controls={open ? "long-menu" : undefined}
-                           aria-expanded={open ? "true" : undefined}
-                           aria-haspopup="true"
-                           onClick={handleClick}
-                           className="text-white"
-                        >
-                           <MoreVertIcon />
-                        </IconButton>
-                        <Menu
-                           id="long-menu"
-                           MenuListProps={{
-                              "aria-labelledby": "long-button",
-                           }}
-                           anchorEl={anchorEl}
-                           open={open}
-                           onClose={handleClose}
-                        >
-                           {options.map((option) => (
-                              <MenuItem
-                                 key={option}
-                                 onClick={() => handleClose(option, id)}
-                                 className="text-xs"
-                              >
-                                 <span className="mr-1">
-                                    {option === "Favorites" &&
-                                       DBStatus === "Added" && (
-                                          <FontAwesomeIcon
-                                             icon={faCheck}
-                                             className="mr-1 cursor-pointer"
-                                          />
-                                       )}
-                                 </span>
-                                 {option}
-                              </MenuItem>
-                           ))}
-                        </Menu>
-                     </>
-                  )}
-               </div>
+               </button>
+               <FontAwesomeIcon
+                  icon={faDownload}
+                  onClick={() => downloadFIle(audio, id)} // Assuming downloadFIle is defined
+                  className="text-white text-xl cursor-pointer"
+               />
+               {success && single_page !== "favourites" && (
+                  <>
+                     <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-controls={open ? "long-menu" : undefined}
+                        aria-expanded={open ? "true" : undefined}
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                        className="text-white"
+                     >
+                        <MoreVertIcon />
+                     </IconButton>
+                     <Menu
+                        id="long-menu"
+                        MenuListProps={{
+                           "aria-labelledby": "long-button",
+                        }}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                     >
+                        {options.map((option) => (
+                           <MenuItem
+                              key={option}
+                              onClick={() => handleClose(option, id)}
+                              className="text-xs"
+                           >
+                              <span className="mr-1">
+                                 {option === "Favorites" &&
+                                    DBStatus === "Added" && (
+                                       <FontAwesomeIcon
+                                          icon={faCheck}
+                                          className="mr-1 cursor-pointer"
+                                       />
+                                    )}
+                              </span>
+                              {option}
+                           </MenuItem>
+                        ))}
+                     </Menu>
+                  </>
+               )}
             </div>
          </div>
       </div>

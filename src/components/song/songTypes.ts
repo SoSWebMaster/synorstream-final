@@ -20,7 +20,7 @@ export interface SongInterface {
  export interface SongInterface2 {
     id?: number | string,
     name?: string,
-    artis_name?: string,
+    artis_name: string,
     thumb?: string,
     audio?: string | string[] | any,
     flt_name?: string[],

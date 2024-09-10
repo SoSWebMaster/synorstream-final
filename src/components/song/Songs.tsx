@@ -27,8 +27,14 @@ export default function Songs({ className }: SongsProps) {
    const [hasError, setHasError] = useState(false);
    const [currentPage, setCurrentPage] = useState(1);
    const [currentCount, setCurrentCount] = useState(0);
-   const { songType, filterCategories, search, single_page, playListFilter } =
-      useAppSelector((state) => state.music);
+   const {
+      songType,
+      filterCategories,
+      search,
+      single_page,
+      playListFilter,
+      isPlaying,
+   } = useAppSelector((state) => state.music);
    const { success } = useAppSelector((state) => state.auth);
    const dispatch = useAppDispatch();
 
@@ -56,7 +62,7 @@ export default function Songs({ className }: SongsProps) {
       }
    };
 
-   console.log('Current audio',currentAudio)
+   console.log("Current audio", currentAudio);
 
    const fetchSongs = useCallback(async () => {
       setHasError(false);
@@ -156,19 +162,14 @@ export default function Songs({ className }: SongsProps) {
 
    useEffect(() => {
       setCurrentPage(1);
-      // console.log( filterCategories.toString() );
    }, [songType, filterCategories]);
 
    let allSongs = {};
    let firstSongId: number | string | null = null;
 
    const items = songs.map((song, i) => {
-      // console.log(song,"songsong")
-      // saving first song ID because the way we saving all songs in a object with number as a key
-      // because of that it will automatically reorderd song object and we get all songs in sequence
-      // but we don't want that, what we want is the first song ID.
       if (i === 0) firstSongId = song.id;
-
+      console.log("FirstSongID", firstSongId);
       allSongs = { ...allSongs, [song.id]: song };
       return (
          <SongItem
@@ -181,7 +182,13 @@ export default function Songs({ className }: SongsProps) {
       );
    });
 
-   console.log("songs", songs);
+   useEffect(() => {
+      if (!isPlaying) {
+         handlePause();
+      }
+   }, [isPlaying]);
+
+   console.log("isPlaying redux", isPlaying);
 
    useEffect(() => {
       // console.log( allSongs );
