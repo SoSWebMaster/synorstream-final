@@ -44,6 +44,7 @@ const DashboadHeader = () => {
         dispatch(updateSearch(''));
         dispatch(updateSongType(0));
         dispatch({ type: 'LOGOUT' });
+        localStorage.removeItem('currentPlan')
     };
 
     return (

@@ -45,7 +45,7 @@ export default function Songs({ className }: SongsProps) {
       number | null
    >(null);
 
-   const handlePlay = (audio: HTMLAudioElement, songId: any) => {
+   const handlePlay = (audio: any, songId: any) => {
       if (currentAudio && currentAudio !== audio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
@@ -186,11 +186,11 @@ export default function Songs({ className }: SongsProps) {
       if (!isPlaying) {
          handlePause();
       }else{
-         currentAudio?.play()
+         handlePlay(currentAudio,currentPlayingSongId)
       }
    }, [isPlaying]);
 
-   console.log("isPlaying redux", isPlaying);
+  console.log('current song to check using player',currentAudio)
 
    useEffect(() => {
       // console.log( allSongs );

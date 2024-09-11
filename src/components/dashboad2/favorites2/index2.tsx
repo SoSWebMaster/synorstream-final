@@ -19,6 +19,31 @@ const FavoritesComponent2 = () => {
       (state) => state.music
    );
    const { user } = useAppSelector((state) => state.auth);
+
+   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
+      null
+   );
+   const [currentPlayingSongId, setCurrentPlayingSongId] = useState<
+      number | null
+   >(null);
+
+   const handlePlay = (audio: HTMLAudioElement, songId: any) => {
+      if (currentAudio && currentAudio !== audio) {
+         currentAudio.pause();
+         setCurrentPlayingSongId(null);
+      }
+
+      setCurrentAudio(audio);
+      setCurrentPlayingSongId(songId);
+   };
+
+   const handlePause = () => {
+      if (currentAudio) {
+         currentAudio.pause();
+         setCurrentPlayingSongId(null);
+      }
+   };
+
    useEffect(() => {
       fetchSongs();
    }, []);
@@ -32,15 +57,23 @@ const FavoritesComponent2 = () => {
                post: songType,
                page: currentPage,
                single_page: "favorites",
-               categories: filterCategories?.split(','),
+               categories: filterCategories ? filterCategories?.split(",") : [],
                per_page: perPage,
                user: user?.id,
                search,
-               page_name: 'favorites',
+               page_name: "favorites",
             }
          );
          const records = response?.data?.records;
-         setSongs(records);
+         let mappedArray = records.map((record) => ({
+            id: record.id,
+            audio: record.audio_mp3,
+            thumb: record.thumb,
+            name: record.name,
+            artis_name: record.artis_name,
+            flt_name: record.flt_name,
+         }));
+         setSongs(mappedArray);
          //   if( typeof result.data.count === "number" ) setCurrentCount( result.data.count );
 
          //   if( Array.isArray( records ) )  {
@@ -62,6 +95,21 @@ const FavoritesComponent2 = () => {
          setIsLoading(false);
       }
    };
+   let allSongs = {};
+
+   const items = songs.map((song, i) => {
+      allSongs = { ...allSongs, [song.id]: song };
+      return (
+         <SongItem
+            key={song.id}
+            song={song}
+            isPlaying={song.id === currentPlayingSongId}
+            onPlay={(audio) => handlePlay(audio, song.id)}
+            onPause={handlePause}
+         />
+      );
+   });
+
    return (
       <>
          <DashboardComponent2>
@@ -72,9 +120,7 @@ const FavoritesComponent2 = () => {
                   <Filter className=" md:w-1/6 md:sticky md:top-0" />
                   <div className="md:w-5/6">
                      {/* <SongItem key={songs.id} {...songs} /> */}
-                     {songs.map((song, index) => (
-                           <SongItem key={song.id} {...song} />
-                        ))}
+                     {items}
                   </div>
                </div>
             ) : (

@@ -46,6 +46,7 @@ const DashboadHeader2 = () => {
         dispatch(updateSearch(''));
         dispatch(updateSongType(0));
         dispatch({ type: 'LOGOUT' });
+        localStorage.removeItem('currentPlan')
         navigate('/')
         toast.success("Successfully logged out");
     };

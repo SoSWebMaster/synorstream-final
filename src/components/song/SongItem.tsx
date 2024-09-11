@@ -473,6 +473,7 @@ const SongItem: React.FC<{
          if (audioRef.current) {
             audioRef.current.pause();
             dispatch(updateIsPlaying(false));
+            audioRef.current.ontimeupdate = null;
             onPause();
          }
       }
@@ -562,7 +563,7 @@ const SongItem: React.FC<{
       }
    };
 
-   console.log("currentsongID in songitem", single_page);
+   // console.log("currentsongID in songitem", song);
 
    return (
       <div className="border-2 border-white p-4 rounded-md">
@@ -609,7 +610,7 @@ const SongItem: React.FC<{
                      />
                   </button>
                )}
-            <div className="flex items-start justify-between w-[450px] ml-4">
+            <div className="flex items-start justify-between ml-4">
                <p className={`text-white/70 !hidden md:!flex items-start`}>
                   <span
                      className={`mr-2 grow ellipsis ellipsis-2 flex justify-start`}

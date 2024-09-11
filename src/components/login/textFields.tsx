@@ -6,7 +6,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Button, CircularProgress } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { userLogin } from "../../store/authSlice";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import React from "react";
 import { AppDispatch } from "../../store"; // Import your AppDispatch type
@@ -17,19 +17,19 @@ const LoginTextFieldsComponent = () => {
    const [showPassword, setShowPassword] = React.useState(false);
    const [isLoading, setIsLoading] = React.useState(false);
    const [loginDetail, setLoginDetail] = React.useState({
-      email: '',
-      password: ''
+      email: "",
+      password: "",
    });
 
    const inputValues = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      setLoginDetail(prevState => ({
+      setLoginDetail((prevState) => ({
          ...prevState,
-         [name]: value
+         [name]: value,
       }));
    };
 
-   const handleClickShowPassword = () => setShowPassword(show => !show);
+   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
    const loginButton = async () => {
       setIsLoading(true);
@@ -38,10 +38,12 @@ const LoginTextFieldsComponent = () => {
          const result = resultAction as { payload?: any }; // Explicitly type the resultAction
 
          const link = result.payload?.data?.link;
+         localStorage.setItem("currentPan", result.payload?.data?.current_plan);
+
          if (link) {
             if (link === "/dashboard") {
                toast.success("Welcome to dashboard");
-               navigate('/browse');
+               navigate("/browse");
             } else {
                navigate(link);
             }
@@ -62,7 +64,7 @@ const LoginTextFieldsComponent = () => {
                sx={{ height: 70 }}
                value={loginDetail.email}
                onChange={inputValues}
-               name='email'
+               name="email"
             />
             <OutlinedInput
                className="!bg-white !rounded-lg !w-full mb-5"
@@ -70,21 +72,18 @@ const LoginTextFieldsComponent = () => {
                placeholder="Password"
                endAdornment={
                   <InputAdornment position="end">
-                     <IconButton
-                        onClick={handleClickShowPassword}
-                        edge="end"
-                     >
+                     <IconButton onClick={handleClickShowPassword} edge="end">
                         {showPassword ? <Visibility /> : <VisibilityOff />}
                      </IconButton>
                   </InputAdornment>
                }
                value={loginDetail.password}
-               name='password'
+               name="password"
                onChange={inputValues}
             />
             <Button
                className="!border !text-white !font-bold !rounded-lg !w-full h-[55px]"
-               style={{ backgroundColor: '#FB8A2E', borderColor: '#FB8A2E' }}
+               style={{ backgroundColor: "#FB8A2E", borderColor: "#FB8A2E" }}
                variant="outlined"
                onClick={loginButton}
                disabled={isLoading}
