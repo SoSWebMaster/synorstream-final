@@ -185,6 +185,8 @@ export default function Songs({ className }: SongsProps) {
    useEffect(() => {
       if (!isPlaying) {
          handlePause();
+      }else{
+         currentAudio?.play()
       }
    }, [isPlaying]);
 

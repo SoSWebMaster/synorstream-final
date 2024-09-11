@@ -331,7 +331,7 @@
 //    );
 // }
 import React, { useState, useRef, useEffect } from "react";
-import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
+import { PlayIcon, PauseIcon , ChevronDownIcon} from "@heroicons/react/20/solid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAppDispatch, useAppSelector } from "../../store/index.tsx";
 import IconButton from "@mui/material/IconButton";
@@ -358,7 +358,11 @@ import {
    updateIsPlaying,
    updateCurrentDuration,
    updateCurrentSong,
+   updateIsLoading
 } from "../../store/music-store.ts";
+import AltSongs from "./AltSongs.tsx";
+import SimilarSongs from "./SimilarSongs.tsx";
+import PlaylistPopUp from "../dashboad/browse/popUp.tsx";
 
 const formatTime = (time: number) => {
    const minutes = Math.floor(time / 60);
@@ -380,7 +384,9 @@ const SongItem: React.FC<{
    const cateElRef = useRef<HTMLSpanElement>(null);
    const audioRef = useRef<HTMLAudioElement | null>(null);
    const descriptionRef = useRef<HTMLSpanElement>(null);
-   const { single_page, currentSongId } = useAppSelector((state) => state.music);
+   const { single_page, currentSongId } = useAppSelector(
+      (state) => state.music
+   );
    const { success } = useAppSelector((state) => state.auth);
    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
    const [songId, setSOngId] = useState<number | null>(null);
@@ -391,6 +397,9 @@ const SongItem: React.FC<{
    const navigate = useNavigate();
    const { download } = useDownloader();
    const [toggleSimSongs, setToggleSimSongs] = useState<boolean | null>(null);
+   const [isAltAccordionActive, setIsAltAccordionActive] = useState(false);
+   const [toggleAltSongs, setToggleAltSongs] = useState<boolean | null>(null);
+
    const dispatch = useAppDispatch();
 
    const setOpenModalState = () => {
@@ -400,7 +409,17 @@ const SongItem: React.FC<{
       setOpenModal(false);
    };
 
-   const { id, audio, thumb, name, artis_name, flt_name } = song;
+   const {
+      id,
+      audio,
+      thumb,
+      name,
+      artis_name,
+      flt_name,
+      alt_yes_n: altSong,
+   } = song;
+
+   const hasAltSongs = altSong === 1 ? true : false;
 
    useEffect(() => {
       const updateTime = () => {
@@ -431,10 +450,12 @@ const SongItem: React.FC<{
          dispatch(updateCurrentSong(song)); // Update the Redux state with the current song
          dispatch(updateCurrentSongId(song.id)); // Update the current song ID
          dispatch(updateIsPlaying(true));
+         dispatch(updateIsLoading(true))
          setIsLoading(true);
 
          currentAudio.oncanplaythrough = () => {
             setIsLoading(false);
+            dispatch(updateIsLoading(false))
             currentAudio.play().then(() => {
                onPlay(currentAudio);
             });
@@ -442,6 +463,7 @@ const SongItem: React.FC<{
 
          currentAudio.onerror = () => {
             setIsLoading(false);
+            dispatch(updateIsLoading(false))
          };
 
          currentAudio.ontimeupdate = updateTime;
@@ -465,25 +487,25 @@ const SongItem: React.FC<{
    }, [isPlaying]);
 
    useEffect(() => {
-    if (currentSongId === id) {
-       // Play the song if the currentSongId matches this song's id
-       if (audioRef.current) {
-          audioRef.current.play().then(() => onPlay(audioRef.current));
-       } else {
-          audioRef.current = new Audio(audio);
-          const currentAudio = audioRef.current;
-          currentAudio.play().then(() => onPlay(currentAudio));
-       }
-       dispatch(updateIsPlaying(true));
-    } else {
-       // Pause the song if the currentSongId does not match this song's id
-       if (audioRef.current) {
-          audioRef.current.pause();
-          dispatch(updateIsPlaying(false));
-          onPause();
-       }
-    }
- }, [currentSongId]);
+      if (currentSongId === id) {
+         // Play the song if the currentSongId matches this song's id
+         if (audioRef.current) {
+            audioRef.current.play().then(() => onPlay(audioRef.current));
+         } else {
+            audioRef.current = new Audio(audio);
+            const currentAudio = audioRef.current;
+            currentAudio.play().then(() => onPlay(currentAudio));
+         }
+         dispatch(updateIsPlaying(true));
+      } else {
+         // Pause the song if the currentSongId does not match this song's id
+         if (audioRef.current) {
+            audioRef.current.pause();
+            dispatch(updateIsPlaying(false));
+            onPause();
+         }
+      }
+   }, [currentSongId]);
 
    const options = ["Favorites", "Playlist"];
 
@@ -539,7 +561,7 @@ const SongItem: React.FC<{
       }
    };
 
-   console.log('currentsongID in songitem',currentSongId)
+   console.log("currentsongID in songitem", single_page);
 
    return (
       <div className="border-2 border-white p-4 rounded-md">
@@ -572,7 +594,20 @@ const SongItem: React.FC<{
                   className="text-white/50 text-sm truncate"
                   dangerouslySetInnerHTML={{ __html: artis_name }}
                />
+               
             </div>
+            {hasAltSongs && (
+                  <button
+                     className="flex-shrink-0 p-2 rounded-full bg-primary-blue/40"
+                     onClick={() => setToggleAltSongs((state) => !state)}
+                  >
+                     <ChevronDownIcon
+                        className={`w-5 h-5 transition-transform duration-300${
+                           isAltAccordionActive ? " rotate-180" : ""
+                        }`}
+                     />
+                  </button>
+               )}
             <div className="flex items-start justify-between w-[450px] ml-4">
                <p className={`text-white/70 !hidden md:!flex items-start`}>
                   <span
@@ -625,9 +660,9 @@ const SongItem: React.FC<{
                         aria-expanded={open ? "true" : undefined}
                         aria-haspopup="true"
                         onClick={handleClick}
-                        className="text-white"
+                        // className="text-white"
                      >
-                        <MoreVertIcon />
+                        <MoreVertIcon className="text-white" />
                      </IconButton>
                      <Menu
                         id="long-menu"
@@ -661,6 +696,25 @@ const SongItem: React.FC<{
                )}
             </div>
          </div>
+         {hasAltSongs && (
+            <AltSongs
+               id={id}
+               artis_name={artis_name}
+               thumb={thumb}
+               toggle={toggleAltSongs}
+               isAccordionActive={setIsAltAccordionActive}
+            />
+         )}
+          <SimilarSongs id={id} name={name} toggle={toggleSimSongs} />
+
+          {openModal && (
+            <PlaylistPopUp
+               open={openModal}
+               setOpenModalState={setOpenModalState}
+               setCloseModalState={setCloseModalState}
+               songId={id}
+            />
+         )}
       </div>
    );
 };

@@ -58,6 +58,7 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
    const [circularLoader, setCircularLoader] = useState<boolean>(true);
    // const [switcher, setSwitcher] = useState<string>("btn1");
    const [cardHolderName,setCardHolderName]=useState('');
+   const [amount, setAmount] = useState(null)
    const [additionalInfo,setAdditionalInfo] = useState({
       company:null,
       vat:null,
@@ -153,6 +154,7 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
       const response = await axiosInstance.get(endPoints.current_plan);
       if(response?.data){
        setPLanDetails(response?.data?.data[0]);
+       setAmount(response?.data?.data[0].month_price)
        setisParsedFeature(JSON.parse(response?.data?.data[0]?.features))
        setCircularLoader(false)
       //  dispatch(updatePlainAnnualPrice(null))
@@ -356,7 +358,7 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
                
                <div className="flex justify-between">
                   <p className="font-semibold !text-[18px]">Total billed now:</p>
-                  <p className="font-semibold !text-[18px]">$0</p>
+                  <p className="font-semibold !text-[18px]">${amount}</p>
                </div>
                <p className="font-semibold !text-[18px] my-6"> Credit Card will be charged after 7 day free trial period ends.</p>
               

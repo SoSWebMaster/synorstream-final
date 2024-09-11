@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useAppSelector,useAppDispatch } from "../../store";
 import { updatePlainId, updateUserId } from "../../store/music-store";
 import { toast } from "react-toastify";
+import { store } from "../../store";
 
 
 const SignUpTextFieldsComponent = () => {
@@ -29,6 +30,7 @@ const SignUpTextFieldsComponent = () => {
    const {plain_Id,plain_MonthlyPrice,plain_AnnualPrice}=useAppSelector(state=>state.music)
    const handleClickShowPassword = () => setShowPassword(show => !show);
    const handleClickShowPassword2 = () => setShowPassword2(show => !show);
+   const { auth }  = store.getState()
    const  p_type = plain_MonthlyPrice ? 0 : 1;
    const handleSubmit = async (event: React.FormEvent) => {
       event.preventDefault();
@@ -52,9 +54,9 @@ const SignUpTextFieldsComponent = () => {
                toast.warning(`${response.data.msg}`)
             }
             else{
-               dispatch(updatePlainId(null))
+               // dispatch(updatePlainId(null))
                toast.success("Successfully Sign Up")
-               navigate('/login');
+               // navigate('/checkout');
             }
             // Handle successful signup
             // dispatch(updateUserId())

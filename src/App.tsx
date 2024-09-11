@@ -35,7 +35,9 @@ function App() {
                <Route path="/pricing" element={!redirect ? <PricingPage/>: <Navigate to='/browse'/>} /> 
                {/* <Route path='/browse' element={redirect ? <browsePage /> : <Navigate to="/login" />} /> */}
                {/* <Route path="/profile" element={<ProfilePage />} /> */}
-               <Route path="/checkout" element={!redirect && link==="/checkout" ? <Stripe />: <Navigate to='/login'/>}/>
+               {/* <Route path="/checkout" element={!redirect && link==="/checkout" ? <Stripe />: <Navigate to='/login'/>}/> */}
+               <Route path="/checkout" element={ <Stripe />}/>
+
 
                <Route path="/terms-conditions" element={<TermsConditionPage/>} /> 
                <Route path="/privacy-policy" element={<PrivacyPolicyPage/>} /> 

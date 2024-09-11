@@ -54,14 +54,14 @@ const DashboadHeader2 = () => {
         <>
             <div className='flex !items-center !justify-between 2xl:px-52 xl:px-36 lg:px-28 py-10'>
                 <img src={Logo} alt="logo" className='w-[290px] h-[42px] cursor-pointer' onClick={()=>navigate('/browse')}/>
-                <div className='flex justify-end w-full'>
+                <div className='flex items-center justify-end w-full'>
                     <p className='flex items-center justify-center cursor-pointer' onClick={()=>navigate('/browse')}>
-                        <span><img src={User} alt="user avatar" /></span> Welcome {user?.name}
+                         Welcome {user?.name}
                     </p>
                     {/* @ts-ignore  */}
 
                         <>
-                           <ExpandMoreIcon onClick={handleClick} className='mt-3 ml-2 cursor-pointer' />
+                           <ExpandMoreIcon onClick={handleClick} className=' ml-2 cursor-pointer' />
                            <Menu
                                id="fade-menu"
                                MenuListProps={{

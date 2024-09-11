@@ -28,6 +28,7 @@ function PlayerContent() {
       isPlaying,
       currentDuration,
       currentVolume,
+      isLoading
    } = useAppSelector((state) => state.music);
    const [isSongLoaded, setIsSongLoaded] = useState(false);
    const [waveInstance, setWaveInstance] = useState<null | WaveSurfer>(null);
@@ -60,7 +61,9 @@ function PlayerContent() {
 
    console.log('Current song id in player', currentSongId)
 
-   if (!currentSong) return <></>;
+   console.log('isLoading',isLoading)
+
+   if (!currentSong) return <></>;6
 
    return (
       <div className="fixed bottom-0 left-0 right-0 z-50 text-white bg-black">
@@ -180,6 +183,7 @@ function PlayerContent() {
             </div>
          </div>
       </div>
+
    );
 }
 

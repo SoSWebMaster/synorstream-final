@@ -30,10 +30,10 @@ const Home = () => {
                </div>
             </div>
             <div className="2xl:px-60 xl:px-32 lg:px-10">
-               {/* <MusicSection /> */}
+               <MusicSection />
             </div>
             <div className="2xl:px-60 xl:px-32 lg:px-10">
-               {/* <MusicSection2 /> */}
+               <MusicSection2 />
             </div>
             <div className="flex flex-col min-h-screen gap-6 mb-20 text-white bg-black/70 md:p-5 md:flex-row md:items-start">
                <div ref={filterRef} className="md:w-1/6 md:sticky md:top-0">
