@@ -471,9 +471,10 @@ const SongItem: React.FC<{
          currentAudio.onloadedmetadata = handleLoadedMetadata;
       } else {
          if (audioRef.current) {
-            audioRef.current.pause();
+            // audioRef.current.pause();
             dispatch(updateIsPlaying(false));
             audioRef.current.ontimeupdate = null;
+            setCurrentTime(0)
             onPause();
          }
       }
@@ -567,14 +568,14 @@ const SongItem: React.FC<{
 
    return (
       <div className="border-2 border-white p-4 rounded-md">
-         <div className="flex items-start gap-6">
+         <div className="flex items-center gap-6">
             <img
                className="w-16 h-16 object-cover rounded-md"
                src={thumb}
                alt={name}
             />
 
-            <div className="flex items-center px-2 gap-4 mt-2">
+            <div className="flex items-center  justify-center p-2 gap-4 ">
                {isLoading ? (
                   <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
                ) : isPlaying ? (
