@@ -32,7 +32,7 @@ export default function AltSong( { id, name, artis_name, thumb, audio, nextSongF
    return(
       <div className="grid grid-cols-[auto_1fr_1fr] gap-x-4 md:gap-x-6 items-center p-3 md:p-6 border-b border-white/10">
          <div>
-            {( ( !isPlaying || !isActive ) && isSongLoaded ) &&
+            {( ( !isPlaying || !isActive ) ) &&
                <PlayIcon className="w-5 h-5 cursor-pointer"
                   onClick={() => {
                      if( !isSongLoaded ) return
@@ -53,10 +53,10 @@ export default function AltSong( { id, name, artis_name, thumb, audio, nextSongF
                   }}
                />
             }
-            {!isSongLoaded && <div className="w-5 song-loading-spinner" />}
+            {/* {!isSongLoaded && <div className="w-5 song-loading-spinner" />} */}
          </div>
          <p className="ellipsis">{name}</p>
-         {isCurrentStackLoaded &&
+         {/* {isCurrentStackLoaded && */}
          <WaveForm
             audioUrl={audio}
             songId={id}
@@ -75,7 +75,7 @@ export default function AltSong( { id, name, artis_name, thumb, audio, nextSongF
                audio
             }}
          />
-         }
+         {/* } */}
          {!isCurrentStackLoaded && <span className="!hidden md:!block" />}
       </div>
    );

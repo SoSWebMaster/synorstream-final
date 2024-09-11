@@ -84,6 +84,9 @@ export default function AltSongs({ id, artis_name, thumb, toggle, isAccordionAct
       }
    }, [songs]);
 
+
+   console.log('Songs in altsongs',songs)
+
    return(
       <div>
          <ControlledAccordion

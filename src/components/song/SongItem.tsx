@@ -339,7 +339,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import useDownloader from "react-use-downloader";
-import axiosInstance from "../../services/axiosConfig/axiosConfigSimple.ts";
+import useAxios from "../../services/axiosConfig/axiosConfig.ts";
 import SocialShare from "./SocialShare.tsx";
 import SongInfo from "./SongInfo.tsx";
 import { endPoints } from "../../services/constants/endPoint.ts";
@@ -420,6 +420,7 @@ const SongItem: React.FC<{
    } = song;
 
    const hasAltSongs = altSong === 1 ? true : false;
+   const axiosInstance = useAxios();
 
    useEffect(() => {
       const updateTime = () => {
