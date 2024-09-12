@@ -1,82 +1,98 @@
-import { useState, useCallback } from "react";
-import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
-import WaveForm from "../waveform/waveForm.tsx";
-import {  updateCurrentSongId, updateIsPlaying } from "../../store/music-store.ts";
-import useStack from "../../hooks/use-stack.ts";
+import React, { useEffect, useRef } from "react";
 import WaveSurfer from "wavesurfer.js";
-import { useAppDispatch,useAppSelector } from "../../store/index.tsx";
+import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 
-interface AltSongProps{
-   id: number | string,
-   name: string,
-   artis_name: string,
-   thumb: string,
-   audio: string,
-   nextSongFn: CallableFunction,
+interface AltSongProps {
+   id: number | string;
+   name: string;
+   artis_name: string;
+   thumb: string;
+   audio: string;
+   isAltPlaying: boolean;
+   onPlayPause: () => void;
+   isPlaying: boolean
 }
 
-export default function AltSong( { id, name, artis_name, thumb, audio, nextSongFn }: AltSongProps ) {
-   const { currentSongId, isPlaying } = useAppSelector( state => state.music );
-   const dispatch = useAppDispatch();
-   const isActive = currentSongId === id;
-   const [isSongLoaded, setIsSongLoaded] = useState( false );
-   const [waveInstance, setWaveInstance] = useState<null | WaveSurfer>( null );
-   const [isCurrentStackLoaded, nextStackFnRef] = useStack();
+const AltSong: React.FC<AltSongProps> = ({
+   id,
+   name,
+   artis_name,
+   thumb,
+   audio,
+   isAltPlaying,
+   onPlayPause,
+   isPlaying
+}) => {
+   const waveformRef = useRef<HTMLDivElement | null>(null);
+   const waveSurferRef = useRef<WaveSurfer | null>(null);
+   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-   const afterSongLoaded = useCallback(() => {
-      setIsSongLoaded( true );
+   useEffect(() => {
+      if (waveformRef.current) {
+         const wavesurfer = WaveSurfer.create({
+            container: `#waveform-${id}`,
+            url: audio,
+            height: 40,
+            progressColor: "rgb(8, 22, 191)",
+            waveColor: "rgba(255, 255, 255, 1)",
+            fillParent: true,
+         });
 
-      if( typeof nextStackFnRef.current === "function" ) nextStackFnRef.current();
-   }, []);
+         waveSurferRef.current = wavesurfer;
+         wavesurfer.load(audio);
 
-   return(
+         return () => {
+            if (waveSurferRef.current) {
+               waveSurferRef.current.destroy();
+               waveSurferRef.current = null;
+            }
+         };
+      }
+   }, [audio]);
+
+   useEffect(() => {
+      if (isAltPlaying) {
+         audioRef.current?.play();
+         if (waveSurferRef.current) {
+            waveSurferRef.current.play();
+         }
+      } else {
+         audioRef.current?.pause();
+         if (waveSurferRef.current) {
+            waveSurferRef.current.pause();
+         }
+      }
+   }, [isAltPlaying]);
+
+   useEffect(() => {
+      if(isPlaying){
+         audioRef.current?.pause();
+         if (waveSurferRef.current) {
+            waveSurferRef.current.pause();
+         }
+      }
+   }, [isPlaying])
+
+   return (
       <div className="grid grid-cols-[auto_1fr_1fr] gap-x-4 md:gap-x-6 items-center p-3 md:p-6 border-b border-white/10">
          <div>
-            {( ( !isPlaying || !isActive ) ) &&
-               <PlayIcon className="w-5 h-5 cursor-pointer"
-                  onClick={() => {
-                     if( !isSongLoaded ) return
-
-                     if( waveInstance ) waveInstance.play()
-
-                     dispatch( updateIsPlaying( true ) );
-                     dispatch( updateCurrentSongId( id ) );
-                  }}
-               />
-            }
-            {( isPlaying && isActive ) &&
-               <PauseIcon className="w-5 h-5 cursor-pointer"
-                  onClick={() => {
-                     if( waveInstance ) waveInstance.pause()
-
-                     dispatch( updateIsPlaying( false ) )
-                  }}
-               />
-            }
-            {/* {!isSongLoaded && <div className="w-5 song-loading-spinner" />} */}
+            <button onClick={onPlayPause}>
+               {isAltPlaying ? (
+                  <PauseIcon className="w-5 h-5 cursor-pointer" />
+               ) : (
+                  <PlayIcon className="w-5 h-5 cursor-pointer" />
+               )}
+            </button>
          </div>
          <p className="ellipsis">{name}</p>
-         {/* {isCurrentStackLoaded && */}
-         <WaveForm
-            audioUrl={audio}
-            songId={id}
-            isActive={isActive}
-            play={isActive && isPlaying}
-            setDuration={() => {}}
-            updateTime={true}
-            nextSongFn={nextSongFn}
-            afterSongLoaded={() => afterSongLoaded()}
-            getInstance={setWaveInstance}
-            updateCurrentSongOnActive={{
-               id,
-               name,
-               artis_name,
-               thumb,
-               audio
-            }}
+         <div
+            id={`waveform-${id}`}
+            className="waveform-container"
+            ref={waveformRef}
          />
-         {/* } */}
-         {!isCurrentStackLoaded && <span className="!hidden md:!block" />}
+         <audio ref={audioRef} src={audio} preload="auto" />
       </div>
    );
-}
+};
+
+export default AltSong;

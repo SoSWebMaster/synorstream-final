@@ -59,9 +59,7 @@ function PlayerContent() {
       };
    }
 
-   console.log('Current song id in player', currentSongId)
-
-   console.log('isLoading',isLoading)
+   console.log('nextsong',nextSong)
 
    if (!currentSong) return <></>;6
 

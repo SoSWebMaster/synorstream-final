@@ -75,10 +75,14 @@ const PlayListCard: React.FC<PlayListCardProps> = ({
                      }
                   }}
                >
-                  <img src={Tracks[index % Tracks?.length]} />
+                  {/* <img src={Tracks[index % Tracks?.length]} /> */}
+                  <div className=" border-2 flex items-center justify-center border-gray-300 rounded-lg  text-gray-300 w-[100px] h-[100px] ">
+                     <p className="text-center" >{item?.name}</p>
+                  </div>
+
                   <div className="p-3">
-                     <p className="text-[20px] font-semibold">{item?.name}</p>
-                     <p className="text-[#9898A6] text-[12px]">
+                     <p className="text-[20px] font-semibold text-center">{item?.name}</p>
+                     <p className="text-[#9898A6] text-[12px] text-center">
                         {item?.tcount} Track
                      </p>
                   </div>

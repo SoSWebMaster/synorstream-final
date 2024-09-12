@@ -139,6 +139,8 @@ const SinglePlayList2 = () => {
          dispatch(updateFirstSongId(firstSongId));
    }, [songs]);
 
+   console.log('pllaylists in redux', playLists)
+
    return (
       <>
          <DashboardComponent2>

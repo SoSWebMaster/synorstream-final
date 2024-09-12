@@ -19,6 +19,7 @@ const FavoritesComponent2 = () => {
       (state) => state.music
    );
    const { user } = useAppSelector((state) => state.auth);
+   const [userTier, setUserTier] = useState<any>();
 
    const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
       null
@@ -45,6 +46,24 @@ const FavoritesComponent2 = () => {
    };
 
    useEffect(() => {
+      let tier = localStorage.getItem('currentPlan');
+      
+      setUserTier(tier);
+   }, []);
+
+   const returnTierAudio = (record: any) => {
+      if (userTier === '1') {
+         return record?.audio_aac;
+      } else if (userTier === '2') {
+         return record?.audio_mp3;
+      } else if (userTier === '3') {
+         return record?.audio_wav;
+      }
+
+      return null
+   };
+
+   useEffect(() => {
       fetchSongs();
    }, []);
    const fetchSongs = async () => {
@@ -67,7 +86,7 @@ const FavoritesComponent2 = () => {
          const records = response?.data?.records;
          let mappedArray = records.map((record) => ({
             id: record.id,
-            audio: record.audio_mp3,
+            audio: returnTierAudio(record),
             thumb: record.thumb,
             name: record.name,
             artis_name: record.artis_name,
@@ -109,6 +128,8 @@ const FavoritesComponent2 = () => {
          />
       );
    });
+
+   console.log('songs', songs)
 
    return (
       <>

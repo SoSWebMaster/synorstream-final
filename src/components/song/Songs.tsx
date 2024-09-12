@@ -45,7 +45,7 @@ export default function Songs({ className }: SongsProps) {
       number | null
    >(null);
 
-   const handlePlay = (audio: any, songId: any) => {
+   const handlePlay = (audio: HTMLAudioElement, songId: any) => {
       if (currentAudio && currentAudio !== audio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
@@ -61,6 +61,22 @@ export default function Songs({ className }: SongsProps) {
          setCurrentPlayingSongId(null);
       }
    };
+
+   // useEffect(() => {
+   //    // Find the audio element for the current playing song
+   //    const audioElement = document.getElementById(`audio-${currentPlayingSongId}`) as HTMLAudioElement | null;
+
+   //    if (isPlaying) {
+   //       if (audioElement) {
+   //          handlePlay(audioElement, currentPlayingSongId!);
+   //       } else {
+   //          // Optionally handle the case where audioElement is null
+   //          console.warn('Audio element not found');
+   //       }
+   //    } else {
+   //       handlePause();
+   //    }
+   // }, [isPlaying, currentPlayingSongId]);
 
    console.log("Current audio", currentAudio);
 
@@ -186,7 +202,7 @@ export default function Songs({ className }: SongsProps) {
       if (!isPlaying) {
          handlePause();
       }else{
-         handlePlay(currentAudio,currentPlayingSongId)
+         currentAudio?.play()
       }
    }, [isPlaying]);
 
