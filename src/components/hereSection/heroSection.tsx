@@ -40,10 +40,10 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(({ scrollToSect
                     <div>
                         <NewPlayer />
                     </div>
-                    <div className={`text-center ${!isLoading ? '!block' : '!hidden'}`}>
+                    {/* <div className={`text-center ${!isLoading ? '!block' : '!hidden'}`}>
                         <CircularProgress color="primary" size={40} />
                         <NewPlayer />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>
