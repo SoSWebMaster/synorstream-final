@@ -16,8 +16,8 @@ interface AltSongProps {
 const AltSong: React.FC<AltSongProps> = ({
    id,
    name,
-   artis_name,
-   thumb,
+   // artis_name,
+   // thumb,
    audio,
    isAltPlaying,
    onPlayPause,

@@ -38,7 +38,7 @@ const SimilarSong: React.FC<SimilarSongProps> = ({
    const waveSurferRef = useRef<WaveSurfer | null>(null);
    const audioRef = useRef<HTMLAudioElement | null>(null);
    const [loading, setLoading] = useState<boolean>(false);
-   const [songId, setSOngId] = useState<number | null>(null);
+   // const [songId, setSOngId] = useState<number | null>(null);
    const { success } = useAppSelector((state) => state.auth);
    const navigate = useNavigate();
    const axiosInstance = useAxios();
@@ -77,7 +77,7 @@ const SimilarSong: React.FC<SimilarSongProps> = ({
 
    const downloadFIle = (url: any, id: any, name: any) => {
       if (success) {
-         setSOngId(id);
+         // setSOngId(id);
          const fileName = url?.split("/")?.pop();
          if (!fileName) {
             toast.error("File could not be determined.");

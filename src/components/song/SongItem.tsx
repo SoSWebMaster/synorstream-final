@@ -24,8 +24,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import {
-   updateAllSongs,
-   updateFirstSongId,
+   // updateAllSongs,
+   // updateFirstSongId,
    updateCurrentSongId,
    updateIsPlaying,
    updateCurrentDuration,
@@ -58,13 +58,13 @@ const SongItem: React.FC<{
    const [DBStatus, setDBStatus] = useState("");
    const cateElRef = useRef<HTMLSpanElement>(null);
    const audioRef = useRef<HTMLAudioElement | null>(null);
-   const descriptionRef = useRef<HTMLSpanElement>(null);
-   const { single_page, currentSongId } = useAppSelector(
+   // const descriptionRef = useRef<HTMLSpanElement>(null);
+   const { single_page } = useAppSelector(
       (state) => state.music
    );
    const { success } = useAppSelector((state) => state.auth);
    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-   const [songId, setSOngId] = useState<number | null>(null);
+   // const [songId, setSOngId] = useState<number | null>(null);
    const open = Boolean(anchorEl);
    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
       setAnchorEl(event.currentTarget);
@@ -228,7 +228,7 @@ const SongItem: React.FC<{
 
    const downloadFIle = (url: any, id: any, name: any) => {
       if (success) {
-         setSOngId(id);
+         // setSOngId(id);
          const fileName = url?.split("/")?.pop();
          if (!fileName) {
             toast.error("File could not be determined.");

@@ -28,7 +28,7 @@ function PlayerContent() {
       isPlaying,
       currentDuration,
       currentVolume,
-      isLoading,
+      // isLoading,
       currentSongRef
    } = useAppSelector((state) => state.music);
    const [isSongLoaded, setIsSongLoaded] = useState(false);

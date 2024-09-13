@@ -24,7 +24,7 @@ import BillingDetail2 from './components/dashboad2/menus2/billingDetail/billingD
 import MyPlan2 from './components/dashboad2/menus2/myPlan/myPlan';
 import UpdatePlan2 from './components/dashboad2/menus2/updatePlan/updatePlan';
 function App() {
-   const {redirect,link} = useAppSelector((state) => state.auth); 
+   const {redirect} = useAppSelector((state) => state.auth); 
 
 
 
@@ -47,8 +47,8 @@ function App() {
                <Route path="/faq" element={<FaqPage/>} /> 
                <Route path="/contact" element={<ContactUsPage/>} /> 
                <Route path="/submit_music" element={<SubmitMusicPage/>} /> 
-               <Route path='/browse' element={<BrowseIndex /> } />
-               {/* <Route path='/browse' element={ redirect ? <BrowseIndex /> : <Navigate to='/pricing'/> } /> */}
+               {/* <Route path='/browse' element={<BrowseIndex /> } /> */}
+               <Route path='/browse' element={ redirect ? <BrowseIndex /> : <Navigate to='/pricing'/> } />
                <Route path='/copyright' element={ redirect ?  <CopyrightComponent2 /> : <Navigate to='/login'/> } />
                <Route path='/downlaod-history' element={ redirect ? <DownloadHistoryComponent /> : <Navigate to='/login'/> } />
                <Route path='/favourites' element={ redirect ?  <FavoritesComponent2 /> : <Navigate to='/login'/> } />

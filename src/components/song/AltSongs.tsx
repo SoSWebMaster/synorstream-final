@@ -14,7 +14,7 @@ import {
    useAccordionProvider,
 } from "@szhsin/react-accordion";
 import {
-   nextSong,
+   // nextSong,
    updateCurrentSongId,
    updateIsPlaying,
 } from "../../store/music-store";
@@ -42,8 +42,8 @@ export interface AltSongInterface {
 
 export default function AltSongs({
    id,
-   artis_name,
-   thumb,
+   // artis_name,
+   // thumb,
    toggle,
    isAccordionActive,
 }: AltSongsProps) {
@@ -74,7 +74,7 @@ export default function AltSongs({
       }
    };
 
-   const { isPlaying, currentSongRef  } = useAppSelector((state) => state.music);
+   const { isPlaying  } = useAppSelector((state) => state.music);
 
    const { toggle: accordionToggle } = accordionProviderValue;
 
@@ -100,19 +100,19 @@ export default function AltSongs({
       }
    }, [id]);
 
-   const nextAltSong = useCallback(
-      (currentId: string) => {
-         const currentIndex = songs.findIndex((song) => song.id === currentId);
-         const nextAltSong = songs[currentIndex + 1];
+   // const nextAltSong = useCallback(
+   //    (currentId: string) => {
+   //       const currentIndex = songs.findIndex((song) => song.id === currentId);
+   //       const nextAltSong = songs[currentIndex + 1];
 
-         if (currentIndex !== -1 && nextAltSong) {
-            dispatch(updateCurrentSongId(nextAltSong.id));
-         } else {
-            dispatch(nextSong());
-         }
-      },
-      [songs, currentSongId]
-   );
+   //       if (currentIndex !== -1 && nextAltSong) {
+   //          dispatch(updateCurrentSongId(nextAltSong.id));
+   //       } else {
+   //          dispatch(nextSong());
+   //       }
+   //    },
+   //    [songs, currentSongId]
+   // );
 
    useEffect(() => {
       if (toggle === null) return;

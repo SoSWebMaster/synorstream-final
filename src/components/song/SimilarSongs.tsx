@@ -136,7 +136,7 @@
 //       </div>
 //    )
 // }
-import axios from "axios";
+// import axios from "axios";
 import {
    useEffect,
    useState,
@@ -145,14 +145,14 @@ import {
    Dispatch,
    SetStateAction,
 } from "react";
-import AltSong from "./AltSong";
+// import AltSong from "./AltSong";
 import {
    ControlledAccordion,
    AccordionItem,
    useAccordionProvider,
 } from "@szhsin/react-accordion";
 import {
-   nextSong,
+   // nextSong,
    updateCurrentSongId,
    updateIsPlaying,
 } from "../../store/music-store";
@@ -162,9 +162,9 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import axiosInstance from "../../services/axiosConfig/axiosConfigSimple";
 import { endPoints } from "../../services/constants/endPoint";
 import SimilarSong from "./SimilarSong";
-const apiEndPoint = `${
-   import.meta.env.VITE_SYNC_OR_STREAM_BASE_URL
-}/alt_songs_json`;
+// const apiEndPoint = `${
+//    import.meta.env.VITE_SYNC_OR_STREAM_BASE_URL
+// }/alt_songs_json`;
 
 interface AltSongsProps {
    id: number | string;
@@ -186,10 +186,10 @@ export interface AltSongInterface {
 
 export default function SimilarSongs({
    id,
-   artis_name,
-   thumb,
+   // artis_name,
+   // thumb,
    toggle,
-   isAccordionActive,
+   // isAccordionActive,
    name
 }: AltSongsProps) {
    const accordionId = useId();
@@ -250,19 +250,19 @@ export default function SimilarSongs({
       }
    }, [id]);
 
-   const nextAltSong = useCallback(
-      (currentId: string) => {
-         const currentIndex = songs.findIndex((song) => song.id === currentId);
-         const nextAltSong = songs[currentIndex + 1];
+   // const nextAltSong = useCallback(
+   //    (currentId: string) => {
+   //       const currentIndex = songs.findIndex((song) => song.id === currentId);
+   //       const nextAltSong = songs[currentIndex + 1];
 
-         if (currentIndex !== -1 && nextAltSong) {
-            dispatch(updateCurrentSongId(nextAltSong.id));
-         } else {
-            dispatch(nextSong());
-         }
-      },
-      [songs, currentSongId]
-   );
+   //       if (currentIndex !== -1 && nextAltSong) {
+   //          dispatch(updateCurrentSongId(nextAltSong.id));
+   //       } else {
+   //          dispatch(nextSong());
+   //       }
+   //    },
+   //    [songs, currentSongId]
+   // );
 
    useEffect(() => {
       if (toggle === null) return;
