@@ -204,7 +204,7 @@ const SinglePlayList2 = () => {
                      </Select>
                   </FormControl>
                </Box>
-               <div className="w-6/6">
+               {/* <div className="w-6/6"> */}
                   {fetchingSong ? (
                      <CircularProgress
                         color="warning"
@@ -216,7 +216,7 @@ const SinglePlayList2 = () => {
                   ) : (
                      <div>No Songs Found..</div>
                   )}
-               </div>
+               {/* </div> */}
             </div>
             <Player />
          </DashboardComponent2>

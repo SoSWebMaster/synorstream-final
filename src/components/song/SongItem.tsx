@@ -35,6 +35,7 @@ import {
 import AltSongs from "./AltSongs.tsx";
 import SimilarSongs from "./SimilarSongs.tsx";
 import PlaylistPopUp from "../dashboad/browse/popUp.tsx";
+import { useLocation } from "react-router-dom";
 // @ts-ignore
 import { throttle } from "lodash";
 
@@ -95,6 +96,16 @@ const SongItem: React.FC<{
 
    const hasAltSongs = altSong === 1 ? true : false;
    const axiosInstance = useAxios();
+   const location = useLocation();
+   const pathname = location.pathname;
+
+   // Split pathname and extract segment
+   const pathSegments = pathname.split("/"); // Splits at '/'
+   const playlist = pathSegments[1]; 
+
+   const containerClassName = playlist === 'playlist'
+    ? 'flex items-center justify-between ml-4' // No max-width applied
+    : 'flex items-center max-w-[350px] justify-between ml-4'; // Max-width applied
 
    useEffect(() => {
       const updateTime = throttle(() => {
@@ -306,7 +317,7 @@ const SongItem: React.FC<{
                />
             </button>
             {/* )} */}
-            <div className="flex items-center max-w-[350px] overflow-hidden justify-between ml-4">
+            <div className={containerClassName}>
                <p className={`text-white/70 !hidden md:!flex items-center`}>
                   <span
                      className={`mr-2 grow ellipsis ellipsis-2 flex justify-start`}
