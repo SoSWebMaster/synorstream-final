@@ -34,6 +34,7 @@ interface MusicState {
    plain_AnnualPrice?: null | number,
    pageNameId?: null | number,
    userId?: null | number;
+   currentSongRef?: any
 }
 
 const initialState: MusicState = {
@@ -59,7 +60,8 @@ const initialState: MusicState = {
    plain_MonthlyPrice: null,
    plain_AnnualPrice: null,
    pageNameId: null,
-   userId: null
+   userId: null,
+   currentSongRef: null
 }
 
 export const musicSlice = createSlice({
@@ -168,6 +170,10 @@ export const musicSlice = createSlice({
       updateUserId: (state, action: PayloadAction<MusicState['userId']>) => {
          state.userId = action.payload;
       },
+
+      updateAudioRef: (state, action: PayloadAction<MusicState['currentSongRef']>) => {
+         state.currentSongRef = action.payload;
+      },
    }
 
 });
@@ -175,7 +181,7 @@ export const musicSlice = createSlice({
 export const {
    updateCurrentSongId, updateCurrentSongIdForPagination, updateCurrentSong, updateFirstSongId, updateIsPlaying, updateCurrentDuration, updateCurrentDurationSeek, updateAllSongs,
    nextSong, prevSong, updateIsLoading, updateCurrentVolume, updateSongType, updateFilterCategories, updateSearch, updateMusicType, updateSideBar, updatePlayListFilter,
-   updatePlayLists, updateSinglePage, updatePlainId, updatePlainMonthlyPrice, updatePlainAnnualPrice, updatePageNameId, updateUserId
+   updatePlayLists, updateSinglePage, updatePlainId, updatePlainMonthlyPrice, updatePlainAnnualPrice, updatePageNameId, updateUserId, updateAudioRef
 } = musicSlice.actions;
 
 

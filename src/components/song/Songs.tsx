@@ -7,6 +7,7 @@ import {
    updateIsPlaying,
    updateCurrentDuration,
    updateCurrentSong,
+   updateAudioRef
 } from "../../store/music-store";
 import { callStack } from "../../util/util";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -45,7 +46,12 @@ export default function Songs({ className }: SongsProps) {
       number | null
    >(null);
 
-   const handlePlay = (audio: HTMLAudioElement, songId: any) => {
+   const [anotherId, setAnotherID] = useState<
+      number | null
+   >(null);
+
+   const handlePlay = (audio: any, songId: any) => {
+      console.log('first')
       if (currentAudio && currentAudio !== audio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
@@ -53,12 +59,16 @@ export default function Songs({ className }: SongsProps) {
 
       setCurrentAudio(audio);
       setCurrentPlayingSongId(songId);
+      setAnotherID(songId)
+      dispatch(updateAudioRef(audio))
    };
 
    const handlePause = () => {
       if (currentAudio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
+         // setCurrentAudio(null);
+         dispatch(updateAudioRef(null))
       }
    };
 
@@ -180,6 +190,7 @@ export default function Songs({ className }: SongsProps) {
       setCurrentPage(1);
    }, [songType, filterCategories]);
 
+
    let allSongs = {};
    let firstSongId: number | string | null = null;
 
@@ -200,13 +211,19 @@ export default function Songs({ className }: SongsProps) {
 
    useEffect(() => {
       if (!isPlaying) {
-         handlePause();
-      }else{
-         currentAudio?.play()
+         handlePause()
+      } else {
+         // if (currentAudio) {
+         handlePlay(currentAudio, anotherId)
+         // }
+         // currentAudio?.play()
       }
+      // currentAudio?.play()
+
    }, [isPlaying]);
 
-  console.log('current song to check using player',currentAudio)
+
+   console.log('current song to check using player', currentAudio)
 
    useEffect(() => {
       // console.log( allSongs );

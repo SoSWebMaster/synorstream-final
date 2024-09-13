@@ -138,28 +138,29 @@ const SongItem: React.FC<{
             audioRef.current = new Audio(audio);
          }
 
-         const currentAudio = audioRef.current;
+        //  const currentAudio = audioRef.current;
          dispatch(updateCurrentSong(song)); // Update the Redux state with the current song
          dispatch(updateCurrentSongId(song.id)); // Update the current song ID
          dispatch(updateIsPlaying(true));
          dispatch(updateIsLoading(true));
          setIsLoading(true);
 
-         currentAudio.oncanplaythrough = () => {
+
+         audioRef.current.oncanplaythrough = () => {
             setIsLoading(false);
             dispatch(updateIsLoading(false));
-            currentAudio.play().then(() => {
-               onPlay(currentAudio);
+            audioRef.current && audioRef.current.play().then(() => {
+               onPlay(audioRef.current);
             });
          };
 
-         currentAudio.onerror = () => {
+         audioRef.current.onerror = () => {
             setIsLoading(false);
             dispatch(updateIsLoading(false));
          };
 
-         currentAudio.ontimeupdate = updateTime;
-         currentAudio.onloadedmetadata = handleLoadedMetadata;
+         audioRef.current.ontimeupdate = updateTime;
+         audioRef.current.onloadedmetadata = handleLoadedMetadata;
       } else {
          if (audioRef.current) {
             dispatch(updateIsPlaying(false));
@@ -172,7 +173,7 @@ const SongItem: React.FC<{
       return () => {
          if (audioRef.current) {
             audioRef.current.pause();
-            audioRef.current.src = ""; // Clean up src
+            // audioRef.current.src = ""; // Clean up src
             audioRef.current.ontimeupdate = null;
             audioRef.current.onloadedmetadata = null;
          }
@@ -181,26 +182,26 @@ const SongItem: React.FC<{
 
    console.log("Has Played ", hasPlayed30Seconds);
 
-   useEffect(() => {
-      if (currentSongId === id) {
-         // Play the song if the currentSongId matches this song's id
-         if (audioRef.current) {
-            audioRef.current.play().then(() => onPlay(audioRef.current));
-         } else {
-            audioRef.current = new Audio(audio);
-            const currentAudio = audioRef.current;
-            currentAudio.play().then(() => onPlay(currentAudio));
-         }
-         dispatch(updateIsPlaying(true));
-      } else {
-         // Pause the song if the currentSongId does not match this song's id
-         if (audioRef.current) {
-            audioRef.current.pause();
-            dispatch(updateIsPlaying(false));
-            onPause();
-         }
-      }
-   }, [currentSongId]);
+//    useEffect(() => {
+//       if (currentSongId === id) {
+//          // Play the song if the currentSongId matches this song's id
+//          if (audioRef.current) {
+//             audioRef.current.play().then(() => onPlay(audioRef.current));
+//          } else {
+//             audioRef.current = new Audio(audio);
+//             const currentAudio = audioRef.current;
+//             currentAudio.play().then(() => onPlay(currentAudio));
+//          }
+//          dispatch(updateIsPlaying(true));
+//       } else {
+//          // Pause the song if the currentSongId does not match this song's id
+//          if (audioRef.current) {
+//             audioRef.current.pause();
+//             dispatch(updateIsPlaying(false));
+//             onPause();
+//          }
+//       }
+//    }, [currentSongId]);
 
    const options = ["Favorites", "Playlist"];
 
@@ -291,7 +292,7 @@ const SongItem: React.FC<{
                ) : (
                   <PlayIcon
                      className="w-6 h-6 text-white cursor-pointer"
-                     onClick={() => onPlay(audioRef.current!)}
+                     onClick={() => onPlay(audioRef.current)}
                   />
                )}
             </div>

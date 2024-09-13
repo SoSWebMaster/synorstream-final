@@ -28,7 +28,8 @@ function PlayerContent() {
       isPlaying,
       currentDuration,
       currentVolume,
-      isLoading
+      isLoading,
+      currentSongRef
    } = useAppSelector((state) => state.music);
    const [isSongLoaded, setIsSongLoaded] = useState(false);
    const [waveInstance, setWaveInstance] = useState<null | WaveSurfer>(null);
@@ -59,7 +60,7 @@ function PlayerContent() {
       };
    }
 
-   console.log('nextsong',nextSong)
+   console.log('currentSong ref in player',currentSongRef)
 
    if (!currentSong) return <></>;6
 
@@ -112,6 +113,7 @@ function PlayerContent() {
                                     );
 
                                  if (waveInstance) waveInstance.play();
+                                 currentSongRef?.play()
 
                                  dispatch(updateIsPlaying(true));
                               }}
@@ -122,7 +124,7 @@ function PlayerContent() {
                               className="w-5 h-5 cursor-pointer"
                               onClick={() => {
                                  if (waveInstance) waveInstance.pause();
-
+                                 currentSongRef?.pause()
                                  dispatch(updateIsPlaying(false));
                               }}
                            />
