@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import NewPlayer from '../newPlayer/newPlayer';
 import { useAppSelector } from '../../store';
 import { useEffect, forwardRef } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
+// import CircularProgress from '@mui/material/CircularProgress';
 
 interface HeroSectionProps {
     scrollToSectionRef: React.RefObject<HTMLDivElement>;
