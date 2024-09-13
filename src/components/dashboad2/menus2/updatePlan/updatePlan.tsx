@@ -43,7 +43,7 @@ const UpdatePlan2 = () => {
                     </div>
                     <div>
                         <p className="text-[28px] font-semibold">{"$"+item?.month_price+"/ month"}</p>
-                        <p className="text-[18px] text-[#BBBBBB]">{`or billed at $${item?.year_price}/yearly ( 1 Free Month )`}</p>
+                        <p className="text-[18px] text-[#BBBBBB]">{`or billed at $${item?.year_price}/yearly ( ${item?.free_months_text})`}</p>
                     </div>
                     </div>
                 <div>

@@ -42,7 +42,7 @@ const SignUpComponent = () => {
                 
                <div className="flex items-center justify-end px-20 py-8 text-center">
                   <p className="text-[14px] mt-5">
-                     Don’t have an account?
+                     Have an account?
                      <span className="text-[14px] font-bold !pl-1">
                         <Link to="/login"> Sign In!</Link>
                      </span>

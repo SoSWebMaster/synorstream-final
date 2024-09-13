@@ -113,7 +113,7 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
                dispatch(updatePlainAnnualPrice(null))
                dispatch(updatePlainMonthlyPrice(null))
                dispatch(updatePlainId(null))
-               navigate('/login');
+               navigate('/browse');
             }
             else
             {
@@ -153,9 +153,9 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
     try {
       const response = await axiosInstance.get(endPoints.current_plan);
       if(response?.data){
-       setPLanDetails(response?.data?.data[0]);
-       setAmount(response?.data?.data[0].month_price)
-       setisParsedFeature(JSON.parse(response?.data?.data[0]?.features))
+       setPLanDetails(response?.data?.data);
+       setAmount(response?.data?.data.plan_price)
+       setisParsedFeature(JSON.parse(response?.data?.data?.features))
        setCircularLoader(false)
       //  dispatch(updatePlainAnnualPrice(null))
       //  dispatch(updatePlainMonthlyPrice(null))

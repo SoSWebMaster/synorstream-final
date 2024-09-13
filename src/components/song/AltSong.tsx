@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 
@@ -10,7 +10,7 @@ interface AltSongProps {
    audio: string;
    isAltPlaying: boolean;
    onPlayPause: () => void;
-   isPlaying: boolean
+   isPlaying: boolean;
 }
 
 const AltSong: React.FC<AltSongProps> = ({
@@ -21,11 +21,12 @@ const AltSong: React.FC<AltSongProps> = ({
    audio,
    isAltPlaying,
    onPlayPause,
-   isPlaying
+   isPlaying,
 }) => {
    const waveformRef = useRef<HTMLDivElement | null>(null);
    const waveSurferRef = useRef<WaveSurfer | null>(null);
    const audioRef = useRef<HTMLAudioElement | null>(null);
+   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
       if (waveformRef.current) {
@@ -39,6 +40,15 @@ const AltSong: React.FC<AltSongProps> = ({
          });
 
          waveSurferRef.current = wavesurfer;
+
+         wavesurfer.on("ready", () => {
+            setLoading(false);
+         });
+
+         wavesurfer.on("loading", () => {
+            setLoading(true);
+         });
+
          wavesurfer.load(audio);
 
          return () => {
@@ -48,7 +58,7 @@ const AltSong: React.FC<AltSongProps> = ({
             }
          };
       }
-   }, [audio]);
+   }, [audio, id]);
 
    useEffect(() => {
       if (isAltPlaying) {
@@ -65,19 +75,21 @@ const AltSong: React.FC<AltSongProps> = ({
    }, [isAltPlaying]);
 
    useEffect(() => {
-      if(isPlaying){
+      if (isPlaying) {
          audioRef.current?.pause();
          if (waveSurferRef.current) {
             waveSurferRef.current.pause();
          }
       }
-   }, [isPlaying])
+   }, [isPlaying]);
 
    return (
       <div className="grid grid-cols-[auto_1fr_1fr] gap-x-4 md:gap-x-6 items-center p-3 md:p-6 border-b border-white/10">
          <div>
             <button onClick={onPlayPause}>
-               {isAltPlaying ? (
+               {loading ? (
+                  <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
+               ) : isAltPlaying ? (
                   <PauseIcon className="w-5 h-5 cursor-pointer" />
                ) : (
                   <PlayIcon className="w-5 h-5 cursor-pointer" />
@@ -85,11 +97,18 @@ const AltSong: React.FC<AltSongProps> = ({
             </button>
          </div>
          <p className="ellipsis">{name}</p>
-         <div
-            id={`waveform-${id}`}
-            className="waveform-container"
-            ref={waveformRef}
-         />
+         <div className="relative">
+            {loading && (
+               <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
+               </div>
+            )}
+            <div
+               id={`waveform-${id}`}
+               className="waveform-container"
+               ref={waveformRef}
+            />
+         </div>
          <audio ref={audioRef} src={audio} preload="auto" />
       </div>
    );

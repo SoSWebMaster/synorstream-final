@@ -7,9 +7,11 @@ import { useState } from "react";
 import { endPoints } from "../../../../services/constants/endPoint";
 import { useAppSelector } from "../../../../store";
 import useAxios from "../../../../services/axiosConfig/axiosConfig";
-const ChangeBillingDetail=({handleClose})=>{
+import { toast } from "react-toastify";
+
+const ChangeBillingDetail2 = ({ handleClose }) => {
   const style = {
-    position: "absolute" as "absolute",
+    position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
@@ -21,78 +23,78 @@ const ChangeBillingDetail=({handleClose})=>{
     pt: 2,
     px: 4,
     pb: 3,
- };
- const axiosInstance=useAxios();
+  };
 
- const handleClose1=()=>{
-     if(handleClose){
-      handleClose()
-     }
- }
+  const axiosInstance = useAxios();
+  const stripe = useStripe();
+  const elements = useElements();
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const { user } = useAppSelector((state) => state.auth);
 
- const stripe = useStripe();
- const elements = useElements();
- const [isLoading, setIsLoading] = useState<boolean>(false);
- const [message, setMessage] = useState<string | null>(null);
- const {user} =useAppSelector(state=>state.auth)
+  const handleClose1 = () => {
+    if (handleClose) {
+      handleClose();
+    }
+  };
 
- const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-     event.preventDefault();
-     if (!stripe || !elements) return;
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!stripe || !elements) return;
 
-     setIsLoading(true);
+    setIsLoading(true);
 
-     const { error, setupIntent } = await stripe.confirmSetup({
-         elements,
-         redirect: "if_required",
-     });
+    const { error, setupIntent } = await stripe.confirmSetup({
+      elements,
+      redirect: "if_required",
+    });
 
-     if (error) {
-         // setMessage(error.message);
-         setIsLoading(false);
-     } else if (setupIntent && setupIntent.status === "succeeded") {
-       const newObj={ payment_method: setupIntent.payment_method}
-       // call post api (add_payment_method_api) from backend and pass setup-intent init (return paymentMethod form setupIntent )
-       try{
-        const resp=await axiosInstance.post(endPoints?.add_new_payment_method,newObj)
-         setMessage("Payment method updated successfully!");
-         setIsLoading(false);
-         handleClose1();
-       }catch(err){
-          setIsLoading(false);
-          handleClose1();
-          console.log(err)
-       }
-      
-      
-     
+    if (error) {
+      setMessage(error.message);
+      toast.error(`Error: ${error.message}`);  // Show error message to user
+      setIsLoading(false);
+    } else if (setupIntent && setupIntent.status === "succeeded") {
+      const newObj = { payment_method: setupIntent.payment_method };
+      console.log('Setup Intent:', setupIntent);
+      try {
+        await axiosInstance.post(endPoints?.add_new_payment_method, newObj);
+        toast.success("Payment method updated successfully!");
+        setMessage("Payment method updated successfully!");
+        setIsLoading(false);
+        handleClose1();  // Close modal on success
+      } catch (err) {
+        setIsLoading(false);
+        toast.error("Failed to update payment method.");
+        console.error("API Error:", err);
+      }
+    } else {
+      setMessage("Unexpected error occurred");
+      toast.error("Unexpected error occurred");
+      setIsLoading(false);
+    }
+  };
 
-         // Optionally, make a request to your server to attach this payment method to the customer.
-     } else {
-         setMessage("Unexpected error occurred");
-         setIsLoading(false);
-     }
- };
-    return (
-      <Box sx={style}>
+  return (
+    <Box sx={style}>
       <button
-          className="flex items-center justify-end w-full text-white"
-          onClick={handleClose1}
+        className="flex items-center justify-end w-full text-white"
+        onClick={handleClose1}
       >
-          <FontAwesomeIcon icon={faXmark} className="text-[25px]" />
+        <FontAwesomeIcon icon={faXmark} className="text-[25px]" />
       </button>
       <form onSubmit={handleSubmit}>
-            <PaymentElement />
-            <Button disabled={!stripe || isLoading} className="!bg-[#FB8A2E] !text-white !mt-5 !font-medium" type="submit">
-                {isLoading ? "Processing..." : "Update Payment Method"}
-            </Button>
-            {message && <div>{message}</div>}
-        </form>
-     
+        <PaymentElement />
+        <Button
+          disabled={!stripe || isLoading}
+          className="!bg-[#FB8A2E] !text-white !mt-5 !font-medium"
+          type="submit"
+        >
+          {isLoading ? "Processing..." : "Update Payment Method"}
+        </Button>
+        {message && <div>{message}</div>}
+      </form>
+    </Box>
+  );
+};
 
-  </Box>
-    )
-}
-
-
-export default ChangeBillingDetail;
+export default ChangeBillingDetail2;

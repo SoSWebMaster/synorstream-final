@@ -36,7 +36,7 @@ import AltSongs from "./AltSongs.tsx";
 import SimilarSongs from "./SimilarSongs.tsx";
 import PlaylistPopUp from "../dashboad/browse/popUp.tsx";
 // @ts-ignore
-import { throttle } from 'lodash';
+import { throttle } from "lodash";
 
 const formatTime = (time: number) => {
    const minutes = Math.floor(time / 60);
@@ -102,22 +102,22 @@ const SongItem: React.FC<{
             const time = Math.floor(audioRef.current.currentTime);
             setCurrentTime(time);
             dispatch(updateCurrentDuration(time));
-            console.log('time', time);
+            console.log("time", time);
             const targetTime = 30;
             if (time === targetTime && !hasPlayed30Seconds) {
                setHasPlayed30Seconds(true);
-               dummyApiCall();
+               addToHistory();
             }
          }
       }, 1000);
-   
+
       const handleLoadedMetadata = () => {
          if (audioRef.current) {
             const newDuration = audioRef.current.duration;
             setDuration(newDuration);
          }
       };
-   
+
       if (isPlaying) {
          if (audioRef.current) {
             audioRef.current.pause();
@@ -126,14 +126,14 @@ const SongItem: React.FC<{
          } else {
             audioRef.current = new Audio(audio);
          }
-   
+
          const currentAudio = audioRef.current;
          dispatch(updateCurrentSong(song)); // Update the Redux state with the current song
          dispatch(updateCurrentSongId(song.id)); // Update the current song ID
          dispatch(updateIsPlaying(true));
          dispatch(updateIsLoading(true));
          setIsLoading(true);
-   
+
          currentAudio.oncanplaythrough = () => {
             setIsLoading(false);
             dispatch(updateIsLoading(false));
@@ -141,12 +141,12 @@ const SongItem: React.FC<{
                onPlay(currentAudio);
             });
          };
-   
+
          currentAudio.onerror = () => {
             setIsLoading(false);
             dispatch(updateIsLoading(false));
          };
-   
+
          currentAudio.ontimeupdate = updateTime;
          currentAudio.onloadedmetadata = handleLoadedMetadata;
       } else {
@@ -157,7 +157,7 @@ const SongItem: React.FC<{
             onPause();
          }
       }
-   
+
       return () => {
          if (audioRef.current) {
             audioRef.current.pause();
@@ -167,8 +167,8 @@ const SongItem: React.FC<{
          }
       };
    }, [isPlaying]);
-   
-   console.log('Has Played ',hasPlayed30Seconds)
+
+   console.log("Has Played ", hasPlayed30Seconds);
 
    useEffect(() => {
       if (currentSongId === id) {
@@ -214,7 +214,7 @@ const SongItem: React.FC<{
       setAnchorEl(null);
    };
 
-   const downloadFIle = (url: any, id: any) => {
+   const downloadFIle = (url: any, id: any, name: any) => {
       if (success) {
          setSOngId(id);
          const fileName = url?.split("/")?.pop();
@@ -222,6 +222,11 @@ const SongItem: React.FC<{
             toast.error("File could not be determined.");
             console.error("File name could not be determined.");
             return;
+         }
+         if (url?.includes(".mp3")) {
+            name = name + ".mp3";
+         } else if (url?.includes(".wav")) {
+            name = name + ".wav";
          }
          download(url, name);
          toast.info("Downloading Started...");
@@ -245,12 +250,12 @@ const SongItem: React.FC<{
       }
    };
 
-   const dummyApiCall = async () => {
+   const addToHistory = async () => {
       try {
-         await axiosInstance.post('/add_to_history', { songid: id });
-         console.log('API call successful');
+         await axiosInstance.post("/add_to_history", { songid: id });
+         console.log("API call successful");
       } catch (error) {
-         console.error('Error during API call', error);
+         console.error("Error during API call", error);
       }
    };
 
@@ -261,6 +266,7 @@ const SongItem: React.FC<{
                className="w-16 h-16 object-cover rounded-md"
                src={thumb}
                alt={name}
+               loading="lazy"
             />
 
             <div className="flex items-center  justify-center p-2 gap-4 ">
@@ -340,7 +346,7 @@ const SongItem: React.FC<{
                </button>
                <FontAwesomeIcon
                   icon={faDownload}
-                  onClick={() => downloadFIle(audio, id)} // Assuming downloadFIle is defined
+                  onClick={() => downloadFIle(audio, id, name)} // Assuming downloadFIle is defined
                   className="text-white text-xl cursor-pointer"
                />
                {success && single_page !== "favourites" && (

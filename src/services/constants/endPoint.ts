@@ -27,6 +27,8 @@ export const endPoints = {
     update_payment: 'update_payment',
     add_new_payment_method: 'add',
     submit_music_api:'submit_music_api',
-    pay:'pay'
+    pay:'pay',
+    sim_song: 'sim_song',
+    copyright_clearance: 'copyright_clearance'
   };
   

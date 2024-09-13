@@ -161,6 +161,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useAppDispatch, useAppSelector } from "../../store";
 import axiosInstance from "../../services/axiosConfig/axiosConfigSimple";
 import { endPoints } from "../../services/constants/endPoint";
+import SimilarSong from "./SimilarSong";
 const apiEndPoint = `${
    import.meta.env.VITE_SYNC_OR_STREAM_BASE_URL
 }/alt_songs_json`;
@@ -180,7 +181,7 @@ export interface AltSongInterface {
    name: string;
    artis_name: string;
    thumb: string;
-   audio: string;
+   audmp: string;
 }
 
 export default function SimilarSongs({
@@ -223,24 +224,25 @@ export default function SimilarSongs({
 
       const fetchAltSongs = useCallback( async () => {
       try{
-         const response = await axiosInstance.post( endPoints?.fetch_music_json, {
+         const response = await axiosInstance.post( endPoints?.sim_song, {
             id,
             post: 1,
             single: 'syncorstream.com',
-            per_page: 10,
-            user: 155,
+            // per_page: 10,
+            // user: 155,
             page: 1,
-            source:'react'
+            // source:'react'
          });
 
-         const data = response.data.records;
-         // console.log( data );
+         const data = response.data.data;
+         console.log('data', data );
+         setSongs(data)
 
-         if( data && Array.isArray( data ) ) {
-            data.map( song => song.id = `${id}_sim_${song.id}` );
+         // if( data && Array.isArray( data ) ) {
+         //    data.map( song => song.id = `${id}_sim_${song.id}` );
 
-            setSongs( response.data.records );
-         }
+         //    setSongs( response.data.records );
+         // }
 
       } catch( e ) {
          console.error( 'Unable to fetch alt songs', e );
@@ -305,13 +307,13 @@ export default function SimilarSongs({
                </button>
             </div>
                {songs.map((song) => (
-                  <AltSong
+                  <SimilarSong
                      key={song.id}
                      id={song.id}
                      name={song.name}
                      artis_name={song.artis_name}
                      thumb={song.thumb}
-                     audio={song.audio}
+                     audio={song.audmp}
                      isAltPlaying={isAltPlaying && currentSongId === song.id}
                      onPlayPause={() => handlePlayPause(song.id)}
                      isPlaying={isPlaying}

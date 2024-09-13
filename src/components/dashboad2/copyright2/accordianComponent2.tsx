@@ -23,53 +23,94 @@ const AccordionComponent2 = () => {
   const [inputValues, setInputValues] = React.useState<{ [key: string]: string }>({});
   const [addresses, setAddresses] = React.useState<{ [key: string]: string[] }>({});
   const axiosInstance=useAxios();
+
+  // Fetch data on component mount, ensure it runs only once
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axiosInstance.get(endPoints?.copyright_clearance);
+        const result = response?.data?.result?.[0];
+
+        if (result) {
+          // Populate addresses with data from the API
+          const initialAddresses = {
+            YouTube: JSON.parse(result.youtube || "[]"),
+            FaceBook: JSON.parse(result.facebook || "[]"),
+            Instagram: JSON.parse(result.instagram || "[]"),
+            Twitch: JSON.parse(result.twitch || "[]"),
+            Vimeo: JSON.parse(result.vimeo || "[]"),
+            Video: JSON.parse(result.video || "[]"),
+          };
+          setAddresses(initialAddresses);
+        }
+      } catch (error) {
+        toast.error("Failed to load data from server");
+      }
+    };
+
+    // Make sure fetchData runs only once on component mount
+    fetchData();
+  }, []); // Empty dependency array means the effect runs only once after the initial render
+
   const handleAddAddress = (serviceName: string, address: string) => {
     if (address.trim() !== "") {
-      const newAddresses = { ...addresses };
-      if (!newAddresses[serviceName]) {
-        newAddresses[serviceName] = [];
-      }
-      if (!newAddresses[serviceName].includes(address)) {
-        newAddresses[serviceName].push(address);
-        setAddresses(newAddresses);
-      } else {
-        toast.error("This URL is already added!");
-      }
+      setAddresses(prevAddresses => {
+        const newAddresses = { ...prevAddresses };
+        if (!newAddresses[serviceName]) {
+          newAddresses[serviceName] = [];
+        }
+        if (!newAddresses[serviceName].includes(address)) {
+          newAddresses[serviceName].push(address);
+        } else {
+          toast.error("This URL is already added!");
+        }
+        return newAddresses;
+      });
     }
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, serviceName: string) => {
-    const newInputValues = { ...inputValues, [serviceName]: e.target.value };
-    setInputValues(newInputValues);
+    setInputValues(prevValues => ({
+      ...prevValues,
+      [serviceName]: e.target.value
+    }));
   };
 
   const removeUrl = (serviceName: string, address: string) => {
-    const newAddresses = { ...addresses };
-    newAddresses[serviceName] = newAddresses[serviceName].filter(add => add !== address);
-    setAddresses(newAddresses);
+    setAddresses(prevAddresses => {
+      const newAddresses = { ...prevAddresses };
+      newAddresses[serviceName] = newAddresses[serviceName].filter(add => add !== address);
+      return newAddresses;
+    });
   };
 
   const handleAddButtonClick = (serviceName: string) => {
     const inputValue = inputValues[serviceName] || '';
     handleAddAddress(serviceName, inputValue);
-    setInputValues({ ...inputValues, [serviceName]: '' });
+    setInputValues(prevValues => ({
+      ...prevValues,
+      [serviceName]: ''
+    }));
   };
+
   const keys = ['FaceBook', 'Instagram', 'YouTube', 'Twitch', 'Vimeo', 'Video'];
   const formData = keys.reduce((acc, key) => {
     acc[key] = addresses[key] || []; // Set to empty array if key is not present in addresses
     return acc;
   }, {} as { [key: string]: string[] });
-  const onSaveData=async ()=>{
-    const finalObj={'formData':formData}
+
+  const onSaveData = async () => {
+    const finalObj={'formData':formData};
 
     try{
-        const response = await axiosInstance.post(endPoints?.update_copyright,finalObj);
-        if(response?.data?.success){
-          toast.success(`${response?.data?.message}`);
-        }
+      const response = await axiosInstance.post(endPoints?.update_copyright,finalObj);
+      if(response?.data?.success){
+        toast.success(`${response?.data?.message}`);
+      }
     }catch(err) {
       toast.error("Error occurred while saving data!");
     }
-  } 
+  };
 
   return (
     <div className="bg-[#171717CC] p-10 mx-2 mt-16 rounded-xl">
@@ -128,10 +169,10 @@ const AccordionComponent2 = () => {
         
         </Accordion>
       ))}
-        <div className="flex items-center justify-end p-10">
-              <p>For Video Clearence Contact Us</p>
-              <Button className="!w-[120px] !h-[43px] !bg-[#FB8A2E] !text-white !font-semibold !ml-6" onClick={onSaveData}>Save</Button>
-          </div>
+      <div className="flex items-center justify-end p-10">
+        <p>For Video Clearance Contact Us</p>
+        <Button className="!w-[120px] !h-[43px] !bg-[#FB8A2E] !text-white !font-semibold !ml-6" onClick={onSaveData}>Save</Button>
+      </div>
     </div>
   );
 };
