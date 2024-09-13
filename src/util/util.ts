@@ -10,6 +10,28 @@ export function convertSecondToMinutesAndSecond( time: number )  {
    return `${formattedTime}`;
 }
 
+export function convertCurrentDuration(time: any) {
+   // Calculate minutes and seconds
+
+
+   console.log('time in util', time)
+
+   if (time === null || time === 0) {
+      return "00:00";
+  }
+
+   const minutes = Math.floor(time / 60);
+   const seconds = time % 60;
+
+   // Format the minutes and seconds as strings with leading zeros if necessary
+   const formattedMinutes = minutes.toString().padStart(2, '0');
+   const formattedSeconds = seconds.toString().padStart(2, '0');
+
+   // Combine formatted minutes and seconds into MM:SS format
+   return `${formattedMinutes}:${formattedSeconds}`;
+}
+
+
 export function debounce( func: CallableFunction, timeout = 200 ) {
    let timer: any;
 

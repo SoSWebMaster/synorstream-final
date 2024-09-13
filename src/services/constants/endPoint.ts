@@ -29,6 +29,9 @@ export const endPoints = {
     submit_music_api:'submit_music_api',
     pay:'pay',
     sim_song: 'sim_song',
-    copyright_clearance: 'copyright_clearance'
+    copyright_clearance: 'copyright_clearance',
+    selected_plan: 'selected_plan',
+    cal_pro_rate_amt: 'cal_pro_rate_amt',
+    switch_plan: 'switch_plan'
   };
   

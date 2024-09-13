@@ -64,16 +64,17 @@ export default function AltSongs({
             const newIsPlaying = !prev;
             return newIsPlaying;
          });
+         dispatch(updateIsPlaying(false));
       } else {
          // Set new song and play
          setCurrentSongId(id);
          setIsAltPlaying(true);
          dispatch(updateCurrentSongId(id));
-         // dispatch(updateIsPlaying(true));
+         dispatch(updateIsPlaying(false));
       }
    };
 
-   const { isPlaying } = useAppSelector((state) => state.music);
+   const { isPlaying, currentSongRef  } = useAppSelector((state) => state.music);
 
    const { toggle: accordionToggle } = accordionProviderValue;
 
@@ -132,6 +133,7 @@ export default function AltSongs({
    useEffect(() => {
       if (isPlaying) {
          setIsAltPlaying(false);
+
       }
    }, [isPlaying]);
 

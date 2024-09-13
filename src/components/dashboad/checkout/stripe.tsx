@@ -57,11 +57,12 @@ import { toast } from "react-toastify";
                .then((res) => res.json())
                .then(({ output }) => {
                setCircularLoader(false);
+               console.log('output in',output)
                setClientSecret(output.clientSecret);
                })
                .catch((err) => {
                   console.log(err);
-                  toast.error(`${err}`)
+                  // toast.error(`${err}`)
                });
          
             

@@ -5,9 +5,10 @@ import Filter from "../../filter/Filter";
 import axiosInstance from "../../../services/axiosConfig/axiosConfig";
 import { endPoints } from "../../../services/constants/endPoint";
 import { SongInterface } from "../../song/songTypes";
-import { useAppSelector } from "../../../store";
+import { useAppSelector, useAppDispatch } from "../../../store";
 import SongItem from "../../song/SongItem";
 import { CircularProgress } from "@mui/material";
+import { updateAudioRef } from "../../../store/music-store";
 const perPage = 8;
 const FavoritesComponent2 = () => {
    const axiosInstanceAuth = axiosInstance();
@@ -15,10 +16,10 @@ const FavoritesComponent2 = () => {
    const [isLoading, setIsLoading] = useState(false);
    const [currentPage, setCurrentPage] = useState(1);
    const [hasError, setHasError] = useState(false);
-   const { songType, filterCategories, search, single_page } = useAppSelector(
-      (state) => state.music
-   );
+   const { songType, filterCategories, search, single_page, isPlaying } =
+      useAppSelector((state) => state.music);
    const { user } = useAppSelector((state) => state.auth);
+   const dispatch = useAppDispatch();
    const [userTier, setUserTier] = useState<any>();
 
    const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
@@ -28,7 +29,10 @@ const FavoritesComponent2 = () => {
       number | null
    >(null);
 
-   const handlePlay = (audio: HTMLAudioElement, songId: any) => {
+   const [anotherId, setAnotherID] = useState<number | null>(null);
+
+   const handlePlay = (audio: any, songId: any) => {
+      console.log("first");
       if (currentAudio && currentAudio !== audio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
@@ -36,31 +40,35 @@ const FavoritesComponent2 = () => {
 
       setCurrentAudio(audio);
       setCurrentPlayingSongId(songId);
+      setAnotherID(songId);
+      dispatch(updateAudioRef(audio));
    };
 
    const handlePause = () => {
       if (currentAudio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
+         // setCurrentAudio(null);
+         dispatch(updateAudioRef(null));
       }
    };
 
    useEffect(() => {
-      let tier = localStorage.getItem('currentPlan');
-      
+      let tier = localStorage.getItem("currentPlan");
+
       setUserTier(tier);
    }, []);
 
    const returnTierAudio = (record: any) => {
-      if (userTier === '1') {
+      if (userTier === "1") {
          return record?.audio_aac;
-      } else if (userTier === '2') {
+      } else if (userTier === "2") {
          return record?.audio_mp3;
-      } else if (userTier === '3') {
+      } else if (userTier === "3") {
          return record?.audio_wav;
       }
 
-      return null
+      return null;
    };
 
    useEffect(() => {
@@ -86,7 +94,7 @@ const FavoritesComponent2 = () => {
          const records = response?.data?.records;
          let mappedArray = records.map((record) => ({
             id: record.id,
-            audio: returnTierAudio(record),
+            audio: record.audio_aac,
             thumb: record.thumb,
             name: record.name,
             artis_name: record.artis_name,
@@ -116,6 +124,8 @@ const FavoritesComponent2 = () => {
    };
    let allSongs = {};
 
+   console.log('songs in',songs)
+
    const items = songs.map((song, i) => {
       allSongs = { ...allSongs, [song.id]: song };
       return (
@@ -129,7 +139,19 @@ const FavoritesComponent2 = () => {
       );
    });
 
-   console.log('songs', songs)
+   useEffect(() => {
+      if (!isPlaying) {
+         handlePause();
+      } else {
+         // if (currentAudio) {
+         handlePlay(currentAudio, anotherId);
+         // }
+         // currentAudio?.play()
+      }
+      // currentAudio?.play()
+   }, [isPlaying]);
+
+   console.log("songs", songs);
 
    return (
       <>

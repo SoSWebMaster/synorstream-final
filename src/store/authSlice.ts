@@ -1,41 +1,40 @@
 // @ts-nocheck
-import {createSlice} from '@reduxjs/toolkit';
-import {authSlicetype} from './types';
-import {getAPIConstants} from '../services/constants/getApiContants';
-import {login} from '../services/loginService';
-import {endPoints} from '../services/constants/endPoint';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { authSlicetype } from './types';
+import { getAPIConstants } from '../services/constants/getApiContants';
+import { login } from '../services/loginService';
+import { endPoints } from '../services/constants/endPoint';
 import { inputType } from '../services/loginTypes';
-import { createAsyncThunk } from '@reduxjs/toolkit';
+
+// Create the async thunk for user login
 export const userLogin = createAsyncThunk(
   endPoints?.login,
   async (data: inputType, thunkAPI) => {
     try {
       return await login(data);
-
-      // eslint-disable-next-line
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error?.errors);
     }
   }
 );
 
-
-// initial states of slice
+// Initial state of the slice
 const initialState: authSlicetype = {
-   user: {
+  user: {
     id: '',
-    name:'',
+    name: '',
     email: '',
   },
-  redirect:false,
-  result:false,
-  link:'',
+  redirect: false,
+  result: false,
+  link: '',
   error: null,
   success: false,
   loading: getAPIConstants.IDLE,
-  token:'',
+  token: '',
 };
 
+// Create the slice
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -44,40 +43,35 @@ export const authSlice = createSlice({
     builder.addCase(userLogin.pending, (state) => {
       state.loading = getAPIConstants.PENDING;
     });
-    builder.addCase(userLogin.fulfilled, (state, actions) => {
+    builder.addCase(userLogin.fulfilled, (state, action) => {
+      const { id, name, email, token, link, redirect, result } = action.payload.data;
 
-        const { id, name, email } = actions?.payload?.data?.user;
-      return {
-        user:{
-            id:id,
-            name:name,
-            email:email,
-        },
-        link:actions?.payload?.data?.link,
-        redirect:actions?.payload?.data?.redirect,
-        result:actions?.payload?.data?.result,
-        success: true,
-        error: null,
-        loading: getAPIConstants.FULLFILLED,
-        token:actions?.payload?.data?.token,
+      // Update the state directly
+      state.user = {
+        id,
+        name,
+        email,
       };
+      state.link = link;
+      state.redirect = redirect;
+      state.result = result;
+      state.success = true;
+      state.error = null;
+      state.loading = getAPIConstants.FULLFILLED;
+      state.token = token;
     });
-    builder.addCase(userLogin.rejected, (state, actions) => {
-      return {
-        ...state,
-        error: actions.payload,
-        success: false,
-        loading: getAPIConstants.REJECTED,
-      };
+    builder.addCase(userLogin.rejected, (state, action) => {
+      state.error = action.payload;
+      state.success = false;
+      state.loading = getAPIConstants.REJECTED;
     });
-    builder.addCase('LOGOUT', () => initialState)
+    builder.addCase('LOGOUT', () => initialState);
   },
 });
 
-export const authToken = (state:authSlicetype) => state.user.access_token;
-
-
-export const loggedUser = (state:authSlicetype) => state.user;
+// Selectors
+export const authToken = (state: authSlicetype) => state.token;
+export const loggedUser = (state: authSlicetype) => state.user;
 
 export type authSlicetypes = typeof authSlice;
 

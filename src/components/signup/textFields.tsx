@@ -59,7 +59,6 @@ const SignUpTextFieldsComponent = () => {
                   email: email,
                   password: password,
                };
-               // dispatch(updatePlainId(null))
                toast.success("Successfully Sign Up");
                try {
                   const resultAction = await dispatch(userLogin(details));
@@ -67,7 +66,7 @@ const SignUpTextFieldsComponent = () => {
 
                   const link = result.payload?.data?.link;
                   localStorage.setItem(
-                     "currentPan",
+                     "currentPlan",
                      result.payload?.data?.current_plan
                   );
 

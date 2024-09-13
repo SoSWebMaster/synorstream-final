@@ -209,12 +209,13 @@ export default function SimilarSongs({
             const newIsPlaying = !prev;
             return newIsPlaying;
          });
+         dispatch(updateIsPlaying(false));
       } else {
          // Set new song and play
          setCurrentSongId(id);
          setIsAltPlaying(true);
          dispatch(updateCurrentSongId(id));
-         // dispatch(updateIsPlaying(true));
+         dispatch(updateIsPlaying(false));
       }
    };
 

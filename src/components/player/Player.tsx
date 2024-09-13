@@ -10,7 +10,7 @@ import {
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch, useAppSelector } from "../../store";
 import WaveForm from "../waveform/waveForm";
-import { convertSecondToMinutesAndSecond } from "../../util/util";
+import { convertSecondToMinutesAndSecond, convertCurrentDuration } from "../../util/util";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faForwardStep,
@@ -157,7 +157,7 @@ function PlayerContent() {
                   <p className="text-center text-white/50 !hidden md:!block">
                      {/* { console.log(currentDuration)} */}
                      {currentDuration &&
-                        convertSecondToMinutesAndSecond(currentDuration)}
+                        convertCurrentDuration(currentDuration)}
                      {!currentDuration && "00:00"}
                      {songDuration && " / "}
                      {songDuration &&

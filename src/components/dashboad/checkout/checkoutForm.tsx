@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { updatePlainAnnualPrice, updatePlainId, updatePlainMonthlyPrice } from "../../../store/music-store";
 import { useAppDispatch } from "../../../store";
 import './stripe.scss';
-// import { useAppSelector } from "../../../store";
+import { useAppSelector } from "../../../store";
 
 
 enum PaymentStatus {
@@ -64,6 +64,8 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
       vat:null,
       billing:null
    })
+
+   const { plain_MonthlyPrice, plain_AnnualPrice } = useAppSelector((state) => state.music);
    
    const dispatch=useAppDispatch()
    useEffect(() => {
@@ -177,6 +179,9 @@ export const CheckoutForm = ({ message, setMessage,   clientSecret }: Props): JS
   const handleCardName=(e)=>{
    setCardHolderName(e.target.value)
   }
+
+  console.log('redux annual',plain_AnnualPrice)
+  console.log('redux monthly',plain_MonthlyPrice)
   
 
    return (

@@ -35,6 +35,7 @@ const SinglePlayList2 = () => {
       filterCategories,
       search,
       playLists = [],
+      isPlaying
    } = useAppSelector((state) => state.music);
 
    const [selectedPlaylist, setSelectedPlaylist] = useState<string>("");
@@ -43,7 +44,6 @@ const SinglePlayList2 = () => {
    const axios = axiosInstance();
 
    const dispatch = useAppDispatch();
-
    const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
       null
    );
@@ -51,7 +51,12 @@ const SinglePlayList2 = () => {
       number | null
    >(null);
 
-   const handlePlay = (audio: HTMLAudioElement, songId: any) => {
+   const [anotherId, setAnotherID] = useState<
+      number | null
+   >(null);
+
+   const handlePlay = (audio: any, songId: any) => {
+      console.log('first')
       if (currentAudio && currentAudio !== audio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
@@ -59,12 +64,16 @@ const SinglePlayList2 = () => {
 
       setCurrentAudio(audio);
       setCurrentPlayingSongId(songId);
+      setAnotherID(songId)
+      // dispatch(updateAudioRef(audio))
    };
 
    const handlePause = () => {
       if (currentAudio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
+         // setCurrentAudio(null);
+         // dispatch(updateAudioRef(null))
       }
    };
 
@@ -110,20 +119,20 @@ const SinglePlayList2 = () => {
    let allSongs = {};
    let firstSongId: number | string | null = null;
 
-   const items = songs.map((song, i) => {
-      if (i === 0) firstSongId = song.id;
-      console.log("FirstSongID", firstSongId);
-      allSongs = { ...allSongs, [song.id]: song };
-      return (
-         <SongItem
-            key={song.id}
-            song={song}
-            isPlaying={song.id === currentPlayingSongId}
-            onPlay={(audio) => handlePlay(audio, song.id)}
-            onPause={handlePause}
-         />
-      );
-   });
+   // const items = songs.map((song, i) => {
+   //    if (i === 0) firstSongId = song.id;
+   //    console.log("FirstSongID", firstSongId);
+   //    allSongs = { ...allSongs, [song.id]: song };
+   //    return (
+   //       <SongItem
+   //          key={song.id}
+   //          song={song}
+   //          isPlaying={song.id === currentPlayingSongId}
+   //          onPlay={(audio) => handlePlay(audio, song.id)}
+   //          onPause={handlePause}
+   //       />
+   //    );
+   // });
 
    useEffect(() => {
       dispatch(updateCurrentSongId(null));
@@ -140,6 +149,34 @@ const SinglePlayList2 = () => {
    }, [songs]);
 
    console.log('pllaylists in redux', playLists)
+
+   const items = songs.map((song, i) => {
+      if (i === 0) firstSongId = song.id;
+      console.log("FirstSongID", firstSongId);
+      allSongs = { ...allSongs, [song.id]: song };
+      return (
+         <SongItem
+            key={song.id}
+            song={song}
+            isPlaying={song.id === currentPlayingSongId}
+            onPlay={(audio) => handlePlay(audio, song.id)}
+            onPause={handlePause}
+         />
+      );
+   });
+
+   useEffect(() => {
+      if (!isPlaying) {
+         handlePause()
+      } else {
+         // if (currentAudio) {
+         handlePlay(currentAudio, anotherId)
+         // }
+         // currentAudio?.play()
+      }
+      // currentAudio?.play()
+
+   }, [isPlaying]);
 
    return (
       <>

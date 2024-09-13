@@ -91,9 +91,9 @@ function formatDate(isoDateString:string) {
                 <p>No features available.</p>
             )}
        <div>
-        <p className="text-[20px] font-extrabold mt-4">
+        {/* <p className="text-[20px] font-extrabold mt-4">
           Canceled on: <span className="text-[#FB8A2E]">{Dte}</span>
-        </p>
+        </p> */}
       </div>
 
             <Button className="!bg-[#FB8A2E] !text-white !rounded-md !mt-5 !w-60 !h-11 !font-bold" onClick={()=> handleUpdatePlan(planData)}>Update Plan</Button>

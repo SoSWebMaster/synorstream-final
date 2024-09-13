@@ -101,9 +101,9 @@ const SongItem: React.FC<{
 
    // Split pathname and extract segment
    const pathSegments = pathname.split("/"); // Splits at '/'
-   const playlist = pathSegments[1]; 
+   const pageName = pathSegments[1]; 
 
-   const containerClassName = playlist === 'playlist'
+   const containerClassName = pageName === 'playlist' || pageName === 'favourites'
     ? 'flex items-center justify-between ml-4' // No max-width applied
     : 'flex items-center max-w-[350px] justify-between ml-4'; // Max-width applied
 
@@ -281,7 +281,7 @@ const SongItem: React.FC<{
                loading="lazy"
             />
 
-            <div className="flex items-center  justify-center p-2 gap-4 ">
+            <div className="flex items-center w-[50px]  justify-center p-2 gap-4 ">
                {isLoading ? (
                   <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
                ) : isPlaying ? (

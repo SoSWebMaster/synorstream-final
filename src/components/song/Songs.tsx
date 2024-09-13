@@ -68,7 +68,7 @@ export default function Songs({ className }: SongsProps) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
          // setCurrentAudio(null);
-         dispatch(updateAudioRef(null))
+         // dispatch(updateAudioRef(null))
       }
    };
 
