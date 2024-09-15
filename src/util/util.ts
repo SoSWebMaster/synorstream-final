@@ -14,8 +14,6 @@ export function convertCurrentDuration(time: any) {
    // Calculate minutes and seconds
 
 
-   console.log('time in util', time)
-
    if (time === null || time === 0) {
       return "00:00";
   }

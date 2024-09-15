@@ -1,7 +1,6 @@
 import LoginContent from './loginContent'
 import logo from '/static/images/SoS_Logo.png' 
 import SideImg from '/static/images/sideImage.png' 
-import thumbsUp from '/static/images/thumbs-up.png' 
 import { Link } from 'react-router-dom'
 import bgImage from '/static/images/Website-Background.png'
 const LoginForm=()=>{
@@ -27,7 +26,7 @@ const LoginForm=()=>{
             <div className="relative w-full 2xl:w-[34%] xl:w-[45%] lg:w-[45%] bg-transparent">
                 <img src={SideImg} alt="Side Image" className='object-cover w-full h-screen' />
                 <div className="absolute bottom-12 w-[90%] left-12 h-[25%] z-20">
-                    <div className="!bg-[url('public/static/images/Rectangle-side.png')] w-full h-full p-5">
+                    {/* <div className="!bg-[url('public/static/images/Rectangle-side.png')] w-full h-full p-5">
                         <p className='2xl:w-[80%] xl:w-[65%] lg:w-[80%] h-[45px] bg-[#0714BD] rounded-lg p-3 flex items-center'>
                             <img src={thumbsUp} alt="Thumbs Up" className='mr-1' />
                             Top Notch Music Resources
@@ -35,7 +34,7 @@ const LoginForm=()=>{
                         <p className='mt-5'>
                             Today, we create innovative solutions to the challenges that consumers face in both their everyday lives and events.
                         </p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

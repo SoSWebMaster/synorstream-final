@@ -22,8 +22,8 @@ export const royalityItems = [
 
 
 export const description: string =
-   "   Royalty-free music and sound effects (SFX) provide an invaluable resource for creators of all kinds, enabling seamless integration of high-quality audio into various projects without the hassle of licensing fees.";
-export const heading1: string = " ROYALTY-FREE MUSIC FOR";
+   "   Music and sound effects (SFX) provide an invaluable resource for content creators. Audio raises the production quality of your projects and also helps fill dead-space, taking the pressure off of you from feeling the need to constantly talk. ";
+export const heading1: string = " MUSIC & SFX FOR ";
 export const heading2: string = " ALL OF YOUR PROJECTS";
 
 export const rectangleImages = [

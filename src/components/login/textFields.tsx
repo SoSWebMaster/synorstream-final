@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import React from "react";
 import { AppDispatch } from "../../store"; // Import your AppDispatch type
-
+import { updatePlainMonthlyPrice } from "../../store/music-store";
 const LoginTextFieldsComponent = () => {
    const dispatch = useDispatch<AppDispatch>(); // Type the dispatch function
    const navigate = useNavigate();
@@ -39,6 +39,7 @@ const LoginTextFieldsComponent = () => {
 
          const link = result.payload?.data?.link;
          localStorage.setItem("currentPlan", result.payload?.data?.current_plan);
+         dispatch(updatePlainMonthlyPrice(result.payload?.data?.plan_amount))
 
          if (link) {
             if (link === "/dashboard") {

@@ -12,9 +12,8 @@ const PlaylistComponent=()=>{
                     <h1 className="text-[48px] font-medium">{text1}</h1>
                     <div className="w-3/4 px-4 py-2 mt-2 rounded-lg bg-black/50">
                         <p className="text-[20px] text-justify">
-                            Discover your next favorite jam with our curated playlists! Dive into handpicked tracks
-                            <br /> that suit every mood and moment. Explore, save, and share your personalized playlists
-                            <br /> effortlessly. Let the music journey begin and elevate your vibe!
+                        Create the right playlist to set your mood.
+                 
                         </p>
                     </div>
                 </div>

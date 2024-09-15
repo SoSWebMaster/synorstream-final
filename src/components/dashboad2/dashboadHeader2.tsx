@@ -51,6 +51,9 @@ const DashboadHeader2 = () => {
         toast.success("Successfully logged out");
     };
 
+
+    console.log('user',user)
+
     return (
         <>
             <div className='flex !items-center !justify-between 2xl:px-52 xl:px-36 lg:px-28 py-10'>

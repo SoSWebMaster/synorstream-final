@@ -9,13 +9,10 @@ import {
 } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "../../../store";
 import {
-   updatePlayListFilter,
-   updateFirstSongId,
-   updateCurrentDuration,
+   updateAllSongs,
+   updateAudioRef,
    updateCurrentSong,
-   updateCurrentSongId,
-   updateIsPlaying
-} from "../../../store/music-store";
+} from "../../../store/updated-music-store";
 import { useEffect, useState } from "react";
 import { SongInterface } from "../../song/songTypes";
 import SongItem from "../../song/SongItem";
@@ -35,7 +32,6 @@ const SinglePlayList2 = () => {
       filterCategories,
       search,
       playLists = [],
-      isPlaying
    } = useAppSelector((state) => state.music);
 
    const [selectedPlaylist, setSelectedPlaylist] = useState<string>("");
@@ -44,42 +40,10 @@ const SinglePlayList2 = () => {
    const axios = axiosInstance();
 
    const dispatch = useAppDispatch();
-   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(
-      null
-   );
-   const [currentPlayingSongId, setCurrentPlayingSongId] = useState<
-      number | null
-   >(null);
-
-   const [anotherId, setAnotherID] = useState<
-      number | null
-   >(null);
-
-   const handlePlay = (audio: any, songId: any) => {
-      console.log('first')
-      if (currentAudio && currentAudio !== audio) {
-         currentAudio.pause();
-         setCurrentPlayingSongId(null);
-      }
-
-      setCurrentAudio(audio);
-      setCurrentPlayingSongId(songId);
-      setAnotherID(songId)
-      // dispatch(updateAudioRef(audio))
-   };
-
-   const handlePause = () => {
-      if (currentAudio) {
-         currentAudio.pause();
-         setCurrentPlayingSongId(null);
-         // setCurrentAudio(null);
-         // dispatch(updateAudioRef(null))
-      }
-   };
 
    useEffect(() => {
       fetchSongs();
-   }, [selectedPlaylist]); // Fetch songs whenever the selected playlist changes
+   }, [selectedPlaylist]);
 
    const fetchSongs = async () => {
       setFetchingSong(true);
@@ -101,8 +65,19 @@ const SinglePlayList2 = () => {
             name: record.name,
             artis_name: record.artis_name,
             flt_name: record.flt_name,
+            audmp: record.audio,
+            audio_wav: record.audwa,
          }));
          setSongs(mappedArray);
+
+         dispatch(
+            updateAllSongs(
+               mappedArray.reduce(
+                  (acc: any, song: any) => ({ ...acc, [song.id]: song }),
+                  {}
+               )
+            )
+         );
          setFetchingSong(false);
       } catch (e) {
          console.error("Unable to fetch songs!!!", e);
@@ -113,70 +88,27 @@ const SinglePlayList2 = () => {
    const handleChange = (event: SelectChangeEvent<string>) => {
       const playlistName = event.target.value;
       setSelectedPlaylist(playlistName);
-      dispatch(updatePlayListFilter(playlistName));
+      // dispatch(updatePlayListFilter(playlistName));
    };
 
    let allSongs = {};
    let firstSongId: number | string | null = null;
 
-   // const items = songs.map((song, i) => {
-   //    if (i === 0) firstSongId = song.id;
-   //    console.log("FirstSongID", firstSongId);
-   //    allSongs = { ...allSongs, [song.id]: song };
-   //    return (
-   //       <SongItem
-   //          key={song.id}
-   //          song={song}
-   //          isPlaying={song.id === currentPlayingSongId}
-   //          onPlay={(audio) => handlePlay(audio, song.id)}
-   //          onPause={handlePause}
-   //       />
-   //    );
-   // });
-
-   useEffect(() => {
-      dispatch(updateCurrentSongId(null));
-      dispatch(updateFirstSongId(null));
-      dispatch(updateCurrentSong(null));
-      dispatch(updateCurrentDuration(null));
-      dispatch(updateIsPlaying(false));
-   }, []);
-
-   useEffect(() => {
-      // first song to be active by default because it need by the bottom music player
-      if (typeof firstSongId === "number")
-         dispatch(updateFirstSongId(firstSongId));
-   }, [songs]);
-
-   console.log('pllaylists in redux', playLists)
+   console.log("pllaylists in redux", playLists);
 
    const items = songs.map((song, i) => {
       if (i === 0) firstSongId = song.id;
       console.log("FirstSongID", firstSongId);
       allSongs = { ...allSongs, [song.id]: song };
-      return (
-         <SongItem
-            key={song.id}
-            song={song}
-            isPlaying={song.id === currentPlayingSongId}
-            onPlay={(audio) => handlePlay(audio, song.id)}
-            onPause={handlePause}
-         />
-      );
+      return <SongItem key={song.id} song={song} />;
    });
 
    useEffect(() => {
-      if (!isPlaying) {
-         handlePause()
-      } else {
-         // if (currentAudio) {
-         handlePlay(currentAudio, anotherId)
-         // }
-         // currentAudio?.play()
+      if (songs.length > 0) {
+         updateAudioRef(new Audio(songs[0]?.audio));
+         dispatch(updateCurrentSong(songs[0]));
       }
-      // currentAudio?.play()
-
-   }, [isPlaying]);
+   }, [songs]);
 
    return (
       <>
@@ -242,17 +174,17 @@ const SinglePlayList2 = () => {
                   </FormControl>
                </Box>
                {/* <div className="w-6/6"> */}
-                  {fetchingSong ? (
-                     <CircularProgress
-                        color="warning"
-                        size={40}
-                        className="ml-4"
-                     />
-                  ) : songs?.length > 0 ? (
-                     items
-                  ) : (
-                     <div>No Songs Found..</div>
-                  )}
+               {fetchingSong ? (
+                  <CircularProgress
+                     color="warning"
+                     size={40}
+                     className="ml-4"
+                  />
+               ) : songs?.length > 0 ? (
+                  items
+               ) : (
+                  <div>No Songs Found..</div>
+               )}
                {/* </div> */}
             </div>
             <Player />

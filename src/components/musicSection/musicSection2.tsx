@@ -32,7 +32,7 @@ const MusicSection2 = () => {
          <Button className="!ml-16 !mb-3  !text-white">New Releases</Button>
          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
             {songs?.length>0 ?  songs?.map((song, id) => (
-               <MusicSectionContent2 thumb={song?.thu} artist_name={song?.artis_name} audio={song?.audio_mp3} name={song?.name} id={song?.id} index={id}/>
+               <MusicSectionContent2 key={id} thumb={song?.thu} artist_name={song?.artis_name} audio={song?.audio_mp3} name={song?.name} id={song?.id} index={id}/>
             )) : <CircularProgress color="warning" size={40}   />}
          </ScrollMenu>
       </div>

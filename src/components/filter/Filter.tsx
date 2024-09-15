@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { updateFilterCategories } from "../../store/music-store";
+import { updateFilterCategories } from "../../store/updated-music-store";
 import SongSwitcher from "./SongSwitcher";
 import CategoryFilter from "./CategoryFilter";
 import musicFilterInfo from "../../util/music-filter-info";

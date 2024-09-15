@@ -33,24 +33,24 @@ const FooterComponent = () => {
                      ))}
                   </div>
                   <div>
-                     <h1 className="text-[18px] font-bold mb-5">Product</h1>
+                     <h1 className="text-[18px] font-bold mb-5">COMPANY</h1>
                      {productLinks.map((item, index) => (
                         <p
                            key={index}
                            className="text-[16px] text-[#7A7A7A] mb-5 !cursor-pointer hover:text-[#FB8A2E] transition-transform duration-500"
                            onClick={()=>navigate(item?.links)}
                         >
-                           {item?.name} 
+                           {item?.name}  
                         </p>
                      ))}
                   </div>
                   <div>
-                     <h1 className="text-[18px] font-bold mb-5">Get Socials</h1>
+                     <h1 className="text-[18px] font-bold mb-5">GET SOCIAL</h1>
                      <p className="text-[16px] text-[#7A7A7A] mb-5" dangerouslySetInnerHTML={{ __html: footerContent }}>
                      </p>
                      <div className="flex ">
                         {socialLinks.map((link, index) => (
-                           <a href={link?.url} target="_blank">
+                           <a href={link?.url} key={index} target="_blank">
                               <img
                               key={index}
                               src={link.src}

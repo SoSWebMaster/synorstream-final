@@ -1,209 +1,117 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import {
-   PlayIcon,
-   PauseIcon,
-   ChevronDownIcon,
-} from "@heroicons/react/20/solid";
+   playSong,
+   pauseSong,
+   updateTotalDuration,
+   updateCurrentDuration,
+} from "../../store/updated-music-store";
+import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useAppDispatch, useAppSelector } from "../../store/index.tsx";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import useDownloader from "react-use-downloader";
-import useAxios from "../../services/axiosConfig/axiosConfig.ts";
-import SocialShare from "./SocialShare.tsx";
-import SongInfo from "./SongInfo.tsx";
-import { endPoints } from "../../services/constants/endPoint.ts";
-import { toast } from "react-toastify";
 import {
    faCirclePlus,
    faMusic,
-   faDownload,
    faCheck,
+   faDownload,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
-import {
-   // updateAllSongs,
-   // updateFirstSongId,
-   updateCurrentSongId,
-   updateIsPlaying,
-   updateCurrentDuration,
-   updateCurrentSong,
-   updateIsLoading,
-} from "../../store/music-store.ts";
-import AltSongs from "./AltSongs.tsx";
-import SimilarSongs from "./SimilarSongs.tsx";
-import PlaylistPopUp from "../dashboad/browse/popUp.tsx";
 import { useLocation } from "react-router-dom";
-// @ts-ignore
-import { throttle } from "lodash";
+import useAxios from "../../services/axiosConfig/axiosConfig";
+import SocialShare from "./SocialShare";
+import { endPoints } from "../../services/constants/endPoint";
+import { IconButton } from "@mui/material";
+import useDownloader from "react-use-downloader";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import SongInfo from "./SongInfo";
+import SimilarSongs from "./SimilarSongs";
+import AltSongs from "./AltSongs";
+import PlaylistPopUp from "../dashboad/browse/popUp";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const formatTime = (time: number) => {
-   const minutes = Math.floor(time / 60);
-   const seconds = Math.floor(time % 60);
-   return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-};
-
-const SongItem: React.FC<{
+interface SongItemProps {
    song: any;
-   isPlaying: boolean;
-   onPlay: (audio: any) => void;
-   onPause: () => void;
-}> = ({ song, isPlaying, onPlay, onPause }) => {
-   const [isLoading, setIsLoading] = useState(false);
-   const [currentTime, setCurrentTime] = useState(0);
-   const [duration, setDuration] = useState(0);
-   const [openModal, setOpenModal] = useState(false);
-   const [DBStatus, setDBStatus] = useState("");
-   const cateElRef = useRef<HTMLSpanElement>(null);
-   const audioRef = useRef<HTMLAudioElement | null>(null);
-   // const descriptionRef = useRef<HTMLSpanElement>(null);
-   const { single_page } = useAppSelector(
-      (state) => state.music
-   );
-   const { success } = useAppSelector((state) => state.auth);
-   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-   // const [songId, setSOngId] = useState<number | null>(null);
-   const open = Boolean(anchorEl);
-   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget);
-   };
-   const navigate = useNavigate();
-   const { download } = useDownloader();
-   const [toggleSimSongs, setToggleSimSongs] = useState<boolean | null>(null);
-   const [isAltAccordionActive, setIsAltAccordionActive] = useState(false);
-   const [toggleAltSongs, setToggleAltSongs] = useState<boolean | null>(null);
-   const [hasPlayed30Seconds, setHasPlayed30Seconds] = useState(false);
-   const dispatch = useAppDispatch();
+}
 
-   const setOpenModalState = () => {
-      setOpenModal(true);
-   };
-   const setCloseModalState = () => {
-      setOpenModal(false);
-   };
-
+const SongItem: React.FC<SongItemProps> = ({ song }) => {
    const {
-      id,
-      audio,
-      thumb,
-      name,
-      artis_name,
-      flt_name,
-      alt_yes_n: altSong,
-   } = song;
+      currentSongId,
+      isPlaying,
+      currentSongRef,
+      currentDuration,
+      totalDuration,
+   } = useAppSelector((state) => state.updatedMusicStore);
+   const dispatch = useAppDispatch();
+   const isCurrentSongPlaying = currentSongId === song.id && isPlaying;
 
-   const hasAltSongs = altSong === 1 ? true : false;
+   const handlePlay = useCallback(() => {
+      dispatch(playSong(song)); // Centralized play logic
+   }, [dispatch, song]);
+
+   const handlePause = useCallback(() => {
+      dispatch(pauseSong());
+   }, [dispatch]);
+   const { download } = useDownloader();
+
+   const hasAltSongs = song.alt_yes_n === 1 ? true : false;
    const axiosInstance = useAxios();
    const location = useLocation();
    const pathname = location.pathname;
 
+   const { single_page } = useAppSelector((state) => state.music);
+   const { success } = useAppSelector((state) => state.auth);
+
+   const [toggleSimSongs, setToggleSimSongs] = useState<boolean | null>(null);
+   const [isAltAccordionActive, setIsAltAccordionActive] = useState(false);
+   const [toggleAltSongs, setToggleAltSongs] = useState<boolean | null>(null);
+   const [DBStatus, setDBStatus] = useState("");
+   const [userTier, setUserTier] = useState<any>("");
+   const [openModal, setOpenModal] = useState(false);
+   const navigate = useNavigate();
+
    // Split pathname and extract segment
    const pathSegments = pathname.split("/"); // Splits at '/'
-   const pageName = pathSegments[1]; 
+   const pageName = pathSegments[1];
 
-   const containerClassName = pageName === 'playlist' || pageName === 'favourites'
-    ? 'flex items-center justify-between ml-4' // No max-width applied
-    : 'flex items-center max-w-[350px] justify-between ml-4'; // Max-width applied
+   const containerClassName =
+      pageName === "playlist" || pageName === "favourites"
+         ? "flex items-center justify-between ml-4" // No max-width applied
+         : "flex items-center max-w-[350px] justify-between ml-4"; // Max-width applied
+
+   const cateElRef = useRef<HTMLSpanElement>(null);
 
    useEffect(() => {
-      const updateTime = throttle(() => {
-         if (audioRef.current) {
-            const time = Math.floor(audioRef.current.currentTime);
-            setCurrentTime(time);
-            dispatch(updateCurrentDuration(time));
-            console.log("time", time);
-            const targetTime = 30;
-            if (time === targetTime && !hasPlayed30Seconds) {
-               setHasPlayed30Seconds(true);
-               addToHistory();
-            }
-         }
-      }, 1000);
+      if (currentSongRef) {
+         // Update total duration when metadata is loaded
+         currentSongRef.addEventListener("loadedmetadata", () => {
+            dispatch(updateTotalDuration(currentSongRef.duration));
+         });
 
-      const handleLoadedMetadata = () => {
-         if (audioRef.current) {
-            const newDuration = audioRef.current.duration;
-            setDuration(newDuration);
-         }
-      };
+         // Update current time as the song progresses
+         currentSongRef.addEventListener("timeupdate", () => {
+            dispatch(updateCurrentDuration(currentSongRef.currentTime));
+         });
 
-      if (isPlaying) {
-         if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.src = audio; // Update the src
-            audioRef.current.currentTime = 0;
-         } else {
-            audioRef.current = new Audio(audio);
-         }
-
-        //  const currentAudio = audioRef.current;
-         dispatch(updateCurrentSong(song)); // Update the Redux state with the current song
-         dispatch(updateCurrentSongId(song.id)); // Update the current song ID
-         dispatch(updateIsPlaying(true));
-         dispatch(updateIsLoading(true));
-         setIsLoading(true);
-
-
-         audioRef.current.oncanplaythrough = () => {
-            setIsLoading(false);
-            dispatch(updateIsLoading(false));
-            audioRef.current && audioRef.current.play().then(() => {
-               onPlay(audioRef.current);
-            });
+         return () => {
+            // Cleanup event listeners on unmount
+            currentSongRef.removeEventListener("loadedmetadata", () => {});
+            currentSongRef.removeEventListener("timeupdate", () => {});
          };
-
-         audioRef.current.onerror = () => {
-            setIsLoading(false);
-            dispatch(updateIsLoading(false));
-         };
-
-         audioRef.current.ontimeupdate = updateTime;
-         audioRef.current.onloadedmetadata = handleLoadedMetadata;
-      } else {
-         if (audioRef.current) {
-            dispatch(updateIsPlaying(false));
-            audioRef.current.ontimeupdate = null;
-            setCurrentTime(0);
-            onPause();
-         }
       }
+   }, [currentSongRef, dispatch]);
 
-      return () => {
-         if (audioRef.current) {
-            audioRef.current.pause();
-            // audioRef.current.src = ""; // Clean up src
-            audioRef.current.ontimeupdate = null;
-            audioRef.current.onloadedmetadata = null;
-         }
-      };
-   }, [isPlaying]);
+   useEffect(() => {
+      let tier = localStorage.getItem("currentPlan");
+      setUserTier(tier);
+   }, []);
 
-   console.log("Has Played ", hasPlayed30Seconds);
-
-//    useEffect(() => {
-//       if (currentSongId === id) {
-//          // Play the song if the currentSongId matches this song's id
-//          if (audioRef.current) {
-//             audioRef.current.play().then(() => onPlay(audioRef.current));
-//          } else {
-//             audioRef.current = new Audio(audio);
-//             const currentAudio = audioRef.current;
-//             currentAudio.play().then(() => onPlay(currentAudio));
-//          }
-//          dispatch(updateIsPlaying(true));
-//       } else {
-//          // Pause the song if the currentSongId does not match this song's id
-//          if (audioRef.current) {
-//             audioRef.current.pause();
-//             dispatch(updateIsPlaying(false));
-//             onPause();
-//          }
-//       }
-//    }, [currentSongId]);
-
-   const options = ["Favorites", "Playlist"];
+   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+   const open = Boolean(anchorEl);
+   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+   };
 
    const handleClose = async (type: string | number, id: number | string) => {
       if (type === "Favorites") {
@@ -226,9 +134,13 @@ const SongItem: React.FC<{
       setAnchorEl(null);
    };
 
+   const options = ["Favorites", "Playlist"];
+
    const downloadFIle = (url: any, id: any, name: any) => {
       if (success) {
          // setSOngId(id);
+         console.log(url)
+         console.log("in true");
          const fileName = url?.split("/")?.pop();
          if (!fileName) {
             toast.error("File could not be determined.");
@@ -245,6 +157,7 @@ const SongItem: React.FC<{
 
          saveDownloadHistory(id);
       } else {
+         console.log("in false");
          navigate("/pricing");
       }
    };
@@ -262,49 +175,55 @@ const SongItem: React.FC<{
       }
    };
 
-   const addToHistory = async () => {
-      try {
-         await axiosInstance.post("/add_to_history", { songid: id });
-         console.log("API call successful");
-      } catch (error) {
-         console.error("Error during API call", error);
-      }
+   const setOpenModalState = () => {
+      setOpenModal(true);
+   };
+   const setCloseModalState = () => {
+      setOpenModal(false);
+   };
+
+   console.log(currentDuration);
+
+   const formatTime = (time: number) => {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60)
+         .toString()
+         .padStart(2, "0");
+      return `${minutes}:${seconds}`;
    };
 
    return (
-      <div className="border-2 border-white p-4 rounded-md">
+      <div className="song-item flex flex-col  gap-6 p-4 border-2 border-white">
          <div className="flex items-center gap-6">
             <img
+               src={song.thumb}
+               alt={song.name}
                className="w-16 h-16 object-cover rounded-md"
-               src={thumb}
-               alt={name}
-               loading="lazy"
             />
-
-            <div className="flex items-center w-[50px]  justify-center p-2 gap-4 ">
-               {isLoading ? (
-                  <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
-               ) : isPlaying ? (
-                  <PauseIcon
-                     className="w-6 h-6 text-white cursor-pointer"
-                     onClick={() => onPause()}
+            <div className="flex items-center flex-grow gap-4 ">
+               <div className="flex items-center justify-center">
+                  {isCurrentSongPlaying ? (
+                     <PauseIcon
+                        className="w-6 h-6 text-white cursor-pointer"
+                        onClick={handlePause}
+                     />
+                  ) : (
+                     <PlayIcon
+                        className="w-6 h-6 text-white cursor-pointer"
+                        onClick={handlePlay}
+                     />
+                  )}
+               </div>
+               <div className="flex flex-col">
+                  <h3 className="text-xl font-semibold truncate">
+                     {song.name}
+                  </h3>
+                  <p
+                     className="text-white/50 text-md truncate"
+                     dangerouslySetInnerHTML={{ __html: song.artis_name }}
                   />
-               ) : (
-                  <PlayIcon
-                     className="w-6 h-6 text-white cursor-pointer"
-                     onClick={() => onPlay(audioRef.current)}
-                  />
-               )}
+               </div>
             </div>
-
-            <div className="flex flex-col flex-grow w-full max-w-[350px]">
-               <h3 className="text-xl text-white truncate">{name}</h3>
-               <span
-                  className="text-white/50 text-sm truncate"
-                  dangerouslySetInnerHTML={{ __html: artis_name }}
-               />
-            </div>
-            {/* {hasAltSongs && ( */}
             <button
                className={`flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${
                   hasAltSongs ? "opacity-100" : "opacity-0"
@@ -317,17 +236,16 @@ const SongItem: React.FC<{
                   }`}
                />
             </button>
-            {/* )} */}
             <div className={containerClassName}>
                <p className={`text-white/70 !hidden md:!flex items-center`}>
                   <span
                      className={`mr-2 grow ellipsis ellipsis-2 flex justify-start`}
                      ref={cateElRef}
                   >
-                     {Array.isArray(flt_name) ? (
-                        Array.from(new Set(flt_name)).join(", ")
+                     {Array.isArray(song?.flt_name) ? (
+                        Array.from(new Set(song?.flt_name)).join(", ")
                      ) : (
-                        <span>{flt_name}</span>
+                        <span>{song?.flt_name}</span>
                      )}
                   </span>
                   <FontAwesomeIcon
@@ -339,28 +257,39 @@ const SongItem: React.FC<{
                      }}
                   />
                </p>
-               <div className="ml-3 flex items-center gap-2">
-                  <span className="text-white/70">
-                     {formatTime(currentTime)}
-                  </span>
-                  <span className="text-white/70">/</span>
-                  <span className="text-white/70">{formatTime(duration)}</span>
-               </div>
+               {isCurrentSongPlaying && (
+                  <div className="ml-3 flex items-center gap-2">
+                     <span className="text-white/70">
+                        {formatTime(currentDuration)}
+                     </span>
+                     <span className="text-white/70">/</span>
+                     <span className="text-white/70">
+                        {formatTime(totalDuration)}
+                     </span>
+                  </div>
+               )}
             </div>
             <div className="flex items-center gap-3 ml-4">
-               <SocialShare url={audio} />
-               <SongInfo songId={id} />
+               <SocialShare url={song.audio} />
+               <SongInfo songId={song.id} />
+               {/* {userTier !== "1" && ( */}{" "}
                <button onClick={() => setToggleSimSongs((prev) => !prev)}>
+                  {" "}
                   <FontAwesomeIcon
                      icon={faMusic}
                      className="text-white text-xl"
                   />
                </button>
-               <FontAwesomeIcon
-                  icon={faDownload}
-                  onClick={() => downloadFIle(audio, id, name)} // Assuming downloadFIle is defined
-                  className="text-white text-xl cursor-pointer"
-               />
+               {/* // )} */}
+               {userTier !== "1" && (
+                  <FontAwesomeIcon
+                     icon={faDownload}
+                     onClick={() =>
+                        downloadFIle(song.audmp, song.id, song.name)
+                     } // Assuming downloadFIle is defined
+                     className="text-white text-xl cursor-pointer"
+                  />
+               )}
                {success && single_page !== "favourites" && (
                   <>
                      <IconButton
@@ -386,7 +315,7 @@ const SongItem: React.FC<{
                         {options.map((option) => (
                            <MenuItem
                               key={option}
-                              onClick={() => handleClose(option, id)}
+                              onClick={() => handleClose(option, song.id)}
                               className="text-xs"
                            >
                               <span className="mr-1">
@@ -404,32 +333,35 @@ const SongItem: React.FC<{
                      </Menu>
                   </>
                )}
-            </div>
+            </div>{" "}
          </div>
+
          {hasAltSongs && (
             <AltSongs
-               id={id}
-               artis_name={artis_name}
-               thumb={thumb}
+               id={song.id}
+               artis_name={song.artis_name}
+               thumb={song.thumb}
                toggle={toggleAltSongs}
                isAccordionActive={setIsAltAccordionActive}
             />
          )}
-         <SimilarSongs
-            id={id}
-            artis_name={artis_name}
-            thumb={thumb}
-            toggle={toggleSimSongs}
-            isAccordionActive={setIsAltAccordionActive}
-            name={name}
-         />
+         {toggleSimSongs && (
+            <SimilarSongs
+               id={song.id}
+               artis_name={song.artis_name}
+               thumb={song.thumb}
+               toggle={toggleSimSongs}
+               isAccordionActive={setIsAltAccordionActive}
+               name={song.name}
+            />
+         )}
 
          {openModal && (
             <PlaylistPopUp
                open={openModal}
                setOpenModalState={setOpenModalState}
                setCloseModalState={setCloseModalState}
-               songId={id}
+               songId={song.id}
             />
          )}
       </div>

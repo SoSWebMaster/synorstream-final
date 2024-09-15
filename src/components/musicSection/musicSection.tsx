@@ -61,7 +61,7 @@ const MusicSection = () => {
          <Button className="!ml-16 !text-white">New Collection</Button>
          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
             {songs?.length>0 ?  songs?.map((song, id) => (
-               <MusicSectionContent thumb={song?.thumb} artist_name={song?.artis_name} audio={song?.audio} name={song?.name} id={song?.id} index={id}/>
+               <MusicSectionContent key={id} thumb={song?.thumb} artist_name={song?.artis_name} audio={song?.audio} name={song?.name} id={song?.id} index={id}/>
             )) : <div className="text-center"> <CircularProgress color="warning" size={40}   /></div>}
          </ScrollMenu>
       </div>

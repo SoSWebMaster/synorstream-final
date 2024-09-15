@@ -44,13 +44,16 @@ export const authSlice = createSlice({
       state.loading = getAPIConstants.PENDING;
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
-      const { id, name, email, token, link, redirect, result } = action.payload.data;
+
+      console.log(action.payload?.data)
+
+      const { user, token, link, redirect, result, plan_amount } = action.payload.data;
 
       // Update the state directly
       state.user = {
-        id,
-        name,
-        email,
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
       };
       state.link = link;
       state.redirect = redirect;

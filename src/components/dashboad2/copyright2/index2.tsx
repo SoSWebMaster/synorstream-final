@@ -10,14 +10,12 @@ const CopyrightComponent2 = () => {
                      Copyright Clearance
                   </h1>
                   <div className="w-3/4 px-4 py-2 mt-2 rounded-lg bg-black/50">
-                  <p className="text-[20px] mt-2">
-                     Unlock the beats you love with peace of mind! Get your
-                     copyright clearance right here <br /> and keep the music
-                     flowing. Navigate with ease and ensure your tracks are
-                     protected.
-                     <br /> Join the harmony of hassle-free music licensing
-                     today!
-                  </p>
+                     <p className="text-[20px] mt-2">
+                        Enter your account and video links here so we can be
+                        sure to clear any copyright issues on your videos. If
+                        you experience any claims, contact us and we’ll get it
+                        sorted for you as soon as possible.
+                     </p>
                   </div>
                </div>
 

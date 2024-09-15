@@ -54,7 +54,7 @@ const PricingCards = () => {
    const [isOpen, setIsOpen] = useState(false);
    const navigate = useNavigate();
    const dispatch = useAppDispatch();
-   const [isMonthly, setIsMonthly] = useState(true);
+   const [isYearly, setIsYearly] = useState(false);
 
    // Handler for switch toggle
 
@@ -106,12 +106,12 @@ const PricingCards = () => {
       y_price: number
    ) => {
       dispatch(updatePlainId(planId));
-      if (isMonthly) {
-         dispatch(updatePlainMonthlyPrice(m_price));
-         dispatch(updatePlainAnnualPrice(null));
-      } else {
+      if (isYearly) {
          dispatch(updatePlainAnnualPrice(y_price));
          dispatch(updatePlainMonthlyPrice(null));
+      } else {
+         dispatch(updatePlainMonthlyPrice(m_price));
+         dispatch(updatePlainAnnualPrice(null));
       }
 
       setM_Price(m_price);
@@ -159,17 +159,40 @@ const PricingCards = () => {
       const check = event.target.checked;
 
       if (check) {
-         handleSwitch("btn1", m_price, null);
-      } else {
          handleSwitch("btn2", null, y_price);
+      } else {
+         handleSwitch("btn1", m_price, null);
       }
 
-      setIsMonthly(check);
+      setIsYearly(check);
    };
 
    return (
-      <>
-         <div className="relative flex justify-between bottom-32">
+      <div>
+         <div className="flex flex-row  justify-end items-center">
+            <p>Yearly</p>
+            <Switch
+               // defaultChecked
+               color="warning"
+               onChange={handleSwitchChange}
+               inputProps={{ "aria-label": "pricing switch" }}
+               sx={{
+                  "& .MuiSwitch-switchBase": {
+                     color: "#ccc", // Base color for unchecked
+                     "&.Mui-checked": {
+                        color: "#f57c00", // Color when checked
+                     },
+                     "&.Mui-checked + .MuiSwitch-track": {
+                        backgroundColor: "#f57c00", // Track color when checked
+                     },
+                  },
+                  "& .MuiSwitch-track": {
+                     backgroundColor: "#ccc", // Track color when unchecked
+                  },
+               }}
+            />
+         </div>
+         <div className=" flex justify-between bottom-32">
             {pricingData.length > 0 &&
                pricingData.map((item, index) => (
                   <div
@@ -186,35 +209,15 @@ const PricingCards = () => {
                         <div className="flex justify-between items-center">
                            <p className="text-[36px] font-bold flex items-center">
                               {"$" +
-                                 (isMonthly
-                                    ? item.month_price
-                                    : item.year_price)}
+                                 (isYearly
+                                    ? item.year_price
+                                    : item.month_price)}
                               <span className="text-[16px] text-[#848199] ml-1">
-                                 {isMonthly ? "/ month" : `/ year`}
+                                 {isYearly ? "/ year" : `/ month`}
                               </span>
                            </p>
-                           <Switch
-                              defaultChecked
-                              color="warning"
-                              onChange={handleSwitchChange}
-                              inputProps={{ "aria-label": "pricing switch" }}
-                              sx={{
-                                 "& .MuiSwitch-switchBase": {
-                                    color: "#ccc", // Base color for unchecked
-                                    "&.Mui-checked": {
-                                       color: "#f57c00", // Color when checked
-                                    },
-                                    "&.Mui-checked + .MuiSwitch-track": {
-                                       backgroundColor: "#f57c00", // Track color when checked
-                                    },
-                                 },
-                                 "& .MuiSwitch-track": {
-                                    backgroundColor: "#ccc", // Track color when unchecked
-                                 },
-                              }}
-                           />
                         </div>
-                        {!isMonthly && <p>{item?.free_months_text}</p>}
+                        {isYearly && <p>{item?.free_months_text}</p>}
                         <p className="text-[#848199] text-[12px] pt-1 !h-10">
                            {item.sub_heading}
                         </p>
@@ -226,7 +229,7 @@ const PricingCards = () => {
                      </div>
                      <p className="text-[12px] font-semibold text-center mt-1">
                         {"$" +
-                           (isMonthly ? item.year_price : item.year_price) +
+                           (isYearly ? item.year_price : item.year_price) +
                            `/year ( ${item.free_months_text} )`}
                      </p>
                      <div className="flex justify-center">
@@ -368,7 +371,7 @@ const PricingCards = () => {
                </Modal>
             )}
          </div>
-      </>
+      </div>
    );
 };
 

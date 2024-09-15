@@ -25,4 +25,4 @@ export const socialLinks = [
    { src: Twitch, alt: "Twitch",url:'https://www.twitch.tv/syncorstream'  },
    { src: Youtube, alt: "Youtube",url:'https://www.youtube.com/@SyncOrStream'  },
 ];
-export const footerContent:string=' Join millions of people who got their <br /> royalty free music and sound effects <br /> (SFX) for free. Stay Connected for <br /> the latest Music and More!'
+export const footerContent:string='Connect with us on social media for<br/> updates and special announcements!'

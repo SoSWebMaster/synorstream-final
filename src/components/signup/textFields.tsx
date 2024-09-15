@@ -157,8 +157,8 @@ const SignUpTextFieldsComponent = () => {
             </Button>
          </form>
          <p className="mt-3">
-            By continuing you indicate that you read and agreed to the Terms of
-            Use
+            By continuing you indicate that you read and agreed to the<span className="underline cursor-pointer" onClick={() => navigate('/terms-conditions')} > Terms of
+            Use.</span>
          </p>
       </div>
    );

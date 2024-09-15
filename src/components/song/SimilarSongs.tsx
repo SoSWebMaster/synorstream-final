@@ -236,7 +236,6 @@ export default function SimilarSongs({
          });
 
          const data = response.data.data;
-         console.log('data', data );
          setSongs(data)
 
          // if( data && Array.isArray( data ) ) {

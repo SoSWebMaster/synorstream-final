@@ -45,7 +45,7 @@ const NewPlayer = () => {
          );
          const records = response?.data?.records;
          if (records) {
-            dispatch(updateIsLoading(true));
+            // dispatch(updateIsLoading(true));
             setSongs(records);
          }
          // console.log( records );
@@ -64,8 +64,8 @@ const NewPlayer = () => {
 
       allSongs = { ...allSongs, [song.id]: song };
       return (
-         <SwiperSlide>
-            <SongItem2 key={song.id} {...song} swiperRef={swiperRef} />
+         <SwiperSlide key={i} >
+            <SongItem2  {...song} swiperRef={swiperRef} />
          </SwiperSlide>
       );
    });

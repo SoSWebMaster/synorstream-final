@@ -13,12 +13,7 @@ import {
    AccordionItem,
    useAccordionProvider,
 } from "@szhsin/react-accordion";
-import {
-   // nextSong,
-   updateCurrentSongId,
-   updateIsPlaying,
-} from "../../store/music-store";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppSelector } from "../../store";
 const apiEndPoint = `${
    import.meta.env.VITE_SYNC_OR_STREAM_BASE_URL
 }/alt_songs_json`;
@@ -56,7 +51,6 @@ export default function AltSongs({
    const [songs, setSongs] = useState<AltSongInterface[]>([]);
    const [currentSongId, setCurrentSongId] = useState<number | null>(null);
    const [isAltPlaying, setIsAltPlaying] = useState(false);
-   const dispatch = useAppDispatch();
 
    const handlePlayPause = (id: any) => {
       if (currentSongId === id) {
@@ -64,17 +58,19 @@ export default function AltSongs({
             const newIsPlaying = !prev;
             return newIsPlaying;
          });
-         dispatch(updateIsPlaying(false));
+         // pauseSong()
+         // dispatch(updateIsPlaying(false));
       } else {
          // Set new song and play
          setCurrentSongId(id);
          setIsAltPlaying(true);
-         dispatch(updateCurrentSongId(id));
-         dispatch(updateIsPlaying(false));
+
+         // dispatch(updateCurrentSongId(id));
+         // dispatch(updateIsPlaying(false));
       }
    };
 
-   const { isPlaying  } = useAppSelector((state) => state.music);
+   const { isPlaying  } = useAppSelector((state) => state.updatedMusicStore);
 
    const { toggle: accordionToggle } = accordionProviderValue;
 
@@ -133,14 +129,13 @@ export default function AltSongs({
    useEffect(() => {
       if (isPlaying) {
          setIsAltPlaying(false);
-
       }
    }, [isPlaying]);
 
    // console.log("Songs in altsongs", songs);
 
    return (
-      <div>
+      // <div>
          <ControlledAccordion providerValue={accordionProviderValue}>
             <AccordionItem
                itemKey={accordionId}
@@ -163,6 +158,6 @@ export default function AltSongs({
                ))}
             </AccordionItem>
          </ControlledAccordion>
-      </div>
+      // </div>
    );
 }

@@ -27,7 +27,7 @@ const HeroSection = forwardRef<HTMLDivElement, HeroSectionProps>(({ scrollToSect
                 <div className="p-12 text-center text-white">
                     <h1 className="text-[48px] font-medium !mb-[-20px]">THE NEW</h1>
                     <h1 className="text-[48px] font-medium">SOUNDWAVE IS HERE</h1>
-                    <p className="text-[22px]">Modern music & SFX for streamers, content creators and professionals. </p>
+                    <p className="text-[22px]">Modern music & SFX for streamers, content creators, and professionals. </p>
                     <p className="text-[22px]">No generic 'background music' here. </p>
                     <Button
                         className='!bg-[#FB8A2E] !text-white !font-bold !mt-5 w-[180px] h-[43px]'

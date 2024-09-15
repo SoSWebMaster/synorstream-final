@@ -4,18 +4,17 @@ import Filter from "../components/filter/Filter";
 import FooterComponent from "../components/footer/footer";
 import LicenseSection from "../components/licenseSection/licenseSection";
 import MusicSection from "../components/musicSection/musicSection";
-import MusicSection2 from "../components/musicSection/musicSection2";
+// import MusicSection2 from "../components/musicSection/musicSection2";
 import Header from "../components/header/Header";
 import HeroSection from "../components/hereSection/heroSection";
 import RoyalitySection from "../components/royalitySection/royalitySection";
 import bgImage from '../../public/static/images/Website-Background.png';
-import { useAppSelector } from "../store/index";
 import Player from "../components/player/Player";
 
 const Home = () => {
    const filterRef = useRef<HTMLDivElement>(null);
 
-   const {  songType } = useAppSelector((state) => state.music);
+   // const {  songType } = useAppSelector((state) => state.music);
 
    return (
       <>
@@ -32,9 +31,9 @@ const Home = () => {
             <div className="2xl:px-60 xl:px-32 lg:px-10">
                <MusicSection />
             </div>
-            <div className="2xl:px-60 xl:px-32 lg:px-10">
+            {/* <div className="2xl:px-60 xl:px-32 lg:px-10">
                <MusicSection2 />
-            </div>
+            </div> */}
             <div className="flex flex-col min-h-screen gap-6 mb-20 text-white bg-black/70 md:p-5 md:flex-row md:items-start">
                <div ref={filterRef} className="md:w-1/6 md:sticky md:top-0">
                   <Filter />
@@ -47,7 +46,7 @@ const Home = () => {
             <div>
                <FooterComponent />
             </div>
-            {!songType && <Player />}
+            <Player />
          </div>
       </>
    );
