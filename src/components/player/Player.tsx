@@ -1,4 +1,4 @@
-import { useEffect} from "react";
+import { useEffect } from "react";
 import {
    nextSong,
    prevSong,
@@ -32,9 +32,9 @@ function PlayerContent() {
    const dispatch = useAppDispatch();
 
    console.log(currentDuration);
-   useEffect(() => {
-      if (!currentSongRef) return;
-   }, [currentSongRef]);
+   // useEffect(() => {
+   //    if (!currentSongRef) return;
+   // }, [currentSongRef]);
 
    const handlePlayPause = () => {
       if (isPlaying) {
@@ -58,25 +58,25 @@ function PlayerContent() {
    };
 
 
-   useEffect(() => {
-      if (currentSongRef) {
-         // Update total duration when metadata is loaded
-         currentSongRef.addEventListener("loadedmetadata", () => {
-            dispatch(updateTotalDuration(currentSongRef.duration));
-         });
+   // useEffect(() => {
+   //    if (currentSongRef) {
+   //       // Update total duration when metadata is loaded
+   //       currentSongRef.addEventListener("loadedmetadata", () => {
+   //          dispatch(updateTotalDuration(currentSongRef.duration));
+   //       });
 
-         // Update current time as the song progresses
-         currentSongRef.addEventListener("timeupdate", () => {
-            dispatch(updateCurrentDuration(currentSongRef.currentTime));
-         });
+   //       // Update current time as the song progresses
+   //       currentSongRef.addEventListener("timeupdate", () => {
+   //          dispatch(updateCurrentDuration(currentSongRef.currentTime));
+   //       });
 
-         return () => {
-            // Cleanup event listeners on unmount
-            currentSongRef.removeEventListener("loadedmetadata", () => {});
-            currentSongRef.removeEventListener("timeupdate", () => {});
-         };
-      }
-   }, [currentSongRef, dispatch]);
+   //       return () => {
+   //          // Cleanup event listeners on unmount
+   //          currentSongRef.removeEventListener("loadedmetadata", () => { });
+   //          currentSongRef.removeEventListener("timeupdate", () => { });
+   //       };
+   //    }
+   // }, [currentSongRef, dispatch]);
 
    const formatTime = (time: number) => {
       const minutes = Math.floor(time / 60);
@@ -110,7 +110,7 @@ function PlayerContent() {
                   </p>
                </div>
                <div>
-                
+
                   <div className="flex justify-center pb-1 text-center">
                      <div className="mr-5">
                         <FontAwesomeIcon
@@ -154,14 +154,17 @@ function PlayerContent() {
                <div className="flex items-center gap-3">
                   <div>
                      <p className="text-center text-white/50 !hidden md:!block">
-                        {formatTime(currentDuration)} / 
+                        {formatTime(currentDuration)} /
                         {formatTime(totalDuration)}
                      </p>
                   </div>
                </div>
             </div>
             <div className="flex flex-1 items-start justify-start">
-               <div className="!w-[70%]"></div>
+               <div className="!w-[70%]">
+                  <div id="waveform"></div>
+               </div>
+
             </div>
          </div>
       </div>

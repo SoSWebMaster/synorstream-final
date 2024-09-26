@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DashboardComponent2 from "..";
 import Filter from "../../filter/Filter";
 import axiosInstance from "../../../services/axiosConfig/axiosConfig";
@@ -8,7 +8,7 @@ import { SongInterface } from "../../song/songTypes";
 import { useAppSelector, useAppDispatch } from "../../../store";
 import SongItem from "../../song/SongItem";
 import { CircularProgress } from "@mui/material";
-import { updateAudioRef } from "../../../store/music-store";
+import { updateAudioRef, updateAllSongs } from "../../../store/music-store";
 const perPage = 8;
 const FavoritesComponent2 = () => {
    const axiosInstanceAuth = axiosInstance();
@@ -17,7 +17,7 @@ const FavoritesComponent2 = () => {
    const [currentPage, setCurrentPage] = useState(1);
    const [hasError, setHasError] = useState(false);
    const { songType, filterCategories, search, single_page, isPlaying } =
-      useAppSelector((state) => state.music);
+      useAppSelector((state) => state.updatedMusicStore);
    const { user } = useAppSelector((state) => state.auth);
    const dispatch = useAppDispatch();
    const [userTier, setUserTier] = useState<any>();
@@ -71,60 +71,76 @@ const FavoritesComponent2 = () => {
       return null;
    };
 
-   useEffect(() => {
-      fetchSongs();
-   }, []);
-   const fetchSongs = async () => {
-      // setHasError( false );
-      setIsLoading(true);
-      try {
-         const response = await axiosInstanceAuth.post(
-            endPoints?.fetch_data_favorites,
-            {
-               post: songType,
-               page: currentPage,
-               single_page: "favorites",
-               categories: filterCategories ? filterCategories?.split(",") : [],
-               per_page: perPage,
-               user: user?.id,
-               search,
-               page_name: "favorites",
-            }
-         );
-         const records = response?.data?.records;
-         let mappedArray = records.map((record) => ({
-            id: record.id,
-            audio: record.audio_aac,
-            thumb: record.thumb,
-            name: record.name,
-            artis_name: record.artis_name,
-            flt_name: record.flt_name,
-         }));
-         setSongs(mappedArray);
-         //   if( typeof result.data.count === "number" ) setCurrentCount( result.data.count );
 
-         //   if( Array.isArray( records ) )  {
-         //      if( currentPage === 1 )  {
+   const fetchSongs = useCallback(
+      async () => {
+         // setHasError( false );
+         setIsLoading(true);
+         try {
+            const response = await axiosInstanceAuth.post(
+               endPoints?.fetch_data_favorites,
+               {
+                  post: songType,
+                  page: currentPage,
+                  single_page: "favorites",
+                  categories: filterCategories
+                     ? filterCategories.split(',').map(Number)
+                     : [],
+                  per_page: perPage,
+                  user: user?.id,
+                  search: search,
+                  page_name: "favorites",
+               }
+            );
+            const records = response?.data?.records;
+            let mappedArray = records.map((record) => ({
+               id: record.id,
+               audio: record.audio_aac,
+               thumb: record.thumb,
+               name: record.name,
+               artis_name: record.artis_name,
+               flt_name: record.flt_name,
+            }));
+            setSongs(mappedArray);
+            //   if( typeof result.data.count === "number" ) setCurrentCount( result.data.count );
 
-         //         setSongs( records );
-         //      } else if( currentPage > 1 )  {
-         //         setSongs( state => [...state, ...records] );
-         //      }
-         //   } else {
-         //      setSongs([]);
-         //   }
+            //   if( Array.isArray( records ) )  {
+            //      if( currentPage === 1 )  {
 
-         setIsLoading(false);
-         // console.log( records );
-      } catch (e) {
-         console.error("unable to fetch songs!!!");
-         setHasError(true);
-         setIsLoading(false);
-      }
-   };
+            //         setSongs( records );
+            //      } else if( currentPage > 1 )  {
+            //         setSongs( state => [...state, ...records] );
+            //      }
+            //   } else {
+            //      setSongs([]);
+            //   }
+
+            dispatch(
+               updateAllSongs(
+                  records.reduce(
+                     (acc, song) => ({ ...acc, [song.id]: song }),
+                     {}
+                  )
+               )
+            );
+
+            setIsLoading(false);
+            // console.log( records );
+         } catch (e) {
+            console.error("unable to fetch songs!!!");
+            setHasError(true);
+            setIsLoading(false);
+         }
+      }, [dispatch, filterCategories, currentPage, search]
+
+   )
    let allSongs = {};
 
-   console.log('songs in',songs)
+
+   useEffect(() => {
+      fetchSongs();
+   }, [fetchSongs]);
+   console.log('songs in', songs)
 
    const items = songs.map((song, i) => {
       allSongs = { ...allSongs, [song.id]: song };
@@ -151,24 +167,25 @@ const FavoritesComponent2 = () => {
       // currentAudio?.play()
    }, [isPlaying]);
 
-   console.log("songs", songs);
+   console.log("filtercategories", filterCategories);
 
    return (
       <>
          <DashboardComponent2>
-            {isLoading ? (
-               <CircularProgress color="warning" size={40} />
-            ) : songs?.length > 0 ? (
-               <div className="flex min-h-screen gap-6 mb-20 text-white bg-black/50 md:p-5 !bg-[url('/static/images/Website-Background.png')] !h-full">
-                  <Filter className=" md:w-1/6 md:sticky md:top-0" />
+            <div className="flex min-h-screen gap-6 mb-20 text-white bg-black/50 md:p-5 !bg-[url('/static/images/Website-Background.png')] !h-full">
+               <Filter className=" md:w-1/6 md:sticky md:top-0" />
+               {isLoading ? (
+                  <CircularProgress color="warning" size={40} />
+               ) : songs?.length > 0 ? (
+
                   <div className="md:w-5/6">
-                     {/* <SongItem key={songs.id} {...songs} /> */}
                      {items}
                   </div>
-               </div>
-            ) : (
-               <div>Songs Not Found</div>
-            )}
+
+               ) : (
+                  <div>Songs Not Found</div>
+               )}
+            </div>
          </DashboardComponent2>
       </>
    );

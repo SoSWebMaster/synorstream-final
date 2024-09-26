@@ -8,10 +8,10 @@ const DownloadHistoryComponent = () => {
                <h1 className="text-[48px] font-medium ">Download History</h1>
                <p className="text-[20px] mt-2">
                   Explore your music download history, a curated collection of
-                  your favorite tunes and <br /> memorable discoveries. Each
+                  your favorite tunes and  memorable discoveries. Each
                   track tells a story, capturing moments of joy, excitement,{" "}
-                  <br /> and reflection. Relive your musical journey and let the
-                  rhythms and melodies take you <br /> back.{" "}
+                  and reflection. Relive your musical journey and let the
+                  rhythms and melodies take you back.{" "}
                </p>
             </div>
 

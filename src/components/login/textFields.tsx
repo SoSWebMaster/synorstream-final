@@ -62,7 +62,7 @@ const LoginTextFieldsComponent = () => {
             <OutlinedInput
                placeholder="Email"
                className="!bg-white !rounded-lg !w-full mb-5"
-               sx={{ height: 70 }}
+               sx={{ height: 60 }}
                value={loginDetail.email}
                onChange={inputValues}
                name="email"

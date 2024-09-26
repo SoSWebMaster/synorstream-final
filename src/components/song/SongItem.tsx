@@ -30,6 +30,8 @@ import PlaylistPopUp from "../dashboad/browse/popUp";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import FormatSelectionModal from "./FormatSelectionModal";
+import useAudioPlayer from "../../hooks/use-audio";
 
 interface SongItemProps {
    song: any;
@@ -47,8 +49,8 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
    const isCurrentSongPlaying = currentSongId === song.id && isPlaying;
 
    const handlePlay = useCallback(() => {
-      dispatch(playSong(song)); // Centralized play logic
-   }, [dispatch, song]);
+      play(song) // Centralized play logic
+   }, [song]);
 
    const handlePause = useCallback(() => {
       dispatch(pauseSong());
@@ -69,6 +71,28 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
    const [DBStatus, setDBStatus] = useState("");
    const [userTier, setUserTier] = useState<any>("");
    const [openModal, setOpenModal] = useState(false);
+   const [isFullLine, setIsFullLine] = useState(false);
+   const [modalOpen, setModalOpen] = useState(false);
+   const [selectedSongId, setSelectedSongId] = useState(null);
+
+   const { play } = useAudioPlayer()
+
+
+   const truncateText = (text: any, maxLength: any) => {
+      if (text.length > maxLength) {
+         return text.substring(0, maxLength) + '...';
+      }
+      return text;
+   };
+
+   const toggleFullLine = () => {
+      setIsFullLine(!isFullLine);
+   };
+
+   const fltName = Array.isArray(song?.flt_name)
+      ? Array.from(new Set(song?.flt_name)).join(", ")
+      : song?.flt_name || "";
+
    const navigate = useNavigate();
 
    // Split pathname and extract segment
@@ -77,30 +101,44 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const containerClassName =
       pageName === "playlist" || pageName === "favourites"
-         ? "flex items-center justify-between ml-4" // No max-width applied
-         : "flex items-center max-w-[350px] justify-between ml-4"; // Max-width applied
+         ? "  "
+         : "max-w-[350px]";
+   3
+   const nameContainer =
+      pageName === "playlist" || pageName === "favourites"
+         ? "flex items-center min-w-[300px] gap-4  "
+         : "flex items-center flex-grow gap-4";
+
+   const buttonVisibility =
+      pageName === "playlist" || pageName === "favourites"
+         ? `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${hasAltSongs ? "hidden" : "hidden"
+         }`
+         : `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${hasAltSongs ? "opacity-100" : "opacity-0"
+         }`;
+
+
 
    const cateElRef = useRef<HTMLSpanElement>(null);
 
-   useEffect(() => {
-      if (currentSongRef) {
-         // Update total duration when metadata is loaded
-         currentSongRef.addEventListener("loadedmetadata", () => {
-            dispatch(updateTotalDuration(currentSongRef.duration));
-         });
+   // useEffect(() => {
+   //    if (currentSongRef) {
+   //       // Update total duration when metadata is loaded
+   //       currentSongRef.addEventListener("loadedmetadata", () => {
+   //          dispatch(updateTotalDuration(currentSongRef.duration));
+   //       });
 
-         // Update current time as the song progresses
-         currentSongRef.addEventListener("timeupdate", () => {
-            dispatch(updateCurrentDuration(currentSongRef.currentTime));
-         });
+   //       // Update current time as the song progresses
+   //       currentSongRef.addEventListener("timeupdate", () => {
+   //          dispatch(updateCurrentDuration(currentSongRef.currentTime));
+   //       });
 
-         return () => {
-            // Cleanup event listeners on unmount
-            currentSongRef.removeEventListener("loadedmetadata", () => {});
-            currentSongRef.removeEventListener("timeupdate", () => {});
-         };
-      }
-   }, [currentSongRef, dispatch]);
+   //       return () => {
+   //          // Cleanup event listeners on unmount
+   //          currentSongRef.removeEventListener("loadedmetadata", () => { });
+   //          currentSongRef.removeEventListener("timeupdate", () => { });
+   //       };
+   //    }
+   // }, [currentSongRef, dispatch]);
 
    useEffect(() => {
       let tier = localStorage.getItem("currentPlan");
@@ -136,32 +174,40 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const options = ["Favorites", "Playlist"];
 
-   const downloadFIle = (url: any, id: any, name: any) => {
+   const handleDownloadFile = (url: any, id: any, name: any) => {
       if (success) {
-         // setSOngId(id);
-         console.log(url)
-         console.log("in true");
-         const fileName = url?.split("/")?.pop();
-         if (!fileName) {
-            toast.error("File could not be determined.");
-            console.error("File name could not be determined.");
-            return;
+         if (userTier === '2') {
+            const fileName = url?.includes(".mp3") ? name + ".mp3" : name;
+            toast.info("Downloading MP3...");
+            download(url, fileName);
+            saveDownloadHistory(id);
+         } else if (userTier === '3') {
+            setSelectedSongId(id);
+            setModalOpen(true);
          }
-         if (url?.includes(".mp3")) {
-            name = name + ".mp3";
-         } else if (url?.includes(".wav")) {
-            name = name + ".wav";
-         }
-         download(url, name);
-         toast.info("Downloading Started...");
-
-         saveDownloadHistory(id);
       } else {
-         console.log("in false");
          navigate("/pricing");
       }
+
    };
-   const saveDownloadHistory = async (songId: number) => {
+
+   const handleModalConfirm = (format: string) => {
+      setModalOpen(false);
+
+      const url = format === "mp3" ? song.audmp : song.audwa;
+      const fileName = song.name + `.${format}`;
+
+      if (url) {
+         toast.info(`Downloading ${format.toUpperCase()}...`);
+         download(url, fileName);
+         saveDownloadHistory(selectedSongId);
+      } else {
+         toast.error(`${format.toUpperCase()} format not available.`);
+      }
+   };
+
+
+   const saveDownloadHistory = async (songId: any) => {
       try {
          const response = await axiosInstance.post(endPoints?.download, {
             id: songId,
@@ -182,8 +228,6 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
       setOpenModal(false);
    };
 
-   console.log(currentDuration);
-
    const formatTime = (time: number) => {
       const minutes = Math.floor(time / 60);
       const seconds = Math.floor(time % 60)
@@ -200,7 +244,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                alt={song.name}
                className="w-16 h-16 object-cover rounded-md"
             />
-            <div className="flex items-center flex-grow gap-4 ">
+            <div className={nameContainer}>
                <div className="flex items-center justify-center">
                   {isCurrentSongPlaying ? (
                      <PauseIcon
@@ -210,7 +254,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                   ) : (
                      <PlayIcon
                         className="w-6 h-6 text-white cursor-pointer"
-                        onClick={handlePlay}
+                        onClick={() => play(song)}
                      />
                   )}
                </div>
@@ -225,47 +269,31 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                </div>
             </div>
             <button
-               className={`flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${
-                  hasAltSongs ? "opacity-100" : "opacity-0"
-               }`}
+               className={buttonVisibility}
                onClick={() => setToggleAltSongs((state) => !state)}
             >
                <ChevronDownIcon
-                  className={`w-5 h-5 transition-transform duration-300${
-                     isAltAccordionActive ? " rotate-180" : ""
-                  }`}
+                  className={`w-5 h-5 transition-transform duration-300${isAltAccordionActive ? " rotate-180" : ""
+                     }`}
                />
             </button>
             <div className={containerClassName}>
-               <p className={`text-white/70 !hidden md:!flex items-center`}>
-                  <span
-                     className={`mr-2 grow ellipsis ellipsis-2 flex justify-start`}
-                     ref={cateElRef}
-                  >
-                     {Array.isArray(song?.flt_name) ? (
-                        Array.from(new Set(song?.flt_name)).join(", ")
-                     ) : (
-                        <span>{song?.flt_name}</span>
-                     )}
+               <p className="text-white/70 !hidden md:!flex items-center">
+                  <span className="flex justify-start" ref={cateElRef}>
+                     {isFullLine ? fltName : truncateText(fltName, 80)}
                   </span>
                   <FontAwesomeIcon
                      icon={faCirclePlus}
-                     className=" text-xl cursor-pointer "
-                     onClick={() => {
-                        if (!cateElRef.current) return;
-                        cateElRef.current.classList.toggle("full-line");
-                     }}
+                     className="text-xl cursor-pointer ml-2"
+                     onClick={toggleFullLine}
                   />
                </p>
+
                {isCurrentSongPlaying && (
                   <div className="ml-3 flex items-center gap-2">
-                     <span className="text-white/70">
-                        {formatTime(currentDuration)}
-                     </span>
+                     <span className="text-white/70">{formatTime(currentDuration)}</span>
                      <span className="text-white/70">/</span>
-                     <span className="text-white/70">
-                        {formatTime(totalDuration)}
-                     </span>
+                     <span className="text-white/70">{formatTime(totalDuration)}</span>
                   </div>
                )}
             </div>
@@ -285,8 +313,8 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                   <FontAwesomeIcon
                      icon={faDownload}
                      onClick={() =>
-                        downloadFIle(song.audmp, song.id, song.name)
-                     } // Assuming downloadFIle is defined
+                        handleDownloadFile(song.audmp, song.id, song.name)
+                     }
                      className="text-white text-xl cursor-pointer"
                   />
                )}
@@ -299,7 +327,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                         aria-expanded={open ? "true" : undefined}
                         aria-haspopup="true"
                         onClick={handleClick}
-                        // className="text-white"
+                     // className="text-white"
                      >
                         <MoreVertIcon className="text-white" />
                      </IconButton>
@@ -355,6 +383,18 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                name={song.name}
             />
          )}
+
+         {
+            modalOpen && (
+               <FormatSelectionModal
+                  open={modalOpen}
+                  onClose={() => setModalOpen(false)}
+                  onConfirm={handleModalConfirm}
+               />
+            )
+         }
+
+
 
          {openModal && (
             <PlaylistPopUp

@@ -1,18 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import {  updateSearch } from "../../store/music-store";
+import { updateSearch } from "../../store/updated-music-store";
 import { debounce } from "../../util/util";
 import { useAppDispatch } from "../../store";
-interface SearchProps{
+interface SearchProps {
    className?: string,
 }
 
-export default function Search( { className }: SearchProps ) {
+export default function Search({ className }: SearchProps) {
    const dispatch = useAppDispatch();
    // @ts-ignore
-   const updateSearchTerms = debounce( ( e: Event ) => dispatch( updateSearch( e.target?.value ) ), 500 );
+   const updateSearchTerms = debounce((e: Event) => dispatch(updateSearch(e.target?.value)), 500);
 
-   return(
+   return (
       <div className={`${className ? className + ' ' : ''}relative rounded-md   overflow-hidden text-lg`}>
          <input
             className="block w-full py-2 pl-4 font-semibold !text-white  pr-11 h-11 focus:outline-none"

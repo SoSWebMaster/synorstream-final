@@ -1,7 +1,7 @@
 // @ts-nocheck
 import Box from "@mui/material/Box";
 import { Button, CircularProgress, TextField } from "@mui/material";
-import {  useRef, useState } from "react";
+import { useRef, useState } from "react";
 import axiosInstance from "../../services/axiosConfig/axiosConfigSimple";
 import { endPoints } from "../../services/constants/endPoint";
 import { toast } from "react-toastify";
@@ -11,12 +11,12 @@ import { Controller, useForm } from "react-hook-form";
 import { contactSchema } from "./yupSchema";
 // const axiosInstance = useAxios();
 // @ts-nocheck
-interface ContactProp{
-    name?: string,
-    email?: string,
-    subject?: string,
-    comments?: string,
-    phone?: string,
+interface ContactProp {
+   name?: string,
+   email?: string,
+   subject?: string,
+   comments?: string,
+   phone?: string,
 }
 const ContactUsComponent = () => {
 
@@ -24,13 +24,13 @@ const ContactUsComponent = () => {
    const recaptcha = useRef();
    const [isLoading, setisLoading] = useState(false);
    const defaultValues = {
-    name: "",
-    email: "",
-    subject: "",
-    comments: "",
-    phone: "",
+      name: "",
+      email: "",
+      subject: "",
+      comments: "",
+      phone: "",
    };
-   const { control, formState, handleSubmit,reset } = useForm({
+   const { control, formState, handleSubmit, reset } = useForm({
       mode: "onChange",
       defaultValues: defaultValues,
       resolver: yupResolver(contactSchema),
@@ -38,11 +38,11 @@ const ContactUsComponent = () => {
 
    const { errors } = formState;
 
-   console.log(errors,"errors")
+   console.log(errors, "errors")
 
-   const onSubmitData = async (data:ContactProp) => {
+   const onSubmitData = async (data: ContactProp) => {
       setisLoading(true);
-// @ts-ignore
+      // @ts-ignore
       const captchaValue = recaptcha?.current.getValue();
       if (!captchaValue) {
          toast.error("Please verify the reCAPTCHA!");
@@ -50,8 +50,9 @@ const ContactUsComponent = () => {
       } else {
          try {
             const response = await axiosInstance.post(
-               endPoints?.contact_submit,{
-               details:data}
+               endPoints?.contact_submit, {
+               details: data
+            }
             );
 
             if (response.status === 200) {
@@ -151,9 +152,20 @@ const ContactUsComponent = () => {
                      )}
                   />
 
-                    <Controller
+                  <Controller
                      control={control}
                      name="phone"
+                     rules={{
+                        required: "Phone number is required",
+                        pattern: {
+                           value: /^[0-9\b]+$/,
+                           message: "Phone number is not valid",
+                        },
+                        minLength: {
+                           value: 10,
+                           message: "Phone number must be at least 10 digits",
+                        },
+                     }}
                      render={({ field }) => (
                         <TextField
                            {...field}
@@ -164,6 +176,7 @@ const ContactUsComponent = () => {
                            helperText={errors?.phone?.message}
                            className="!mt-6"
                            placeholder="Phone No"
+                           inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }} // Restrict input to numbers
                            sx={{
                               "& .MuiInputBase-input": {
                                  color: "white",
@@ -189,7 +202,7 @@ const ContactUsComponent = () => {
                         />
                      )}
                   />
-                   <Controller
+                  <Controller
                      control={control}
                      name="subject"
                      render={({ field }) => (
@@ -227,7 +240,7 @@ const ContactUsComponent = () => {
                         />
                      )}
                   />
-                     <Controller
+                  <Controller
                      control={control}
                      name="comments"
                      render={({ field }) => (

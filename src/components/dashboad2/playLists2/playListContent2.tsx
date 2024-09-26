@@ -2,7 +2,11 @@ import * as React from "react";
 import PlayListCard2 from "./playListCard2";
 import ModalComponent2 from "../modalComponent2";
 
-const PlayListContent2 = () => {
+interface PlayListContent2 {
+   searchQuery: string
+}
+
+const PlayListContent2: React.FC<PlayListContent2> = ({ searchQuery }) => {
    const [openModal, setOpenModal] = React.useState(Boolean);
    return (
       <>
@@ -18,7 +22,7 @@ const PlayListContent2 = () => {
                Add New
             </button>
          </div>
-         <PlayListCard2 openState={openModal} />
+         <PlayListCard2 searchQuery={searchQuery} openState={openModal} />
       </>
    );
 };

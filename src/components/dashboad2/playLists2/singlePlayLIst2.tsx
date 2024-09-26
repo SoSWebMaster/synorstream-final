@@ -19,13 +19,11 @@ import SongItem from "../../song/SongItem";
 import axiosInstance from "../../../services/axiosConfig/axiosConfig";
 import { endPoints } from "../../../services/constants/endPoint";
 import DashboardComponent2 from "..";
-import { useParams } from "react-router-dom";
 import Player from "../../player/Player";
 
 const perPage = 8;
 
 const SinglePlayList2 = () => {
-   const { id } = useParams();
    const { user } = useAppSelector((state) => state.auth);
    const {
       songType,
@@ -41,8 +39,11 @@ const SinglePlayList2 = () => {
 
    const dispatch = useAppDispatch();
 
+   // Fetch songs whenever selectedPlaylist changes
    useEffect(() => {
-      fetchSongs();
+      if (selectedPlaylist) {
+         fetchSongs();
+      }
    }, [selectedPlaylist]);
 
    const fetchSongs = async () => {
@@ -55,10 +56,11 @@ const SinglePlayList2 = () => {
             categories: filterCategories.split(","),
             per_page: perPage,
             user: user?.id,
-            search,
-            page_name: id,
+            search: '',
+            page_name: selectedPlaylist, // Use selectedPlaylist here
          });
-         let mappedArray = response?.data?.records.map((record: any) => ({
+
+         const mappedArray = response?.data?.records.map((record: any) => ({
             id: record.id,
             audio: record.audio,
             thumb: record.thumb,
@@ -88,17 +90,13 @@ const SinglePlayList2 = () => {
    const handleChange = (event: SelectChangeEvent<string>) => {
       const playlistName = event.target.value;
       setSelectedPlaylist(playlistName);
-      // dispatch(updatePlayListFilter(playlistName));
    };
 
    let allSongs = {};
    let firstSongId: number | string | null = null;
 
-   console.log("pllaylists in redux", playLists);
-
    const items = songs.map((song, i) => {
       if (i === 0) firstSongId = song.id;
-      console.log("FirstSongID", firstSongId);
       allSongs = { ...allSongs, [song.id]: song };
       return <SongItem key={song.id} song={song} />;
    });
@@ -135,7 +133,7 @@ const SinglePlayList2 = () => {
                         sx={{
                            color: "white",
                            "&.Mui-focused": {
-                              color: "white", // Change label color to white when focused
+                              color: "white",
                            },
                         }}
                      >
@@ -154,7 +152,7 @@ const SinglePlayList2 = () => {
                               borderColor: "#FB8A2E",
                            },
                            "& .MuiSvgIcon-root": {
-                              color: "white", // Change chevron color to white
+                              color: "white",
                            },
                         }}
                         value={selectedPlaylist} // Controlled value
@@ -164,8 +162,8 @@ const SinglePlayList2 = () => {
                         {playLists.length > 0 &&
                            playLists.map((item, index) => (
                               <MenuItem
-                                 key={`${index} + ${item?.name}`}
-                                 value={item?.name} // Set value for MenuItem
+                                 key={`${index} + ${item?.id}`} // Ensure uniqueness
+                                 value={item?.id} // Set playlist ID or unique identifier
                               >
                                  {item?.name}
                               </MenuItem>
@@ -173,7 +171,6 @@ const SinglePlayList2 = () => {
                      </Select>
                   </FormControl>
                </Box>
-               {/* <div className="w-6/6"> */}
                {fetchingSong ? (
                   <CircularProgress
                      color="warning"
@@ -185,7 +182,6 @@ const SinglePlayList2 = () => {
                ) : (
                   <div>No Songs Found..</div>
                )}
-               {/* </div> */}
             </div>
             <Player />
          </DashboardComponent2>

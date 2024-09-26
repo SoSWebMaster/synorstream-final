@@ -281,7 +281,7 @@ export default function Songs({ className }: SongsProps) {
    const [hasError, setHasError] = useState(false);
    const [hasMoreSongs, setHasMoreSongs] = useState(true);
 
-   const { currentSongRef, currentSongId, isPlaying, filterCategories } =
+   const { currentSongRef, currentSongId, isPlaying, filterCategories, search } =
       useAppSelector((state) => state.updatedMusicStore);
    const dispatch = useAppDispatch();
    const fetchSongs = useCallback(
@@ -299,7 +299,7 @@ export default function Songs({ className }: SongsProps) {
                   categories: filterCategories,
                   per_page: perPage,
                   user: 155,
-                  search: "",
+                  search: search,
                   source: "react",
                }
             );
@@ -338,7 +338,7 @@ export default function Songs({ className }: SongsProps) {
             setIsLoading(false);
          }
       },
-      [dispatch, filterCategories, currentPage]
+      [dispatch, filterCategories, currentPage, search]
    );
 
    useEffect(() => {
@@ -386,8 +386,9 @@ export default function Songs({ className }: SongsProps) {
    }, []);
 
    useEffect(() => {
-      updateAudioRef(new Audio(songs[0]?.audio));
+      // updateAudioRef(new Audio(songs[0]?.audio));
       dispatch(updateCurrentSong(songs[0]))
+      console.log('in useeffect')
    }, [songs]);
 
    return (
