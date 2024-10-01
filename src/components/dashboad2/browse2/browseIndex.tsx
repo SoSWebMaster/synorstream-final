@@ -1,5 +1,5 @@
 import DashboardComponent2 from "..";
-
+import Player from "../../player/Player";
 import BrowserComponent2 from "./browseComponent2";
 
 
@@ -10,7 +10,7 @@ const BrowseIndex =()=>{
                 <div className="bg-[url('/static/images/Website-Background.png')] !h-full">
                 <BrowserComponent2/>
                 </div>
-                  
+                <Player />
             </DashboardComponent2>
         </>
     )
