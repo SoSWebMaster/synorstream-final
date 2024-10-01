@@ -1,8 +1,4 @@
-import {
-   nextSong,
-   prevSong,
-   updateCurrentVolume,
-} from "../../store/updated-music-store";
+
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,7 +27,7 @@ function PlayerContent() {
       location.pathname
    );
 
-   const { playSong, pauseSong, setVolume } = useAudio();
+   const { playSong, pauseSong, setVolume, nextSong, prevSong } = useAudio();
 
    console.log(currentDuration);
 
@@ -44,11 +40,11 @@ function PlayerContent() {
    };
 
    const handleNext = () => {
-      dispatch(nextSong());
+     nextSong()
    };
 
    const handlePrev = () => {
-      dispatch(prevSong());
+    prevSong()
    };
 
    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,12 +62,12 @@ function PlayerContent() {
 
    return (
       <div
-         className={`fixed bottom-0 left-0 right-0 z-50 text-white bg-black opacity-0 ${
+         className={`fixed bottom-0 left-0 right-0 z-50 text-white bg-black opacity-0 h-[100px] p-3 ${
             isVisible ? "opacity-0" : "opacity-100"
          } `}
       >
          <div className="flex items-center gap-10 gap-x-2 ">
-            <div className="flex flex-1 justify-center items-center gap-10">
+            <div className="flex flex-1 justify-center items-center gap-10  ">
                <div className="flex justify-center">
                   <img className="md:w-20 " src={currentSong?.thumb} />
                </div>
@@ -140,7 +136,7 @@ function PlayerContent() {
                   </div>
                </div>
             </div>
-            <div className="flex flex-1 items-start justify-start">
+            <div className="flex flex-1 items-start justify-start ">
                <div className="!w-[70%]">
                   <div id={`waveform`}></div>
                </div>
