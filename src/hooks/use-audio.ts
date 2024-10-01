@@ -1,88 +1,77 @@
-import { useEffect, useRef } from "react";
-import { useAppSelector, useAppDispatch } from "../store";
-import WaveSurfer from "wavesurfer.js";
-import {
-   updateCurrentDuration,
-   updateTotalDuration,
-   updateCurrentSong,
-   updateIsPlaying,
-} from "../store/updated-music-store";
+import { useEffect } from 'react';
+import { useAppSelector, useAppDispatch } from '../store';
+import WaveSurfer from 'wavesurfer.js';
+import { playSong, pauseSong, updateCurrentDuration, updateTotalDuration, updateAudioRef, updateCurrentSong } from '../store/updated-music-store';
 
 const useAudioPlayer = () => {
-   const dispatch = useAppDispatch();
-   const { currentSong, isPlaying, currentVolume } = useAppSelector(
-      (state) => state.updatedMusicStore
-   );
-   const waveSurferRef = useRef<WaveSurfer | null>(null);
+  const dispatch = useAppDispatch();
+  const { currentSong, isPlaying, currentVolume, currentSongRef } = useAppSelector((state) => state.updatedMusicStore);
 
-   // Cleanup previous WaveSurfer instance
-   const cleanUpWaveSurfer = () => {
-      if (waveSurferRef.current) {
-         waveSurferRef.current.destroy();
-         waveSurferRef.current = null;
-      }
-   };
+  useEffect(() => {
+    if (currentSong) {
+      // Create a new WaveSurfer instance
+      const waveSurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: 'violet',
+        progressColor: 'purple',
+        barWidth: 2,
+        height: 80,
+        backend: 'MediaElement',
+        // volume: currentVolume,
+      });
 
-   useEffect(() => {
-      // if (currentSong) {
-      //    // Cleanup any existing WaveSurfer instance before creating a new one
-      //    cleanUpWaveSurfer();
+      updateAudioRef(waveSurfer)
 
-      //    // Create a new WaveSurfer instance for the current song
-      //    const waveSurfer = WaveSurfer.create({
-      //       container: `#waveform-${currentSong.id}`,
-      //       waveColor: "violet",
-      //       progressColor: "purple",
-      //       barWidth: 2,
-      //       height: 80,
-      //       backend: "MediaElement",
-      //       // volume: currentVolume,
-      //    });
+      // Load the current song audio
+      waveSurfer.load(currentSong.audio);
 
-      //    // Load the current song into the WaveSurfer instance
-      //    waveSurfer.load(currentSong.audio);
-      //    waveSurferRef.current = waveSurfer;
+      // Handle playback state
+      waveSurfer.on('ready', () => {
+        if (isPlaying) {
+          waveSurfer.play();
+        }
+      });
 
-      //    // When the song is ready, play it if isPlaying is true
-      //    waveSurfer.on("ready", () => {
-      //       if (isPlaying) {
-      //          waveSurfer.play();
-      //       }
-      //       dispatch(updateTotalDuration(waveSurfer.getDuration()));
-      //    });
+      // Update Redux state on audio process
+      waveSurfer.on('audioprocess', () => {
+        dispatch(updateCurrentDuration(waveSurfer.getCurrentTime()));
+        dispatch(updateTotalDuration(waveSurfer.getDuration()));
+      });
 
-      //    // Update the current duration as the song progresses
-      //    waveSurfer.on("audioprocess", () => {
-      //       dispatch(updateCurrentDuration(waveSurfer.getCurrentTime()));
-      //    });
+      // Handle finish event
+      waveSurfer.on('finish', () => {
+        dispatch(pauseSong()); // Update state to indicate song finished
+      });
 
-      //    // Handle the end of the song
-      //    waveSurfer.on("finish", () => {
-      //       dispatch(updateIsPlaying(false));
-      //    });
+      // Cleanup WaveSurfer on unmount or when song changes
+      return () => {
+        waveSurfer.destroy();
+      };
+    }
+  }, [currentSong, isPlaying, currentVolume]);
 
-      //    // Cleanup when the component unmounts or the song changes
-      //    return () => {
-      //       cleanUpWaveSurfer();
-      //    };
-      // }
-   }, [currentSong, isPlaying, currentVolume, dispatch]);
+  console.log('currentSOng in custom hook', currentSong)
 
-   // Play function: set the current song and start playback
-   const play = (song: any) => {
-      dispatch(updateCurrentSong(song));
-      dispatch(updateIsPlaying(true));
-   };
+  // Function to play the song
+  const play = (song: any) => {
 
-   // Pause function: just update the playing state
-   const pause = () => {
-      if (waveSurferRef.current) {
-         waveSurferRef.current.pause();
-      }
-      dispatch(updateIsPlaying(false));
-   };
+    updateCurrentSong(song)
+    console.log('click')
+    if (currentSongRef) {
+      currentSongRef.play();
+      // dispatch(playSong(currentSong)); // Update state to reflect the playing song
+    }
+  };
 
-   return { play, pause };
+  // Function to pause the song
+  const pause = () => {
+    if (currentSongRef) {
+      currentSongRef.pause();
+      // dispatch(pauseSong()); // Update state to reflect the paused state
+    }
+  };
+
+  return { play, pause };
 };
 
 export default useAudioPlayer;

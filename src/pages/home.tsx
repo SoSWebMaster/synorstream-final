@@ -29,7 +29,7 @@ const Home = () => {
                </div>
             </div>
             <div className="2xl:px-60 xl:px-32 lg:px-10 mb-10">
-               <MusicSection /> 
+               <MusicSection />
             </div>
             {/* <div className="2xl:px-60 xl:px-32 lg:px-10">
                <MusicSection2 />

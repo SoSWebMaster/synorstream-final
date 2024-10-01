@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
+import {
+   playSong,
+   pauseSong,
+   updateTotalDuration,
+   updateCurrentDuration,
+} from "../../store/updated-music-store";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,7 +31,7 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import FormatSelectionModal from "./FormatSelectionModal";
-import { useAudio } from "../../context/AudioContext";
+import useAudioPlayer from "../../hooks/use-audio";
 
 interface SongItemProps {
    song: any;
@@ -35,14 +41,20 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
    const {
       currentSongId,
       isPlaying,
+      currentSongRef,
       currentDuration,
       totalDuration,
-      currentSong,
-      isLoading,
    } = useAppSelector((state) => state.updatedMusicStore);
-   const { playSong, pauseSong, resumeSong } = useAudio();
+   const dispatch = useAppDispatch();
    const isCurrentSongPlaying = currentSongId === song.id && isPlaying;
 
+   const handlePlay = useCallback(() => {
+      play(song) // Centralized play logic
+   }, [song]);
+
+   const handlePause = useCallback(() => {
+      dispatch(pauseSong());
+   }, [dispatch]);
    const { download } = useDownloader();
 
    const hasAltSongs = song.alt_yes_n === 1 ? true : false;
@@ -63,19 +75,12 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
    const [modalOpen, setModalOpen] = useState(false);
    const [selectedSongId, setSelectedSongId] = useState(null);
 
-   const handlePlayPause = () => {
-      if (currentSong?.id === song.id && isPlaying) {
-         console.log("in pause");
-         pauseSong();
-      } else {
-         console.log("in play");
-         playSong(song);
-      }
-   };
+   const { play } = useAudioPlayer()
+
 
    const truncateText = (text: any, maxLength: any) => {
       if (text.length > maxLength) {
-         return text.substring(0, maxLength) + "...";
+         return text.substring(0, maxLength) + '...';
       }
       return text;
    };
@@ -90,13 +95,15 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const navigate = useNavigate();
 
-   const pathSegments = pathname.split("/");
+   // Split pathname and extract segment
+   const pathSegments = pathname.split("/"); // Splits at '/'
    const pageName = pathSegments[1];
 
    const containerClassName =
       pageName === "playlist" || pageName === "favourites"
-         ? "flex gap-10 items-center  "
-         : "flex gap-1 items-center max-w-[450px]";
+         ? "  "
+         : "max-w-[350px]";
+   3
    const nameContainer =
       pageName === "playlist" || pageName === "favourites"
          ? "flex items-center min-w-[300px] gap-4  "
@@ -104,14 +111,34 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const buttonVisibility =
       pageName === "playlist" || pageName === "favourites"
-         ? `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${
-              hasAltSongs ? "hidden" : "hidden"
-           }`
-         : `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${
-              hasAltSongs ? "opacity-100" : "opacity-0"
-           }`;
+         ? `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${hasAltSongs ? "hidden" : "hidden"
+         }`
+         : `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${hasAltSongs ? "opacity-100" : "opacity-0"
+         }`;
+
+
 
    const cateElRef = useRef<HTMLSpanElement>(null);
+
+   // useEffect(() => {
+   //    if (currentSongRef) {
+   //       // Update total duration when metadata is loaded
+   //       currentSongRef.addEventListener("loadedmetadata", () => {
+   //          dispatch(updateTotalDuration(currentSongRef.duration));
+   //       });
+
+   //       // Update current time as the song progresses
+   //       currentSongRef.addEventListener("timeupdate", () => {
+   //          dispatch(updateCurrentDuration(currentSongRef.currentTime));
+   //       });
+
+   //       return () => {
+   //          // Cleanup event listeners on unmount
+   //          currentSongRef.removeEventListener("loadedmetadata", () => { });
+   //          currentSongRef.removeEventListener("timeupdate", () => { });
+   //       };
+   //    }
+   // }, [currentSongRef, dispatch]);
 
    useEffect(() => {
       let tier = localStorage.getItem("currentPlan");
@@ -149,20 +176,19 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const handleDownloadFile = (url: any, id: any, name: any) => {
       if (success) {
-         console.log('in if')
-         if (userTier === "2") {
+         if (userTier === '2') {
             const fileName = url?.includes(".mp3") ? name + ".mp3" : name;
             toast.info("Downloading MP3...");
             download(url, fileName);
             saveDownloadHistory(id);
-         } else if (userTier === "3") {
+         } else if (userTier === '3') {
             setSelectedSongId(id);
             setModalOpen(true);
          }
       } else {
-         console.log('in else')
          navigate("/pricing");
       }
+
    };
 
    const handleModalConfirm = (format: string) => {
@@ -179,6 +205,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
          toast.error(`${format.toUpperCase()} format not available.`);
       }
    };
+
 
    const saveDownloadHistory = async (songId: any) => {
       try {
@@ -219,16 +246,17 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
             />
             <div className={nameContainer}>
                <div className="flex items-center justify-center">
-                  <div onClick={handlePlayPause} className="cursor-pointer">
-                     {/* Show PauseIcon if the song is playing, otherwise show PlayIcon */}
-                     {isLoading && currentSong?.id === song.id ? (
-                        <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                     ) : currentSong?.id === song.id && isPlaying ? (
-                        <PauseIcon className="w-6 h-6 text-white cursor-pointer" />
-                     ) : (
-                        <PlayIcon className="w-6 h-6 text-white cursor-pointer" />
-                     )}
-                  </div>
+                  {isCurrentSongPlaying ? (
+                     <PauseIcon
+                        className="w-6 h-6 text-white cursor-pointer"
+                        onClick={handlePause}
+                     />
+                  ) : (
+                     <PlayIcon
+                        className="w-6 h-6 text-white cursor-pointer"
+                        onClick={() => play(song)}
+                     />
+                  )}
                </div>
                <div className="flex flex-col">
                   <h3 className="text-xl font-semibold truncate">
@@ -245,9 +273,8 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                onClick={() => setToggleAltSongs((state) => !state)}
             >
                <ChevronDownIcon
-                  className={`w-5 h-5 transition-transform duration-300${
-                     isAltAccordionActive ? " rotate-180" : ""
-                  }`}
+                  className={`w-5 h-5 transition-transform duration-300${isAltAccordionActive ? " rotate-180" : ""
+                     }`}
                />
             </button>
             <div className={containerClassName}>
@@ -262,17 +289,13 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                   />
                </p>
 
-               {/* {isCurrentSongPlaying && ( */}
-                  <div className={`ml-3 flex items-center gap-2 ${isCurrentSongPlaying ? 'opacity-100' : 'opacity-0'} `}>
-                     <span className="text-white/70">
-                        {formatTime(currentDuration)}
-                     </span>
+               {isCurrentSongPlaying && (
+                  <div className="ml-3 flex items-center gap-2">
+                     <span className="text-white/70">{formatTime(currentDuration)}</span>
                      <span className="text-white/70">/</span>
-                     <span className="text-white/70">
-                        {formatTime(totalDuration)}
-                     </span>
+                     <span className="text-white/70">{formatTime(totalDuration)}</span>
                   </div>
-               {/* )} */}
+               )}
             </div>
             <div className="flex items-center gap-3 ml-4">
                <SocialShare url={song.audio} />
@@ -304,7 +327,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                         aria-expanded={open ? "true" : undefined}
                         aria-haspopup="true"
                         onClick={handleClick}
-                        // className="text-white"
+                     // className="text-white"
                      >
                         <MoreVertIcon className="text-white" />
                      </IconButton>
@@ -361,13 +384,17 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
             />
          )}
 
-         {modalOpen && (
-            <FormatSelectionModal
-               open={modalOpen}
-               onClose={() => setModalOpen(false)}
-               onConfirm={handleModalConfirm}
-            />
-         )}
+         {
+            modalOpen && (
+               <FormatSelectionModal
+                  open={modalOpen}
+                  onClose={() => setModalOpen(false)}
+                  onConfirm={handleModalConfirm}
+               />
+            )
+         }
+
+
 
          {openModal && (
             <PlaylistPopUp

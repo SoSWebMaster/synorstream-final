@@ -10,7 +10,7 @@ import { endPoints } from "../../services/constants/endPoint";
 import { useAppSelector } from "../../store";
 import { SongInterface } from "../song/songTypes";
 import MusicSectionContent from "./musicSectionContent";
-import CircularProgress from "@mui/material/CircularProgress";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const MusicSection = () => {
    const [songs, setSongs] = useState<SongInterface[]>([]);
@@ -60,51 +60,37 @@ const MusicSection = () => {
       <div className=" scroll-container">
          <Button className="!ml-16 !text-white">New Collection</Button>
          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
-            {songs?.length > 0 ? (
-               songs?.map((song, id) => (
-                  <MusicSectionContent
-                     key={id}
-                     thumb={song?.thumb}
-                     artist_name={song?.artis_name}
-                     audio={song?.audio}
-                     name={song?.name}
-                     id={song?.id}
-                     index={id}
-                  />
-               ))
-            ) : (
-               <div className="text-center">
-                  {" "}
-                  <CircularProgress color="warning" size={40} />
-               </div>
-            )}
+            {songs?.length>0 ?  songs?.map((song, id) => (
+               <MusicSectionContent key={id} thumb={song?.thumb} artist_name={song?.artis_name} audio={song?.audio} name={song?.name} id={song?.id} index={id}/>
+            )) : <div className="text-center"> <CircularProgress color="warning" size={40}   /></div>}
          </ScrollMenu>
       </div>
    );
 };
 const LeftArrow = () => {
-   const visibility = React.useContext(VisibilityContext);
-   return (
-      <Button
-         onClick={() => visibility.scrollPrev()}
-         className="relative !bg-[#1F1F22] rounded-full !w-[5px] !h-[40px] top-44"
-         disableRipple={true}
-      >
-         <KeyboardDoubleArrowLeftIcon className="!text-white " />
-      </Button>
-   );
+  const visibility = React.useContext(VisibilityContext);
+  return (
+     <Button
+        onClick={() => visibility.scrollPrev()}
+        className="relative !bg-[#1F1F22] rounded-full !w-[5px] !h-[40px] top-44"
+        disableRipple={true}
+     >
+        <KeyboardDoubleArrowLeftIcon className="!text-white " />
+     </Button>
+  );
 };
 const RightArrow = () => {
-   const visibility = React.useContext(VisibilityContext);
-   return (
-      <Button
-         onClick={() => visibility.scrollNext()}
-         className="relative !bg-[#1F1F22] rounded-full !w-[10px] !h-[40px] top-44 "
-         disableRipple={true}
-      >
-         <KeyboardDoubleArrowRightIcon className="!text-white " />
-      </Button>
-   );
+  const visibility = React.useContext(VisibilityContext);
+  return (
+     <Button
+        onClick={() => visibility.scrollNext()}
+        className="relative !bg-[#1F1F22] rounded-full !w-[10px] !h-[40px] top-44 "
+        disableRipple={true}
+     >
+        <KeyboardDoubleArrowRightIcon className="!text-white " />
+     </Button>
+  );
 };
+
 
 export default MusicSection;
