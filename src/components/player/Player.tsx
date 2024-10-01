@@ -1,10 +1,7 @@
-import { useEffect } from "react";
 import {
    nextSong,
    prevSong,
    updateCurrentVolume,
-   playSong,
-   pauseSong,
 } from "../../store/updated-music-store";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -14,33 +11,35 @@ import {
    faBackwardStep,
 } from "@fortawesome/free-solid-svg-icons";
 import { createPortal } from "react-dom";
-import {
-   updateCurrentDuration,
-   updateTotalDuration,
-} from "../../store/updated-music-store";
+import { useAudio } from "../../context/AudioContext";
+import { useLocation } from "react-router-dom";
 
 function PlayerContent() {
    const {
       currentSong,
       isPlaying,
       currentVolume,
-      currentSongRef,
       currentDuration,
-      totalDuration
+      totalDuration,
+      isLoading,
    } = useAppSelector((state) => state.updatedMusicStore);
 
    const dispatch = useAppDispatch();
 
+   const location = useLocation();
+   const isVisible = ["/browse", "/playlist", "/favourites"].includes(
+      location.pathname
+   );
+
+   const { playSong, pauseSong, setVolume } = useAudio();
+
    console.log(currentDuration);
-   // useEffect(() => {
-   //    if (!currentSongRef) return;
-   // }, [currentSongRef]);
 
    const handlePlayPause = () => {
       if (isPlaying) {
-         dispatch(pauseSong());
+         pauseSong();
       } else if (currentSong) {
-         dispatch(playSong(currentSong));
+         playSong(currentSong);
       }
    };
 
@@ -54,29 +53,8 @@ function PlayerContent() {
 
    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const volume = +e.target.value / 100;
-      dispatch(updateCurrentVolume(volume));
+      setVolume(volume);
    };
-
-
-   // useEffect(() => {
-   //    if (currentSongRef) {
-   //       // Update total duration when metadata is loaded
-   //       currentSongRef.addEventListener("loadedmetadata", () => {
-   //          dispatch(updateTotalDuration(currentSongRef.duration));
-   //       });
-
-   //       // Update current time as the song progresses
-   //       currentSongRef.addEventListener("timeupdate", () => {
-   //          dispatch(updateCurrentDuration(currentSongRef.currentTime));
-   //       });
-
-   //       return () => {
-   //          // Cleanup event listeners on unmount
-   //          currentSongRef.removeEventListener("loadedmetadata", () => { });
-   //          currentSongRef.removeEventListener("timeupdate", () => { });
-   //       };
-   //    }
-   // }, [currentSongRef, dispatch]);
 
    const formatTime = (time: number) => {
       const minutes = Math.floor(time / 60);
@@ -87,14 +65,15 @@ function PlayerContent() {
    };
 
    return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 text-white bg-black">
+      <div
+         className={`fixed bottom-0 left-0 right-0 z-50 text-white bg-black opacity-0 ${
+            isVisible ? "opacity-0" : "opacity-100"
+         } `}
+      >
          <div className="flex items-center gap-10 gap-x-2 ">
             <div className="flex flex-1 justify-center items-center gap-10">
                <div className="flex justify-center">
-                  <img
-                     className="md:w-20 aspect-square"
-                     src={currentSong?.thumb}
-                  />
+                  <img className="md:w-20 " src={currentSong?.thumb} />
                </div>
                <div>
                   <p className="!hidden md:!block">
@@ -110,7 +89,6 @@ function PlayerContent() {
                   </p>
                </div>
                <div>
-
                   <div className="flex justify-center pb-1 text-center">
                      <div className="mr-5">
                         <FontAwesomeIcon
@@ -120,7 +98,9 @@ function PlayerContent() {
                         />
                      </div>
                      <div className="mt-[2px] mr-5">
-                        {isPlaying ? (
+                        {isLoading ? (
+                           <div className="w-4 h-4 border-4 border-t-4 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                        ) : isPlaying ? (
                            <PauseIcon
                               className="w-5 h-5 cursor-pointer"
                               onClick={handlePlayPause}
@@ -162,9 +142,8 @@ function PlayerContent() {
             </div>
             <div className="flex flex-1 items-start justify-start">
                <div className="!w-[70%]">
-                  <div id="waveform"></div>
+                  <div id={`waveform`}></div>
                </div>
-
             </div>
          </div>
       </div>
