@@ -11,97 +11,94 @@ import DashboardComponent2 from "../..";
 import { useNavigate } from "react-router-dom";
 
 const MyPlan2 = () => {
-const navigate=useNavigate();
-function formatDate(isoDateString:string) {
-  const date = new Date(isoDateString);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [planData, setPlanData] = useState<any>(null);
+  const [Dte, setDates] = useState();
+  const axiosInstance = useAxios();
 
-  // Options for formatting the date
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const formatDate = (isoDateString: string) => {
+    const date = new Date(isoDateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
 
-  // Format the date to "Month Day, Year"
-  return date.toLocaleDateString('en-US', options);
-}
-    const dispatch=useDispatch();
-    const [planData, setPlanData] = useState<any>(null);
-    const axiosInstance=useAxios();
-    const [Dte,setDates]=useState();
+  useEffect(() => {
+    fetchPlanData();
+  }, []);
 
-    useEffect(() => {
-      // Function to fetch pricing data from the API
-      fetchPlanData();
-    }, []);
-  
-    const fetchPlanData = async () => {
-      try {
-        const response = await axiosInstance.get(endPoints.current_plan);
-  
-        if(response?.data){
-         const data = response?.data.data[0];
-         
-         if (typeof data.features === 'string') {
-            try {
-                data.features = JSON.parse(data.features);
-            } catch (error) {
-                console.error('Error parsing features JSON:', error);
-                data.features = [];
-            }
+  const fetchPlanData = async () => {
+    try {
+      const response = await axiosInstance.get(endPoints.current_plan);
+
+      if (response?.data) {
+        const data = response.data.data;
+
+        if (typeof data.features === 'string') {
+          try {
+            data.features = JSON.parse(data.features);
+          } catch (error) {
+            console.error('Error parsing features JSON:', error);
+            data.features = [];
+          }
         }
-        setDates(formatDate(response?.data?.trial_end))
-         setPlanData(data);
-        }
-      } catch (error) {
+        setDates(formatDate(response?.data?.trial_end));
+        setPlanData(data);
+      } else {
+        console.error("No data returned from the API.");
       }
-    };
-
-    const stripHtmlTags = (htmlString) => {
-      const div = document.createElement('div');
-      div.innerHTML = htmlString;
-      return div.textContent || div.innerText || '';
-    };
-  
-    if (!planData) {
-      return <div>Loading...</div>;
+    } catch (error) {
+      console.error("Error fetching plan data:", error);
     }
-  
-    const features = Array.isArray(planData?.features) ? planData.features : [];
+  };
 
-    const handleUpdatePlan=(planData:any)=>{
-        navigate(`/update-plan/${planData?.id}`)
-        dispatch(updateSideBar('update-plan')); 
-        dispatch(updatePlainId(planData?.id))
-    }
-    return (
-      <>
+  const stripHtmlTags = (htmlString: string) => {
+    const div = document.createElement('div');
+    div.innerHTML = htmlString;
+    return div.textContent || div.innerText || '';
+  };
+
+  if (!planData) {
+    return <div>Loading...</div>;
+  }
+
+  const features = Array.isArray(planData?.features) ? planData.features : [];
+
+  const handleUpdatePlan = (planData: any) => {
+    navigate(`/update-plan/${planData?.id}`);
+    dispatch(updateSideBar('update-plan'));
+    dispatch(updatePlainId(planData?.id));
+  };
+
+  return (
+    <>
       <DashboardComponent2>
-         <div className="m-12 bg-[url('/static/images/Website-Background.png')] h-full">
-            <p className="text-[28px]">My Plan</p>
-            <p className="text-[24px] mt-8">{planData.plan_name}</p>
-            
-            {features.length > 0 ? (
-                features.map((item, index) => (
-                    <div key={index} className="flex items-center mt-5">
-                        <FontAwesomeIcon
-                            icon={faCheck}
-                            className="cursor-pointer text-[#FB8A2E] w-3"
-                        />
-                        <p className="ml-2 !text-[#BBBBBB]" dangerouslySetInnerHTML={{ __html: stripHtmlTags(item) }}></p>
-                    </div>
-                ))
-            ) : (
-                <p>No features available.</p>
-            )}
-       <div>
-        {/* <p className="text-[20px] font-extrabold mt-4">
-          Canceled on: <span className="text-[#FB8A2E]">{Dte}</span>
-        </p> */}
-      </div>
+        <div className="m-12 bg-[url('/static/images/Website-Background.png')] h-full">
+          <p className="text-[28px]">My Plan</p>
+          <p className="text-[24px] mt-8">{planData.plan_name}</p>
 
-            <Button className="!bg-[#FB8A2E] !text-white !rounded-md !mt-5 !w-60 !h-11 !font-bold" onClick={()=> handleUpdatePlan(planData)}>Update Plan</Button>
-         </div>
-         </DashboardComponent2>
-      </>
+          {features.length > 0 ? (
+            features.map((item, index) => (
+              <div key={index} className="flex items-center mt-5">
+                <FontAwesomeIcon
+                  icon={faCheck}
+                  className="cursor-pointer text-[#FB8A2E] w-3"
+                />
+                <p className="ml-2 !text-[#BBBBBB]" dangerouslySetInnerHTML={{ __html: stripHtmlTags(item) }}></p>
+              </div>
+            ))
+          ) : (
+            <p>No features available.</p>
+          )}
+          <div>
 
-   );
+          </div>
+
+          <Button className="!bg-[#FB8A2E] !text-white !rounded-md !mt-5 !w-60 !h-11 !font-bold" onClick={() => handleUpdatePlan(planData)}>Update Plan</Button>
+        </div>
+      </DashboardComponent2>
+    </>
+  );
 };
 
 export default MyPlan2;

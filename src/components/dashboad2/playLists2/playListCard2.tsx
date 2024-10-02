@@ -59,8 +59,6 @@ const PlayListCard2: React.FC<PlayListCardProps> = ({
       }
    };
 
-   console.log("playlists in redux", playLists);
-
    function truncateText(text: string, maxLength: number) {
       if (text.length > maxLength) {
          return text.substring(0, maxLength) + '...';

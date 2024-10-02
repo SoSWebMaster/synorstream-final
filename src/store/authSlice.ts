@@ -45,8 +45,6 @@ export const authSlice = createSlice({
     });
     builder.addCase(userLogin.fulfilled, (state, action) => {
 
-      console.log(action.payload?.data)
-
       const { user, token, link, redirect, result, plan_amount } = action.payload.data;
 
       // Update the state directly

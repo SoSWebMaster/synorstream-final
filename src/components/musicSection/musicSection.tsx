@@ -40,17 +40,6 @@ const MusicSection = () => {
          if (records) {
             setSongs(records);
          }
-         //  if( Array.isArray( records ) )  {
-         //     if( currentPage === 1 )  {
-         //        setSongs( records );
-         //     } else if( currentPage > 1 )  {
-         //        setSongs( state => [...state, ...records] );
-         //     }
-         //  } else {
-         //     setSongs([]);
-         //  }
-
-         // console.log( records );
       } catch (e) {
          console.error("unable to fetch songs!!!");
       }

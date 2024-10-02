@@ -29,8 +29,6 @@ function PlayerContent() {
 
    const { playSong, pauseSong, setVolume, nextSong, prevSong } = useAudio();
 
-   console.log(currentDuration);
-
    const handlePlayPause = () => {
       if (isPlaying) {
          pauseSong();
@@ -40,11 +38,11 @@ function PlayerContent() {
    };
 
    const handleNext = () => {
-     nextSong()
+      nextSong()
    };
 
    const handlePrev = () => {
-    prevSong()
+      prevSong()
    };
 
    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,9 +60,8 @@ function PlayerContent() {
 
    return (
       <div
-         className={`fixed bottom-0 left-0 right-0 z-50 text-white bg-black opacity-0 h-[100px] p-3 ${
-            isVisible ? "opacity-0" : "opacity-100"
-         } `}
+         className={`fixed bottom-0 left-0 right-0 z-50 text-white bg-black opacity-0 h-[100px] p-3 ${isVisible ? "opacity-0" : "opacity-100"
+            } `}
       >
          <div className="flex items-center gap-10 gap-x-2 ">
             <div className="flex flex-1 justify-center items-center gap-10  ">

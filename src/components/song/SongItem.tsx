@@ -65,10 +65,8 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const handlePlayPause = () => {
       if (currentSong?.id === song.id && isPlaying) {
-         console.log("in pause");
          pauseSong();
       } else {
-         console.log("in play");
          playSong(song);
       }
    };
@@ -104,12 +102,10 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const buttonVisibility =
       pageName === "playlist" || pageName === "favourites"
-         ? `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${
-              hasAltSongs ? "hidden" : "hidden"
-           }`
-         : `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${
-              hasAltSongs ? "opacity-100" : "opacity-0"
-           }`;
+         ? `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${hasAltSongs ? "hidden" : "hidden"
+         }`
+         : `flex-shrink-0 p-2 rounded-full bg-primary-blue/40 transition-opacity duration-300 ${hasAltSongs ? "opacity-100" : "opacity-0"
+         }`;
 
    const cateElRef = useRef<HTMLSpanElement>(null);
 
@@ -149,7 +145,6 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
 
    const handleDownloadFile = (url: any, id: any, name: any) => {
       if (success) {
-         console.log('in if')
          if (userTier === "2") {
             const fileName = url?.includes(".mp3") ? name + ".mp3" : name;
             toast.info("Downloading MP3...");
@@ -160,7 +155,6 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
             setModalOpen(true);
          }
       } else {
-         console.log('in else')
          navigate("/pricing");
       }
    };
@@ -245,9 +239,8 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                onClick={() => setToggleAltSongs((state) => !state)}
             >
                <ChevronDownIcon
-                  className={`w-5 h-5 transition-transform duration-300${
-                     isAltAccordionActive ? " rotate-180" : ""
-                  }`}
+                  className={`w-5 h-5 transition-transform duration-300${isAltAccordionActive ? " rotate-180" : ""
+                     }`}
                />
             </button>
             <div className={containerClassName}>
@@ -263,15 +256,15 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                </p>
 
                {/* {isCurrentSongPlaying && ( */}
-                  <div className={`ml-3 flex items-center gap-2 ${isCurrentSongPlaying ? 'opacity-100' : 'opacity-0'} `}>
-                     <span className="text-white/70">
-                        {formatTime(currentDuration)}
-                     </span>
-                     <span className="text-white/70">/</span>
-                     <span className="text-white/70">
-                        {formatTime(totalDuration)}
-                     </span>
-                  </div>
+               <div className={`ml-3 flex items-center gap-2 ${isCurrentSongPlaying ? 'opacity-100' : 'opacity-0'} `}>
+                  <span className="text-white/70">
+                     {formatTime(currentDuration)}
+                  </span>
+                  <span className="text-white/70">/</span>
+                  <span className="text-white/70">
+                     {formatTime(totalDuration)}
+                  </span>
+               </div>
                {/* )} */}
             </div>
             <div className="flex items-center gap-3 ml-4">
@@ -304,7 +297,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
                         aria-expanded={open ? "true" : undefined}
                         aria-haspopup="true"
                         onClick={handleClick}
-                        // className="text-white"
+                     // className="text-white"
                      >
                         <MoreVertIcon className="text-white" />
                      </IconButton>

@@ -14,9 +14,8 @@ import {
    useAccordionProvider,
 } from "@szhsin/react-accordion";
 import { useAppSelector } from "../../store";
-const apiEndPoint = `${
-   import.meta.env.VITE_SYNC_OR_STREAM_BASE_URL
-}/alt_songs_json`;
+const apiEndPoint = `${import.meta.env.VITE_SYNC_OR_STREAM_BASE_URL
+   }/alt_songs_json`;
 
 interface AltSongsProps {
    id: number | string;
@@ -70,7 +69,7 @@ export default function AltSongs({
       }
    };
 
-   const { isPlaying  } = useAppSelector((state) => state.updatedMusicStore);
+   const { isPlaying } = useAppSelector((state) => state.updatedMusicStore);
 
    const { toggle: accordionToggle } = accordionProviderValue;
 
@@ -84,7 +83,6 @@ export default function AltSongs({
          });
 
          const data = response.data.records;
-         // console.log( data );
 
          if (data && Array.isArray(data)) {
             data.map((song) => (song.id = `${id}_alt_${song.i_o2}`));
@@ -95,20 +93,6 @@ export default function AltSongs({
          console.error("Unable to fetch alt songs", e);
       }
    }, [id]);
-
-   // const nextAltSong = useCallback(
-   //    (currentId: string) => {
-   //       const currentIndex = songs.findIndex((song) => song.id === currentId);
-   //       const nextAltSong = songs[currentIndex + 1];
-
-   //       if (currentIndex !== -1 && nextAltSong) {
-   //          dispatch(updateCurrentSongId(nextAltSong.id));
-   //       } else {
-   //          dispatch(nextSong());
-   //       }
-   //    },
-   //    [songs, currentSongId]
-   // );
 
    useEffect(() => {
       if (toggle === null) return;
@@ -132,32 +116,30 @@ export default function AltSongs({
       }
    }, [isPlaying]);
 
-   // console.log("Songs in altsongs", songs);
-
    return (
       // <div>
-         <ControlledAccordion providerValue={accordionProviderValue}>
-            <AccordionItem
-               itemKey={accordionId}
-               // @ts-ignore
-               header={({ state }) => isAccordionActive(state.isEnter)}
-               className="accordion-no-after-header"
-            >
-               {songs.map((song) => (
-                  <AltSong
-                     key={song.id}
-                     id={song.id}
-                     name={song.name}
-                     artis_name={song.artis_name}
-                     thumb={song.thumb}
-                     audio={song.audio}
-                     isAltPlaying={isAltPlaying && currentSongId === song.id}
-                     onPlayPause={() => handlePlayPause(song.id)}
-                     isPlaying={isPlaying}
-                  />
-               ))}
-            </AccordionItem>
-         </ControlledAccordion>
+      <ControlledAccordion providerValue={accordionProviderValue}>
+         <AccordionItem
+            itemKey={accordionId}
+            // @ts-ignore
+            header={({ state }) => isAccordionActive(state.isEnter)}
+            className="accordion-no-after-header"
+         >
+            {songs.map((song) => (
+               <AltSong
+                  key={song.id}
+                  id={song.id}
+                  name={song.name}
+                  artis_name={song.artis_name}
+                  thumb={song.thumb}
+                  audio={song.audio}
+                  isAltPlaying={isAltPlaying && currentSongId === song.id}
+                  onPlayPause={() => handlePlayPause(song.id)}
+                  isPlaying={isPlaying}
+               />
+            ))}
+         </AccordionItem>
+      </ControlledAccordion>
       // </div>
    );
 }

@@ -10,7 +10,7 @@ import {
    updateAllSongs,
    updateIsLoading,
 } from "../../store/music-store";
-import { useAppDispatch,useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SongInterface } from "../song/songTypes";
 import SongItem2 from "./songItem2";
@@ -48,9 +48,8 @@ const NewPlayer = () => {
             // dispatch(updateIsLoading(true));
             setSongs(records);
          }
-         // console.log( records );
       } catch (e) {
-         console.error("unable to fetch songs!!!",e);
+         console.error("unable to fetch songs!!!", e);
       }
    }, [setSongs, songType, filterCategories, search, isLoading]);
 
@@ -71,7 +70,6 @@ const NewPlayer = () => {
    });
 
    useEffect(() => {
-      // console.log( allSongs );
       dispatch(updateAllSongs(allSongs));
 
       // first song to be active by default because it need by the bottom music player
@@ -81,38 +79,38 @@ const NewPlayer = () => {
 
    return (
       <>
-         {songs?.length>0 ? (
+         {songs?.length > 0 ? (
             <Swiper
-            loop={true}
-            ref={swiperRef}
-            effect={"coverflow"}
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView={"auto"}
-            speed={700}
-            spaceBetween={100}
-            pagination={{
-               clickable: true,
-               el: `swiper-container swiper-container-testClass`,
-               bulletClass: `swiper-pagination-bullet swiper-pagination-testClass`,
-            }}
-            coverflowEffect={{
-               rotate: 1,
-               stretch: 390,
-               depth: 150,
-               modifier: 1,
-               slideShadows: true,
-            }}
-            modules={[EffectCoverflow, Pagination]}
-            initialSlide={3}
-            className="rounded-3xl "
-    
-         >
-            {items}
-         </Swiper>
-         ): <p className={`text-center ${!isLoading ? '!hidden' : '!block'} `}><CircularProgress size={40} /></p> }
-       
-         
+               loop={true}
+               ref={swiperRef}
+               effect={"coverflow"}
+               grabCursor={true}
+               centeredSlides={true}
+               slidesPerView={"auto"}
+               speed={700}
+               spaceBetween={100}
+               pagination={{
+                  clickable: true,
+                  el: `swiper-container swiper-container-testClass`,
+                  bulletClass: `swiper-pagination-bullet swiper-pagination-testClass`,
+               }}
+               coverflowEffect={{
+                  rotate: 1,
+                  stretch: 390,
+                  depth: 150,
+                  modifier: 1,
+                  slideShadows: true,
+               }}
+               modules={[EffectCoverflow, Pagination]}
+               initialSlide={3}
+               className="rounded-3xl "
+
+            >
+               {items}
+            </Swiper>
+         ) : <p className={`text-center ${!isLoading ? '!hidden' : '!block'} `}><CircularProgress size={40} /></p>}
+
+
       </>
    );
 };

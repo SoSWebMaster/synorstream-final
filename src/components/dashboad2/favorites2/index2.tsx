@@ -32,7 +32,6 @@ const FavoritesComponent2 = () => {
    const [anotherId, setAnotherID] = useState<number | null>(null);
 
    const handlePlay = (audio: any, songId: any) => {
-      console.log("first");
       if (currentAudio && currentAudio !== audio) {
          currentAudio.pause();
          setCurrentPlayingSongId(null);
@@ -102,19 +101,6 @@ const FavoritesComponent2 = () => {
                flt_name: record.flt_name,
             }));
             setSongs(mappedArray);
-            //   if( typeof result.data.count === "number" ) setCurrentCount( result.data.count );
-
-            //   if( Array.isArray( records ) )  {
-            //      if( currentPage === 1 )  {
-
-            //         setSongs( records );
-            //      } else if( currentPage > 1 )  {
-            //         setSongs( state => [...state, ...records] );
-            //      }
-            //   } else {
-            //      setSongs([]);
-            //   }
-
             dispatch(
                updateAllSongs(
                   records.reduce(
@@ -125,7 +111,6 @@ const FavoritesComponent2 = () => {
             );
 
             setIsLoading(false);
-            // console.log( records );
          } catch (e) {
             console.error("unable to fetch songs!!!");
             setHasError(true);
@@ -140,7 +125,6 @@ const FavoritesComponent2 = () => {
    useEffect(() => {
       fetchSongs();
    }, [fetchSongs]);
-   console.log('songs in', songs)
 
    const items = songs.map((song, i) => {
       allSongs = { ...allSongs, [song.id]: song };
@@ -166,8 +150,6 @@ const FavoritesComponent2 = () => {
       }
       // currentAudio?.play()
    }, [isPlaying]);
-
-   console.log("filtercategories", filterCategories);
 
    return (
       <>

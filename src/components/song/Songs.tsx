@@ -27,7 +27,7 @@ export default function Songs({ className }: SongsProps) {
    const [isLoading, setIsLoading] = useState(false);
    const [hasError, setHasError] = useState(false);
    const [hasMoreSongs, setHasMoreSongs] = useState(true);
-   const {play, pause} = useAudioPlayer()
+   const { play, pause } = useAudioPlayer()
 
    const { currentSongRef, currentSongId, isPlaying, filterCategories, search } =
       useAppSelector((state) => state.updatedMusicStore);
@@ -128,19 +128,18 @@ export default function Songs({ className }: SongsProps) {
 
    const handlePlay = useCallback(
       (song) => {
-        play(song); 
+         play(song);
       },
       [play]
-    );
+   );
 
-    const handlePause = useCallback(() => {
-      pause(); 
-    }, [pause]);
-  
+   const handlePause = useCallback(() => {
+      pause();
+   }, [pause]);
+
 
    useEffect(() => {
       dispatch(updateCurrentSong(songs[0]))
-      console.log('in useeffect')
    }, [songs]);
 
    return (

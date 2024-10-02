@@ -25,7 +25,6 @@ export default function Filter({ className }: FilterProps) {
       // const categoryCheckboxes = categoryRef?.current.querySelectorAll( "input[type='checkbox']" );
    }
    const updatefilterhandler = useCallback(() => {
-      // console.log('here............', categoryRef.current);
       if (!categoryRef.current) return
 
       const categoryCheckboxes = categoryRef.current.querySelectorAll("input[type='checkbox']");

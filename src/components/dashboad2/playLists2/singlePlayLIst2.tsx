@@ -28,7 +28,7 @@ const SinglePlayList2 = () => {
    const {
       songType,
       filterCategories,
-      search,
+      // search,
       playLists = [],
    } = useAppSelector((state) => state.music);
 

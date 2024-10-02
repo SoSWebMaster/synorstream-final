@@ -55,7 +55,6 @@ const ChangeBillingDetail2 = ({ handleClose }) => {
       setIsLoading(false);
     } else if (setupIntent && setupIntent.status === "succeeded") {
       const newObj = { payment_method: setupIntent.payment_method };
-      console.log('Setup Intent:', setupIntent);
       try {
         await axiosInstance.post(endPoints?.add_new_payment_method, newObj);
         toast.success("Payment method updated successfully!");

@@ -34,50 +34,49 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
    const playSong = (song: any) => {
       dispatch(updateIsLoading(true));
       if (waveSurferRef.current) {
-          waveSurferRef.current.destroy();
+         waveSurferRef.current.destroy();
       }
-  
+
       const waveSurfer = WaveSurfer.create({
-          container: "#waveform",
-          barWidth: 2,
-          backend: "MediaElement",
-          height: 40,
-          progressColor: "rgb(8, 22, 191)",
-          waveColor: "rgba(255, 255, 255, 1)",
-          partialRender: true, 
+         container: "#waveform",
+         barWidth: 2,
+         backend: "MediaElement",
+         height: 40,
+         progressColor: "rgb(8, 22, 191)",
+         waveColor: "rgba(255, 255, 255, 1)",
+         partialRender: true,
       });
-  
+
       // Load only the audio metadata first
       waveSurfer.load(song.audio);
       waveSurferRef.current = waveSurfer;
-  
+
       dispatch(updateCurrentSong(song));
       dispatch(updateCurrentSongId(song?.id));
-  
+
       waveSurfer.on("ready", () => {
-          dispatch(updateIsLoading(false));
-          waveSurfer.play();
-          dispatch(updateIsPlaying(true));
+         dispatch(updateIsLoading(false));
+         waveSurfer.play();
+         dispatch(updateIsPlaying(true));
       });
-  
+
       waveSurfer.on("audioprocess", () => {
-          dispatch(updateCurrentDuration(waveSurfer.getCurrentTime()));
-          dispatch(updateTotalDuration(waveSurfer.getDuration()));
+         dispatch(updateCurrentDuration(waveSurfer.getCurrentTime()));
+         dispatch(updateTotalDuration(waveSurfer.getDuration()));
       });
-  
+
       waveSurfer.on("loading", (progress) => {
-          console.log(`Loading progress: ${progress}%`);
-          dispatch(updateIsLoading(true));
-          dispatch(updateCurrentDuration(0));
-          dispatch(updateTotalDuration(0));
+         dispatch(updateIsLoading(true));
+         dispatch(updateCurrentDuration(0));
+         dispatch(updateTotalDuration(0));
       });
-  
+
       waveSurfer.on("finish", () => {
-          dispatch(updateIsPlaying(false));
-          nextSong();
+         dispatch(updateIsPlaying(false));
+         nextSong();
       });
-  };
-  
+   };
+
    const pauseSong = () => {
       if (waveSurferRef.current) {
          waveSurferRef.current.pause();

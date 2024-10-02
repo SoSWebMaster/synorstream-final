@@ -17,13 +17,12 @@ const MusicSection2 = () => {
    const fetchSongs = async () => {
       try {
          const response = await axiosInstance.get(endPoints?.fetch_latest_songs);
-         console.log(response,"New Relasesss")
          const records = response?.data;
          if (records) {
             setSongs(records);
          }
       } catch (e) {
-         console.error(e,"unable to fetch songs!!!");
+         console.error(e, "unable to fetch songs!!!");
       }
    };
 
@@ -31,36 +30,36 @@ const MusicSection2 = () => {
       <div className="my-10 scroll-container">
          <Button className="!ml-16 !mb-3  !text-white">New Releases</Button>
          <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
-            {songs?.length>0 ?  songs?.map((song, id) => (
-               <MusicSectionContent2 key={id} thumb={song?.thu} artist_name={song?.artis_name} audio={song?.audio_mp3} name={song?.name} id={song?.id} index={id}/>
-            )) : <CircularProgress color="warning" size={40}   />}
+            {songs?.length > 0 ? songs?.map((song, id) => (
+               <MusicSectionContent2 key={id} thumb={song?.thu} artist_name={song?.artis_name} audio={song?.audio_mp3} name={song?.name} id={song?.id} index={id} />
+            )) : <CircularProgress color="warning" size={40} />}
          </ScrollMenu>
       </div>
    );
 };
 const LeftArrow = () => {
-  const visibility = React.useContext(VisibilityContext);
-  return (
-     <Button
-        onClick={() => visibility.scrollPrev()}
-        className="relative !bg-[#1F1F22] rounded-full !w-[5px] !h-[40px] top-44"
-        disableRipple={true}
-     >
-        <KeyboardDoubleArrowLeftIcon className="!text-white " />
-     </Button>
-  );
+   const visibility = React.useContext(VisibilityContext);
+   return (
+      <Button
+         onClick={() => visibility.scrollPrev()}
+         className="relative !bg-[#1F1F22] rounded-full !w-[5px] !h-[40px] top-44"
+         disableRipple={true}
+      >
+         <KeyboardDoubleArrowLeftIcon className="!text-white " />
+      </Button>
+   );
 };
 const RightArrow = () => {
-  const visibility = React.useContext(VisibilityContext);
-  return (
-     <Button
-        onClick={() => visibility.scrollNext()}
-        className="relative !bg-[#1F1F22]   !w-[10px] !h-[40px] top-44 "
-        disableRipple={true}
-     >
-        <KeyboardDoubleArrowRightIcon className="!text-white " />
-     </Button>
-  );
+   const visibility = React.useContext(VisibilityContext);
+   return (
+      <Button
+         onClick={() => visibility.scrollNext()}
+         className="relative !bg-[#1F1F22]   !w-[10px] !h-[40px] top-44 "
+         disableRipple={true}
+      >
+         <KeyboardDoubleArrowRightIcon className="!text-white " />
+      </Button>
+   );
 };
 
 

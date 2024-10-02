@@ -114,8 +114,6 @@ export const musicSlice = createSlice({
          const nextSongId = +nextPosition;
 
          state.currentSongId = nextSongId;
-
-         // console.log( nextSongId, state.currentSongId, keys );
       },
       prevSong: state => {
          if (!state.currentSongId) return
