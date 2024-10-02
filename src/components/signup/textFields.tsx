@@ -65,10 +65,10 @@ const SignUpTextFieldsComponent = () => {
                   const result = resultAction as { payload?: any }; // Explicitly type the resultAction
 
                   const link = result.payload?.data?.link;
-                  localStorage.setItem(
-                     "currentPlan",
-                     result.payload?.data?.current_plan
-                  );
+                  // localStorage.setItem(
+                  //    "currentPlan",
+                  //    result.payload?.data?.current_plan
+                  // );
 
                   if (link) {
                      if (link === "/dashboard") {
