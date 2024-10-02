@@ -49,7 +49,7 @@ interface ModalComponentProps {
 const ModalComponent2: React.FC<ModalComponentProps> = ({ open, setOpen }) => {
   const [playlistName, setPlaylistName] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
-  const axiosInstance=useAxios();
+  const axiosInstance = useAxios();
 
 
   const handleClose = () => setOpen(false);
@@ -114,7 +114,7 @@ const ModalComponent2: React.FC<ModalComponentProps> = ({ open, setOpen }) => {
             <Box sx={footerStyle}>
               <Button
                 variant="contained"
-                className="text-white bg-primary-blue rounded-xl"
+                className="text-white !bg-[#FB8A2E] rounded-xl"
                 onClick={handleSubmit}
                 disabled={loading}
               >

@@ -180,7 +180,7 @@ const SinglePlayList2 = () => {
                ) : songs?.length > 0 ? (
                   items
                ) : (
-                  <div>No Songs Found..</div>
+                  <div>No Songs Found.</div>
                )}
             </div>
             <Player />
