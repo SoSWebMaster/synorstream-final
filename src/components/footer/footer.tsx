@@ -1,21 +1,21 @@
 // @ts-nocheck
 import CircleLogo from "/static/images/Circle_Button_NB.png";
 import { Divider } from "@mui/material";
-import {musicSFXLinks,productLinks,socialLinks,footerContent} from './footerContent'
+import { musicSFXLinks, productLinks, socialLinks, footerContent } from './footerContent'
 import { useNavigate } from "react-router-dom";
 // import ContactUs from "../dashboad/menus/contact/contact";
 import { useState } from "react";
 
 const FooterComponent = () => {
    const [openModal, setOpenModal] = useState(false);
-   const navigate=useNavigate();
-   const setCloseModalState=()=>{
-      setOpenModal(prev=>!prev);
+   const navigate = useNavigate();
+   const setCloseModalState = () => {
+      setOpenModal(prev => !prev);
    }
    return (
       <>
          <footer>
-            <div className="      h-[499px] flex items-center  bg-[url('/static/images/Website-Background.png')]">
+            <div className=" flex items-center  bg-[url('/static/images/Website-Background.png')]">
                <div className="flex justify-between !w-full 2xl:px-60 xl:px-32 lg:px-10">
                   <div>
                      <img src={CircleLogo} className="w-[480px] h-[280px]" />
@@ -26,9 +26,9 @@ const FooterComponent = () => {
                         <p
                            key={index}
                            className="text-[16px] text-[#7A7A7A] mb-5 !cursor-pointer hover:text-[#FB8A2E] transition-transform duration-500"
-                           onClick={()=>navigate(item?.links)}
+                           onClick={() => navigate(item?.links)}
                         >
-                           {item?.name} 
+                           {item?.name}
                         </p>
                      ))}
                   </div>
@@ -38,9 +38,9 @@ const FooterComponent = () => {
                         <p
                            key={index}
                            className="text-[16px] text-[#7A7A7A] mb-5 !cursor-pointer hover:text-[#FB8A2E] transition-transform duration-500"
-                           onClick={()=>navigate(item?.links)}
+                           onClick={() => navigate(item?.links)}
                         >
-                           {item?.name}  
+                           {item?.name}
                         </p>
                      ))}
                   </div>
@@ -52,14 +52,14 @@ const FooterComponent = () => {
                         {socialLinks.map((link, index) => (
                            <a href={link?.url} key={index} target="_blank">
                               <img
-                              key={index}
-                              src={link.src}
-                              alt={link.alt}
-                              className="pr-3 cursor-pointer"
-                              
-                           />
+                                 key={index}
+                                 src={link.src}
+                                 alt={link.alt}
+                                 className="pr-3 cursor-pointer"
+
+                              />
                            </a>
-                           
+
                         ))}
                      </div>
                   </div>
