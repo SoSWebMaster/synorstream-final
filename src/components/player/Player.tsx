@@ -133,7 +133,7 @@ function PlayerContent() {
             </div>
             <div className="flex flex-1 items-start justify-start ">
                <div className="!w-[70%]">
-                  <div id={`waveform`}></div>
+                  <canvas id={`waveform`}></canvas>
                </div>
             </div>
          </div>

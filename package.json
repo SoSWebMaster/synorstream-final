@@ -29,6 +29,8 @@
     "aircode": "^0.7.0",
     "axios": "^1.7.4",
     "downloadjs": "^1.4.7",
+    "hls.js": "^1.0.3-0.canary.7275",
+    "howler": "^2.2.4",
     "install": "^0.13.0",
     "lodash": "^4.17.21",
     "npm": "^10.8.2",

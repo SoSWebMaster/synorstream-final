@@ -22,14 +22,14 @@ const Home = () => {
             <div className="w-full" style={{ backgroundImage: `url(${bgImage})` }}>
                <div className="2xl:px-40 xl:px-36 lg:px-28">
                   <Header />
-                  <HeroSection scrollToSectionRef={filterRef} />
+                  {/* <HeroSection scrollToSectionRef={filterRef} /> */}
                </div>
                <div className="mt-40">
-                  <RoyalitySection />
+                  {/* <RoyalitySection /> */}
                </div>
             </div>
             <div className="2xl:px-60 xl:px-32 lg:px-10 mb-10">
-               <MusicSection /> 
+               {/* <MusicSection />  */}
             </div>
             {/* <div className="2xl:px-60 xl:px-32 lg:px-10">
                <MusicSection2 />

@@ -9,6 +9,7 @@ import { useAppSelector, useAppDispatch } from "../../../store";
 import SongItem from "../../song/SongItem";
 import { CircularProgress } from "@mui/material";
 import { updateAudioRef, updateAllSongs } from "../../../store/music-store";
+import Player from "../../player/Player";
 const perPage = 8;
 const FavoritesComponent2 = () => {
    const axiosInstanceAuth = axiosInstance();
@@ -139,17 +140,17 @@ const FavoritesComponent2 = () => {
       );
    });
 
-   useEffect(() => {
-      if (!isPlaying) {
-         handlePause();
-      } else {
-         // if (currentAudio) {
-         handlePlay(currentAudio, anotherId);
-         // }
-         // currentAudio?.play()
-      }
-      // currentAudio?.play()
-   }, [isPlaying]);
+   // useEffect(() => {
+   //    if (!isPlaying) {
+   //       handlePause();
+   //    } else {
+   //       // if (currentAudio) {
+   //       handlePlay(currentAudio, anotherId);
+   //       // }
+   //       // currentAudio?.play()
+   //    }
+   //    // currentAudio?.play()
+   // }, [isPlaying]);
 
    return (
       <>
@@ -168,6 +169,7 @@ const FavoritesComponent2 = () => {
                   <div>Songs Not Found</div>
                )}
             </div>
+            <Player/>
          </DashboardComponent2>
       </>
    );

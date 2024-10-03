@@ -20,6 +20,7 @@ import axiosInstance from "../../../services/axiosConfig/axiosConfig";
 import { endPoints } from "../../../services/constants/endPoint";
 import DashboardComponent2 from "..";
 import Player from "../../player/Player";
+import { useParams } from 'react-router-dom';
 
 const perPage = 8;
 
@@ -32,11 +33,16 @@ const SinglePlayList2 = () => {
       playLists = [],
    } = useAppSelector((state) => state.music);
 
-   const [selectedPlaylist, setSelectedPlaylist] = useState<string>("");
+   const [selectedPlaylist, setSelectedPlaylist] = useState<any>("");
    const [songs, setSongs] = useState<SongInterface[]>([]);
    const [fetchingSong, setFetchingSong] = useState(false);
    const axios = axiosInstance();
    const dispatch = useAppDispatch();
+   const { id } = useParams();
+
+   useEffect(() => {
+      setSelectedPlaylist(id)
+   }, [id])
 
    // Fetch songs whenever selectedPlaylist changes
    useEffect(() => {
@@ -100,7 +106,7 @@ const SinglePlayList2 = () => {
 
    useEffect(() => {
       if (songs.length > 0) {
-         updateAudioRef(new Audio(songs[0]?.audio));
+         // updateAudioRef(new Audio(songs[0]?.audio));
          dispatch(updateCurrentSong(songs[0]));
       }
    }, [songs]);
