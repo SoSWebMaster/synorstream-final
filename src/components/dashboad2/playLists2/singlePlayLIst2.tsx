@@ -36,7 +36,6 @@ const SinglePlayList2 = () => {
    const [songs, setSongs] = useState<SongInterface[]>([]);
    const [fetchingSong, setFetchingSong] = useState(false);
    const axios = axiosInstance();
-
    const dispatch = useAppDispatch();
 
    // Fetch songs whenever selectedPlaylist changes
@@ -93,10 +92,8 @@ const SinglePlayList2 = () => {
    };
 
    let allSongs = {};
-   let firstSongId: number | string | null = null;
 
-   const items = songs.map((song, i) => {
-      if (i === 0) firstSongId = song.id;
+   const items = songs.map((song) => {
       allSongs = { ...allSongs, [song.id]: song };
       return <SongItem key={song.id} song={song} />;
    });

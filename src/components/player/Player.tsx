@@ -1,6 +1,6 @@
 
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppSelector } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faForwardStep,
@@ -19,8 +19,6 @@ function PlayerContent() {
       totalDuration,
       isLoading,
    } = useAppSelector((state) => state.updatedMusicStore);
-
-   const dispatch = useAppDispatch();
 
    const location = useLocation();
    const isVisible = ["/browse", "/playlist", "/favourites"].includes(

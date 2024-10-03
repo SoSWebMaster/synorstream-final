@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { useAppSelector } from "../../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
    faCirclePlus,
@@ -40,7 +40,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
       currentSong,
       isLoading,
    } = useAppSelector((state) => state.updatedMusicStore);
-   const { playSong, pauseSong, resumeSong } = useAudio();
+   const { playSong, pauseSong } = useAudio();
    const isCurrentSongPlaying = currentSongId === song.id && isPlaying;
 
    const { download } = useDownloader();

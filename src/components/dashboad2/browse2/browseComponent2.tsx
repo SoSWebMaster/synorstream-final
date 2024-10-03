@@ -1,4 +1,3 @@
-import Filter from "../../filter/Filter";
 import Songs from "../../song/Songs";
 const BrowserComponent2 = () => {
 

@@ -2,8 +2,6 @@ import { useEffect, useRef } from "react";
 import { useAppSelector, useAppDispatch } from "../store";
 import WaveSurfer from "wavesurfer.js";
 import {
-   updateCurrentDuration,
-   updateTotalDuration,
    updateCurrentSong,
    updateIsPlaying,
 } from "../store/updated-music-store";
@@ -16,12 +14,12 @@ const useAudioPlayer = () => {
    const waveSurferRef = useRef<WaveSurfer | null>(null);
 
    // Cleanup previous WaveSurfer instance
-   const cleanUpWaveSurfer = () => {
-      if (waveSurferRef.current) {
-         waveSurferRef.current.destroy();
-         waveSurferRef.current = null;
-      }
-   };
+   // const cleanUpWaveSurfer = () => {
+   //    if (waveSurferRef.current) {
+   //       waveSurferRef.current.destroy();
+   //       waveSurferRef.current = null;
+   //    }
+   // };
 
    useEffect(() => {
       // if (currentSong) {
