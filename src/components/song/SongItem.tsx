@@ -204,7 +204,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
    };
 
    return (
-      <div className="song-item flex flex-col  gap-6 p-4 border-2 border-white">
+      <div className="song-item flex flex-col p-4 border border-white">
          <div className="flex items-center gap-6">
             <img
                src={song.thumb}
