@@ -141,7 +141,7 @@ const SongItem: React.FC<SongItemProps> = ({ song }) => {
       setAnchorEl(null);
    };
 
-   const options = ["Favorites", "Playlist"];
+   const options = ["Add To Favorites", "Add To Playlist"];
 
    const handleDownloadFile = (url: any, id: any, name: any) => {
       if (success) {

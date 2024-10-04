@@ -3,7 +3,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Button, CircularProgress, FormHelperText } from "@mui/material";
+import { Button, CircularProgress, FormHelperText, Switch, FormControlLabel } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { userLogin } from "../../store/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ const LoginTextFieldsComponent = () => {
    const navigate = useNavigate();
    const [showPassword, setShowPassword] = React.useState(false);
    const [isLoading, setIsLoading] = React.useState(false);
+   const [rememberMe, setRememberMe] = React.useState(false); // State for Remember Me switch
    const [loginDetail, setLoginDetail] = React.useState({
       email: "",
       password: "",
@@ -39,6 +40,10 @@ const LoginTextFieldsComponent = () => {
    };
 
    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+   const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setRememberMe(e.target.checked);
+   };
 
    const validateInputs = () => {
       let valid = true;
@@ -120,7 +125,12 @@ const LoginTextFieldsComponent = () => {
                error={!!errors.password} // Indicate error state
             />
             <FormHelperText error>{errors.password}</FormHelperText> {/* Display password error */}
-
+            <div className="flex items-center mt-2 mb-4">
+               <FormControlLabel
+                  control={<Switch checked={rememberMe} onChange={handleRememberMeChange} />}
+                  label="Remember Me"
+               />
+            </div>
             <Button
                className="!border !text-white !font-bold !rounded-lg !w-full h-[55px]"
                style={{ backgroundColor: "#FB8A2E", borderColor: "#FB8A2E" }}
