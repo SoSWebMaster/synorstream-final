@@ -15,7 +15,7 @@ const FooterComponent = () => {
    return (
       <>
          <footer>
-            <div className=" h-[499px] flex items-center  bg-[url('/static/images/Website-Background.png')]">
+            <div className=" h-[499px] flex items-center mt-32  bg-[url('/static/images/Website-Background.png')]">
                <div className="flex justify-between !w-full 2xl:px-60 xl:px-32 lg:px-10">
                   <div>
                      <img src={CircleLogo} className="w-[480px] h-[280px]" />

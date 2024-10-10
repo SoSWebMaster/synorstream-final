@@ -1,13 +1,20 @@
 import * as React from "react";
 import PlayListCard2 from "./playListCard2";
 import ModalComponent2 from "../modalComponent2";
-
+import { useLocation } from "react-router-dom";
 interface PlayListContent2 {
    searchQuery: string
 }
 
 const PlayListContent2: React.FC<PlayListContent2> = ({ searchQuery }) => {
-   const [openModal, setOpenModal] = React.useState(Boolean);
+
+   const location = useLocation();
+
+   
+   const queryParams = new URLSearchParams(location.search);
+   const isPlaylist = queryParams.get('isplaylist');
+   const isPlaylistBoolean = isPlaylist === 'false';
+   const [openModal, setOpenModal] = React.useState(isPlaylistBoolean);
    return (
       <>
          <ModalComponent2 open={openModal} setOpen={setOpenModal} />

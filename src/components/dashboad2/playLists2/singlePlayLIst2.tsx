@@ -10,7 +10,6 @@ import {
 import { useAppSelector, useAppDispatch } from "../../../store";
 import {
    updateAllSongs,
-   updateAudioRef,
    updateCurrentSong,
 } from "../../../store/updated-music-store";
 import { useEffect, useState } from "react";
@@ -114,7 +113,7 @@ const SinglePlayList2 = () => {
    return (
       <>
          <DashboardComponent2>
-            <div className="bg-[url('/static/images/Vector.png')] h-[280px] w-full bg-cover bg-center rounded-lg">
+            <div className="bg-[url('/static/images/Vector.png')] mb-6 w-full bg-cover bg-center rounded-lg">
                <div className="px-16 py-12 text-white">
                   <h1 className="text-[48px] font-medium">Playlists</h1>
                   <div className="w-3/4 px-4 py-2 mt-2 rounded-lg bg-black/50">

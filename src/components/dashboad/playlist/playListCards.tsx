@@ -10,7 +10,9 @@ import {
    updatePlayLists,
 } from "../../../store/music-store";
 import { useAppDispatch } from "../../../store";
+import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 import useAxios from "../../../services/axiosConfig/axiosConfig";
 import { endPoints } from "../../../services/constants/endPoint";
 import { useAppSelector } from "../../../store";
@@ -35,6 +37,13 @@ const PlayListCard: React.FC<PlayListCardProps> = ({
    const axiosInstance = useAxios();
    const [isCircularLoading, setIsCircularLoading] = useState(false);
    const [records, setRecords] = useState<PlayListTypes[]>();
+
+   const navigate = useNavigate();
+
+ 
+  const handleAddButtonClick = () => {
+    navigate(`/playlist?isplaylist=false`); 
+  };
    useEffect(() => {
       fetchPlayList();
    }, [search, openState]);
@@ -89,7 +98,18 @@ const PlayListCard: React.FC<PlayListCardProps> = ({
                </div>
             ))
          ) : (
+            
+            <div className="flex justify-between">
+
             <div>No Playlist Found...</div>
+            <Button
+            className="w-[180px] h-[44px] !bg-[#0714BD] !text-white !mx-10"
+            onClick={() => handleAddButtonClick()}
+          >
+            
+           Create Playlist
+          </Button>
+          </div>
          )}
       </div>
    );
